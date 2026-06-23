@@ -1,0 +1,1849 @@
+using ExitGames.Client.Photon;
+using Photon.Pun;
+using Photon.Pun.Demo.Asteroids;
+using Photon.Realtime;
+using System.Collections.Generic;
+using System.Runtime.ConstrainedExecution;
+using System.Text;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using TMPro;
+using Unity.VisualScripting;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+
+using HashTable = ExitGames.Client.Photon.Hashtable;
+
+
+public class GameSceneManager : MonoBehaviourPunCallbacks
+{
+    public List<GameObject>[] CardsInType;
+    public List<GameObject>[] CardsInDisplay;
+    public List<GameObject> DisplayInRally;
+    public List<string> DisplayType = new List<string>();
+    public List<string> DisplayFace = new List<string>();
+    public bool pickable;
+    public bool displaytime = false, playing, responding; 
+    public int cardpicking, targetnum, displaycount;
+    public int status; //0: 沒事 1: 出牌 2: 回牌
+    public string toolcardtype;
+    public Vector3[] position = new Vector3[20];
+    public TMP_Text hintword, to, from, hint;
+    public PlayerHandle player;
+    public GameObject playerprfeb;
+    public GameObject effectprfeb;
+    public GameObject toolcardprfeb;
+    public GameObject carddisplayprfeb;
+    public GameObject[] PlayerPanels;
+    public GameObject HintPanel;
+    public Transform UIparent;
+    public Transform cardpanel;
+    public Transform displayfrom;
+    public Transform displayto;
+    public Button skillButton;
+    public Photon.Realtime.Player[] LocalPlayerList;
+    public Photon.Realtime.Player[] FromAndTo = new Photon.Realtime.Player[2];
+    public bool[] isAlive;
+    public bool[] isPickable;
+    public int me;
+    public int cd, cdLength;
+    public string character;
+    public string reflectMemoType;
+    public int reflectMemoNext;
+    public Photon.Realtime.Player reflectMemoPlayer;
+
+    int count = 0;
+    int skillUseCounter;
+    int temp;
+    public int total;
+    float SW, SH, cs;
+    public int daW, daS, daR;
+    public int maxW, maxS, maxR;
+    public bool Wdead, Sdead, Rdead, multi, reflect, over;
+    int multicount;
+
+    // 1. 宣告卡池字典
+    public Dictionary<string, List<string>> cardPools = new Dictionary<string, List<string>>();
+
+    // 2. 自動讀取 /Resources/Tool/ 底下的 txt 檔案
+    
+
+    [PunRPC]
+    void PlayerList(Photon.Realtime.Player k)
+    {
+        GameObject playerpanel = Instantiate(playerprfeb, UIparent);
+        playerpanel.GetComponent<PlayerPanelController>().NumInList = count;
+        playerpanel.GetComponent<PlayerPanelController>().nick = k.NickName;
+        playerpanel.GetComponent<PlayerPanelController>().character = (string)k.CustomProperties["Picking"];
+        playerpanel.GetComponent<PlayerPanelController>().maxWisdom = (int)k.CustomProperties["Wisdom"];
+        playerpanel.GetComponent<PlayerPanelController>().maxStrength = (int)k.CustomProperties["Strength"];
+        playerpanel.GetComponent<PlayerPanelController>().maxReputation = (int)k.CustomProperties["Reputation"];
+        isAlive[count] = true;
+        isPickable[count] = true;
+        if (k == PhotonNetwork.LocalPlayer)
+        {
+            me = count;
+            character = (string)k.CustomProperties["Picking"];
+            player.Init(character);
+            player.nickname = k.NickName;
+            TextAsset det = Resources.Load<TextAsset>("text/CCard/" + character);
+            string[] inf = det.text.Split("\n");
+            for (int i = 0; i < inf.Length; i++)
+            {
+                inf[i] = inf[i].Trim();
+            }
+            if(character == "2" || character == "30")
+            {
+                cdLength = 9999;
+            }
+            else
+            {
+                int.TryParse(inf[7], out cdLength);
+            }
+            Debug.Log(character == "2");
+            if (character == "2")
+            {
+                cd = 2;
+            }
+            else
+            {
+                cd = 1;
+            }
+            Debug.Log(cd);
+            maxW = (int)k.CustomProperties["Wisdom"];
+            maxS = (int)k.CustomProperties["Strength"];
+            maxR = (int)k.CustomProperties["Reputation"];
+        }
+
+        playerpanel.transform.position = new Vector3(SW-30, SH - 30 - count*100, 0);
+        PlayerPanels[count] = playerpanel;
+        LocalPlayerList[count] = k;
+        count++;
+        
+            //playerpanel.GetComponent<>
+
+    }
+    [PunRPC]
+    async Task StartReflection(int reflectorIndex, int targetIndex, int w, int s, int r, bool isMultiAttack)
+    {
+        hint.text = LocalPlayerList[reflectorIndex].NickName + " 發動了反彈！";
+        HintPanel.SetActive(true);
+
+        // 【關鍵修復】：只有在「第一次」反彈時，才記錄原始攻擊者與群攻下家！
+        // 如果已經在反彈狀態中（連續反彈），絕對不覆寫這兩個記憶變數！
+        if (!reflect)
+        {
+            reflectMemoPlayer = LocalPlayerList[targetIndex];
+            if (isMultiAttack)
+            {
+                reflectMemoNext = (reflectorIndex + 1) % total;
+            }
+        }
+
+        reflect = true; // 設為反彈狀態
+
+        // 攻守方逆轉
+        FromAndTo[0] = LocalPlayerList[reflectorIndex];
+        FromAndTo[1] = LocalPlayerList[targetIndex];
+        from.text = FromAndTo[0].NickName;
+        to.text = FromAndTo[1].NickName;
+
+        if (PhotonNetwork.LocalPlayer == LocalPlayerList[targetIndex])
+        {
+            status = 2; // 被反彈的原攻擊者本地端進入回應階段
+            daW = w;
+            daS = s;
+            daR = r;
+        }
+
+        await Task.Delay(1500);
+        HintPanel.SetActive(false);
+    }
+    [PunRPC]
+    void imDead(int n)
+    {
+        isAlive[n] = false;
+        isPickable[n] = false;
+    }
+    [PunRPC]
+    void PutEffect(int n, int last, string f)
+    {
+        PlayerPanels[n].GetComponent<PlayerPanelController>().AddEffect(f, last, true);
+    }
+    [PunRPC]
+    void UpdateEffect(int n)
+    {
+        PlayerPanels[n].GetComponent<PlayerPanelController>().UpdateEffect();
+    }
+    [PunRPC]
+    void RemoveEffect(int playerIndex, string effectName)
+    {
+        PlayerPanels[playerIndex].GetComponent<PlayerPanelController>().RemoveEffect(effectName);
+    }
+    [PunRPC]
+    void SetFromTo(int F, int T)
+    {
+        if(F != -1)
+        {
+            FromAndTo[0] = LocalPlayerList[F];
+            from.text = FromAndTo[0].NickName;
+        }
+        if (T != -1)
+        {
+            FromAndTo[1] = LocalPlayerList[T];
+            to.text = FromAndTo[1].NickName;
+        }
+        else
+        {
+            to.text = "";
+        }
+    }
+    [PunRPC]
+    void Cleaning()
+    {
+        for (int j = 0; j < DisplayInRally.Count; j++)
+        {
+            DisplayInRally[j].GetComponent<ToolDisplayController>().kill();
+        }
+        DisplayInRally.Clear();
+        DisplayType.Clear();
+        DisplayFace.Clear();
+        HintPanel.SetActive(false);
+        displaytime = false;
+    }
+    [PunRPC]
+    void Go()
+    {
+        if (over || !pickable) return;
+
+        // 【新增攔截邏輯】：檢查自己當前有沒有被限制行動的效果
+        PlayerPanelController myPanel = PlayerPanels[me].GetComponent<PlayerPanelController>();
+        if (myPanel.isExist("disappear"))
+        {
+            System.Random rand = new System.Random(Guid.NewGuid().GetHashCode());
+
+            if (rand.NextDouble() <= 0.5f)
+            {
+                // 50% 機率 A：結束神隱
+                photonView.RPC("Announcement", RpcTarget.All, " 噢！"+ PhotonNetwork.LocalPlayer.NickName + "回來了！", 1500);
+                photonView.RPC("RemoveEffect", RpcTarget.All, me, "disappear");
+            }
+            else
+            {
+                // 50% 機率 B：維持神隱，回復各項數值 3 點
+                photonView.RPC("Announcement", RpcTarget.All, "不行，聯絡不上"+PhotonNetwork.LocalPlayer.NickName + "...", 1500);
+
+                // 加血 (不會顯示卡牌，直接加)
+                UpdatePlayerProperties(3, 3, 3);
+
+                // 維持神隱代表「不可抽牌與行動」，所以強行交棒給下一個人
+                status = 0;
+                player.endRound();
+
+                // 微小的延遲，讓大家看清楚他維持神隱的文字
+                Task.Delay(1500).ContinueWith(t => photonView.RPC("Go", LocalPlayerList[(me + 1) % total]));
+                return; // 直接中斷！本回合跳過！
+            }
+        }
+        if (myPanel.isExist("stun") || myPanel.isExist("freeze")) // 假設有暈眩或結冰
+        {
+            // 1. 發送全域廣播大字，告訴大家這個人跳過回合
+            photonView.RPC("Announcement", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName + " 無法行動，跳過回合！", 1500);
+
+            // 2. 雖然沒動，但還是要呼叫 UpdateEffect 讓他的負面狀態扣除一回合持續時間
+            photonView.RPC("UpdateEffect", RpcTarget.All, me);
+
+            // 3. 直接強行交棒，不讓本地端進入 status = 1 (請出牌) 的狀態
+            status = 0;
+            player.endRound();
+            photonView.RPC("Go", LocalPlayerList[(me + 1) % total]);
+            return; // 提早結束函式
+        }
+        cd = Mathf.Max(0, cd - 1);
+        displaytime = false;
+        photonView.RPC("SetFromTo", RpcTarget.All, me, -1);
+        PhotonNetwork.SendAllOutgoingCommands();
+        status = 1;
+        targetnum = -1;
+        if (PlayerPanels != null) photonView.RPC("UpdateEffect", RpcTarget.All, me);
+        player.newRound();
+        Debug.Log("It's " + PhotonNetwork.LocalPlayer.NickName);
+    }
+    [PunRPC]
+    void GetCard(string tooltype, string face)
+    {
+        DisplayType.Add(tooltype);
+        DisplayFace.Add(face);
+    }
+    [PunRPC]
+    async Task Played(int wisdomDamage, int strengthDamage, int reputationDamage)//need modify
+    {
+        if(!reflect)
+            multi = false;
+        int k = DisplayType.Count;
+        float x = displayfrom.GetComponent<RectTransform>().sizeDelta.x / 2;
+        float y = displayfrom.GetComponent<RectTransform>().sizeDelta.y;
+        float inter = y / (k + 1);
+        temp = k;
+        displaytime = true;
+        if(character == "8")
+        {
+            PVIII plr = (PVIII)player.p;
+            if (FromAndTo[0] == plr.guessPlayer)
+            {
+                switch (plr.guessType)
+                {
+                    case "攻擊":
+                        if (DisplayType[0] == "attack" || DisplayType[0] == "multiattack")
+                        {
+                            plr.rightGuess();
+                        }
+                        else
+                        {
+                            plr.wrongGuess();
+                        }
+                        break;
+                    case "防禦":
+                        if (DisplayType[0] == "defense" || DisplayType[0] == "effectdefense")
+                        {
+                            plr.rightGuess();
+                        }
+                        else
+                        {
+                            plr.wrongGuess();
+                        }
+                        break;
+                    case "其他":
+                        if (DisplayType[0] == "medicine" || DisplayType[0] == "effect")
+                        {
+                            plr.rightGuess();
+                        }
+                        else
+                        {
+                            plr.wrongGuess();
+                        }
+                        break;
+                }
+            }
+        }
+        for (int i = 0; i < k; i++)
+        {
+            GameObject detail = Instantiate(carddisplayprfeb, displayfrom);
+            DisplayInRally.Add(detail);
+            ToolDisplayController tdc = detail.GetComponent<ToolDisplayController>();
+            detail.transform.localPosition = new Vector3(x, y - inter * (i + 1), 1);
+            
+            tdc.tooltype = DisplayType[i];
+            tdc.face = DisplayFace[i];
+            tdc.forDisplay = true;
+            tdc.init(wisdomDamage, strengthDamage, reputationDamage);
+        }
+        
+        if (DisplayType[0] == "attack" || DisplayType[0] == "effect")
+        {
+            if (FromAndTo[1] == PhotonNetwork.LocalPlayer)
+            {
+                if (character == "11")
+                {
+                    System.Random rand = new System.Random(Guid.NewGuid().GetHashCode());
+                    float rnd = (float)rand.NextDouble();
+                    if (rnd <= 0.2f)
+                    {
+                        photonView.RPC("Announcement", RpcTarget.All, "呼...躲過了", 1500);
+                        PhotonNetwork.SendAllOutgoingCommands();
+                        photonView.RPC("Responded", RpcTarget.All, 0, 0, 0);
+                        PhotonNetwork.SendAllOutgoingCommands();
+                        return;
+                    }
+                }
+                status = 2;
+                daW = wisdomDamage;
+                daS = strengthDamage;
+                daR = reputationDamage;
+            }
+        }
+        else if (DisplayType[0] == "unblockable")
+        {
+            // 【不可防禦路線】：直接顯示文字、強制扣血、結束回合！
+            await Task.Delay(2000);
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine(FromAndTo[0].NickName + " 對 " + FromAndTo[1].NickName);
+            sb.AppendLine("發動了無法防禦的技能！");
+
+            if (wisdomDamage < 0) sb.AppendLine("造成 " + (-wisdomDamage).ToString() + " 點智力損害");
+            if (strengthDamage < 0) sb.AppendLine("造成 " + (-strengthDamage).ToString() + " 點體力消耗");
+            if (reputationDamage < 0) sb.AppendLine("誹謗 " + (-reputationDamage).ToString() + " 點聲譽");
+
+            hint.text = sb.ToString();
+            HintPanel.SetActive(true);
+
+            // 受害者直接強行扣血
+            if (FromAndTo[1] == PhotonNetwork.LocalPlayer)
+            {
+                UpdatePlayerProperties(wisdomDamage, strengthDamage, reputationDamage);
+            }
+
+            await Task.Delay(3000);
+
+            // 發動者直接結束回合並交棒
+            if (FromAndTo[0] == PhotonNetwork.LocalPlayer)
+            {
+                status = 0;
+                player.endRound();
+                photonView.RPC("Cleaning", RpcTarget.All);
+                PhotonNetwork.SendAllOutgoingCommands();
+                photonView.RPC("Go", LocalPlayerList[(me + 1) % total]);
+                PhotonNetwork.SendAllOutgoingCommands();
+            }
+
+            // 清空畫面上的卡牌
+            //for (int j = 0; j < k; j++)
+            //{
+            //    DisplayInRally[j].GetComponent<ToolDisplayController>().kill();
+            //}
+            //DisplayInRally.Clear();
+            //DisplayType.Clear();
+            //DisplayFace.Clear();
+            //HintPanel.SetActive(false);
+            //displaytime = false;
+        }
+        else
+        {
+            if (DisplayType[0] == "medicine")
+            {
+                await Task.Delay(2000);
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine(FromAndTo[0].NickName + " 對 " + FromAndTo[1].NickName);
+
+                if (wisdomDamage <= 0)
+                {
+                    sb.AppendLine("造成 " + (-wisdomDamage).ToString() + " 點智力損害");
+                }
+                else
+                {
+                    sb.AppendLine("回復 " + wisdomDamage.ToString() + " 點智力");
+                }
+
+                if (strengthDamage <= 0)
+                {
+                    sb.AppendLine("造成 " + (-strengthDamage).ToString() + " 點體力消耗");
+                }
+                else
+                {
+                    sb.AppendLine("回復 " + strengthDamage.ToString() + " 點體力");
+                }
+
+                if (reputationDamage <= 0)
+                {
+                    sb.Append("誹謗 " + (-reputationDamage).ToString() + " 點聲譽");
+                }
+                else
+                {
+                    sb.Append("挽回 " + reputationDamage.ToString() + " 點聲譽");
+                }
+                hint.text = sb.ToString();
+                HintPanel.SetActive(true);
+                if (FromAndTo[1] == PhotonNetwork.LocalPlayer)
+                {
+                    UpdatePlayerProperties(wisdomDamage, strengthDamage, reputationDamage);
+                }
+                
+                if (FromAndTo[0] == PhotonNetwork.LocalPlayer)
+                {
+                    await Task.Delay(3000);
+                    status = 0;
+                    player.endRound();
+                    photonView.RPC("Cleaning", RpcTarget.All);
+                    PhotonNetwork.SendAllOutgoingCommands();
+                    photonView.RPC("Go", LocalPlayerList[(me + 1) % total]);
+                    PhotonNetwork.SendAllOutgoingCommands();
+                }
+                //for (int j = 0; j < k; j++)
+                //{
+                //    DisplayInRally[j].GetComponent<ToolDisplayController>().kill();
+                //}
+                //DisplayInRally.Clear();
+                //DisplayType.Clear();
+                //DisplayFace.Clear();
+                //HintPanel.SetActive(false);
+                //displaytime = false;
+            }
+        }
+            
+    }
+    [PunRPC]
+    void Multi(int wisdomDamage, int strengthDamage, int reputationDamage)
+    {
+        Debug.Log("收到群攻");
+        multi = true;
+        int k = DisplayType.Count;
+        float x = displayfrom.GetComponent<RectTransform>().sizeDelta.x / 2;
+        float y = displayfrom.GetComponent<RectTransform>().sizeDelta.y;
+        float inter = y / (k + 1);
+        daW = 0;
+        daS = 0;
+        daR = 0;
+        temp = k;
+        displaytime = true;
+        for (int i = 0; i < k; i++)
+        {
+            GameObject detail = Instantiate(carddisplayprfeb, displayfrom);
+            DisplayInRally.Add(detail);
+            detail.transform.localPosition = new Vector3(x, y - inter * (i + 1), 1);
+
+            ToolDisplayController tdc = detail.GetComponent<ToolDisplayController>();
+            // 1. 先賦值
+            tdc.tooltype = DisplayType[i];
+            tdc.face = DisplayFace[i];
+            tdc.forDisplay = true;
+
+            // 2. 後呼叫 init (傳入群攻原始傷害)
+            tdc.init(wisdomDamage, strengthDamage, reputationDamage);
+        }
+        if (FromAndTo[1] == PhotonNetwork.LocalPlayer)
+        {
+            if (player.p.isImmuneToMultiAttack())
+            {
+                photonView.RPC("Announcement", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName + " 不受群體攻擊影響！", 1500);
+                PhotonNetwork.SendAllOutgoingCommands();
+                photonView.RPC("Responded", RpcTarget.All, 0, 0, 0); // 自動安全下莊
+                return;
+            }
+
+            // 【升級】：2. 被動閃避檢測 (取代原本寫死的 11 號)
+            if (player.p.checkPassiveDodge())
+            {
+                photonView.RPC("Announcement", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName + " 躲過了攻擊！", 1500);
+                PhotonNetwork.SendAllOutgoingCommands();
+                photonView.RPC("Responded", RpcTarget.All, 0, 0, 0);
+                return;
+            }
+            status = 2;
+
+            daW = wisdomDamage;
+            daS = strengthDamage;
+            daR = reputationDamage;
+        }
+    }
+
+    [PunRPC]
+    async Task Responded(int w, int s, int r)
+    {
+        int k = DisplayType.Count;
+        if (character == "8")
+        {
+            PVIII plr = (PVIII)player.p;
+            if (FromAndTo[1] == plr.guessPlayer && k > temp)
+            {
+                switch (plr.guessType)
+                {
+                    case "攻擊":
+                        if (DisplayType[temp] == "attack" || DisplayType[temp] == "multiattack")
+                        {
+                            plr.rightGuess();
+                        }
+                        else
+                        {
+                            plr.wrongGuess();
+                        }
+                        break;
+                    case "防禦":
+                        if (DisplayType[temp] == "defense" || DisplayType[temp] == "effectdefense")
+                        {
+                            plr.rightGuess();
+                        }
+                        else
+                        {
+                            plr.wrongGuess();
+                        }
+                        break;
+                    case "其他":
+                        if (DisplayType[temp] == "medicine" || DisplayType[temp] == "effect")
+                        {
+                            plr.rightGuess();
+                        }
+                        else
+                        {
+                            plr.wrongGuess();
+                        }
+                        break;
+                }
+            }
+        }
+        if (k - temp > 0)
+        {
+            float x = displayto.GetComponent<RectTransform>().sizeDelta.x / 2;
+            float y = displayto.GetComponent<RectTransform>().sizeDelta.y;
+            float inter = y / (k - temp + 1);
+            for (int i = temp; i < k; i++)
+            {
+                GameObject detail2 = Instantiate(carddisplayprfeb, displayto);
+                DisplayInRally.Add(detail2);
+                detail2.transform.localPosition = new Vector3(x, y - inter * (i - temp + 1), 1);
+
+                ToolDisplayController tdc = detail2.GetComponent<ToolDisplayController>();
+                // 1. 先賦值
+                tdc.forDisplay = true;
+                tdc.tooltype = DisplayType[i];
+                tdc.face = DisplayFace[i];
+
+                // 2. 計算防禦卡實際擋下的數值 (淨傷害 - 原始傷害 = 正的阻擋值)
+                int blockW = w - daW;
+                int blockS = s - daS;
+                int blockR = r - daR;
+
+                // 3. 呼叫 init 傳入阻擋值
+                tdc.init(blockW, blockS, blockR);
+            }
+        }
+        await Task.Delay(2000);
+
+        //if (w == -100 && s == -100 && r == -100) //default reflect
+        //{
+        //    int a, ab;
+        //    a = 0; ab = 0;
+        //    foreach(Photon.Realtime.Player pp in LocalPlayerList)
+        //    {
+        //        if (pp == FromAndTo[0])
+        //        {
+        //            a = ab;
+        //        }
+        //        ab++;
+        //    }
+        //    hint.text = "反彈！";
+        //    HintPanel.SetActive(true);
+        //    await Task.Delay(2000);
+        //    HintPanel.SetActive(false);
+        //    daW = 0;
+        //    daS = 0;
+        //    daR = 0;
+        //    for (int j = 0; j < k; j++)
+        //    {
+        //        DisplayInRally[j].GetComponent<ToolDisplayController>().kill();
+        //    }
+        //    if (!reflect)
+        //    {
+        //        reflect = true;
+        //        reflectMemoPlayer = FromAndTo[0];
+        //        if(PhotonNetwork.LocalPlayer == FromAndTo[0])
+        //        {
+        //            reflectMemoNext = (me + 1) % total;
+        //        }
+        //        if (multi)
+        //        {
+        //            reflectMemoType = "Multi";
+        //        }
+        //        else
+        //        {
+        //            reflectMemoType = "Played";
+        //        }
+        //    }
+        //    DisplayInRally.Clear();
+        //    if (k > temp)
+        //    {
+        //        for (int j = k - 1; j >= temp; j--)
+        //        {
+        //            DisplayType.RemoveAt(DisplayType.Count - 1);
+        //            DisplayFace.RemoveAt(DisplayFace.Count - 1);
+        //        }
+        //    }
+        //    if (PhotonNetwork.LocalPlayer == FromAndTo[1])
+        //    {
+        //        photonView.RPC("SetFromTo", RpcTarget.All, me, a);
+        //        PhotonNetwork.SendAllOutgoingCommands();
+        //        photonView.RPC("Played", RpcTarget.All, w, r, s);
+        //        PhotonNetwork.SendAllOutgoingCommands();
+        //    }
+        //}
+        await Task.Delay(2000);
+
+        // 1. 找出真正的攻擊者與防禦者 Index
+        int attIdx = 0, defIdx = 0;
+        for (int i = 0; i < total; ++i)
+        {
+            if (LocalPlayerList[i] == FromAndTo[0]) attIdx = i;
+            if (LocalPlayerList[i] == FromAndTo[1]) defIdx = i;
+        }
+        string defCharacter = PlayerPanels[defIdx].GetComponent<PlayerPanelController>().character;
+
+        // 2. 【確定性隨機】：利用雙方ID與傷害值當作種子，確保全網算出一樣的機率，解決平行時空！
+        bool is13Reflecting = false;
+        if (defCharacter == "13" && (w < 0 || s < 0 || r < 0))
+        {
+            System.Random syncRand = new System.Random(FromAndTo[0].ActorNumber + FromAndTo[1].ActorNumber + w + s + r);
+            if (syncRand.NextDouble() <= 0.25f) is13Reflecting = true;
+        }
+
+        // ==========================================
+        // 情況 A：13號 觸發了「對上眼了！」(Boxing 反擊)
+        // ==========================================
+        if (is13Reflecting)
+        {
+            hint.text = "對上眼了！";
+            HintPanel.SetActive(true);
+            await Task.Delay(2000);
+            HintPanel.SetActive(false);
+
+            // 由防禦者負責發射反擊廣播
+            if (PhotonNetwork.LocalPlayer == FromAndTo[1])
+            {
+                photonView.RPC("Cleaning", RpcTarget.All);
+
+                // 設定反彈記憶，確保後續殘局能正確回到原攻擊者身上
+                if (!reflect)
+                {
+                    reflect = true;
+                    reflectMemoPlayer = FromAndTo[0];
+                    reflectMemoNext = (attIdx + 1) % total;
+                    reflectMemoType = multi ? "Multi" : "Played";
+                }
+
+                // 丟出 boxing 卡片，並將傷害原封不動還給攻擊者
+                photonView.RPC("SetFromTo", RpcTarget.All, defIdx, attIdx);
+                photonView.RPC("GetCard", RpcTarget.All, "attack", "boxing");
+                photonView.RPC("Played", RpcTarget.All, w, s, r);
+                PhotonNetwork.SendAllOutgoingCommands();
+            }
+            return; // 成功打出新攻擊卡，直接中斷本次結算，讓狀態機進入下一輪
+        }
+
+        // ==========================================
+        // 情況 B：正常傷害結算 (包含被 2號 反擊，或一般反彈命中)
+        // ==========================================
+
+        bool wasReflect = reflect; // 記下這次是否為反彈
+        reflect = false; // 結算前關閉狀態，避免干擾後續群攻鏈
+
+        // 統一顯示受傷文字
+        StringBuilder sb = new StringBuilder();
+        if (wasReflect) sb.AppendLine(FromAndTo[0].NickName + " 反彈給 " + FromAndTo[1].NickName);
+        else sb.AppendLine(FromAndTo[0].NickName + " 對 " + FromAndTo[1].NickName);
+
+        if (w <= 0) sb.AppendLine("造成 " + (-w).ToString() + " 點智力損害");
+        else sb.AppendLine("回復 " + w.ToString() + " 點智力");
+
+        if (s <= 0) sb.AppendLine("造成 " + (-s).ToString() + " 點體力消耗");
+        else sb.AppendLine("回復 " + s.ToString() + " 點體力");
+
+        if (r <= 0) sb.Append("誹謗 " + (-r).ToString() + " 點聲譽");
+        else sb.Append("挽回 " + r.ToString() + " 點聲譽");
+
+        hint.text = sb.ToString();
+        HintPanel.SetActive(true);
+
+        // 【真正的防禦者】扣血
+        if (PhotonNetwork.LocalPlayer == FromAndTo[1])
+        {
+            UpdatePlayerProperties(w, s, r);
+        }
+
+        await Task.Delay(3000);
+        HintPanel.SetActive(false);
+
+        // 2號 防身術被動結算：讓【真正的攻擊者】扣血
+        if (PhotonNetwork.LocalPlayer == FromAndTo[0] && defCharacter == "2" && (w < 0 || s < 0 || r < 0))
+        {
+            photonView.RPC("Announcement", RpcTarget.All, "防身術！", 1500);
+            PhotonNetwork.SendAllOutgoingCommands();
+            UpdatePlayerProperties(Calculator(w, 0.27f), Calculator(s, 0.27f), Calculator(r, 0.27f));
+        }
+        await Task.Delay(1500);
+
+        // === 殘局處理與回合交棒 ===
+        if (PhotonNetwork.LocalPlayer == FromAndTo[0]) // 原則上由發起攻擊的人負責清空與交棒
+        {
+            if (wasReflect)
+            {
+                // 反彈殘局：交棒邏輯由反彈起點 (reflectMemoPlayer) 接管
+                if (PhotonNetwork.LocalPlayer == reflectMemoPlayer)
+                {
+                    if (!multi || reflectMemoNext == me)
+                    {
+                        // 單體反彈結束，或群攻反彈繞完一圈回到自己：清空場地，交棒下家
+                        photonView.RPC("Cleaning", RpcTarget.All);
+                        status = 0;
+                        player.endRound();
+                        photonView.RPC("Go", LocalPlayerList[(me + 1) % total]);
+                    }
+                    else
+                    {
+                        // 群攻尚未結束，繼續傳給下一個排隊的人
+                        photonView.RPC("Cleaning", RpcTarget.All);
+                        status = 0;
+                        photonView.RPC("SetFromTo", RpcTarget.All, me, reflectMemoNext);
+                        PhotonNetwork.SendAllOutgoingCommands();
+                        photonView.RPC("Multi", RpcTarget.All, daW, daS, daR);
+                    }
+                }
+            }
+            else
+            {
+                // 一般攻擊殘局
+                if (!multi)
+                {
+                    photonView.RPC("Cleaning", RpcTarget.All);
+                    status = 0;
+                    player.endRound();
+                    photonView.RPC("Go", LocalPlayerList[(me + 1) % total]);
+                }
+                else
+                {
+                    // 繼續傳遞群攻
+                    photonView.RPC("Cleaning", RpcTarget.All);
+                    int nextVictim = (defIdx + 1) % total;
+                    if (nextVictim == attIdx)
+                    {
+                        // 繞完一圈回到自己，結束
+                        status = 0;
+                        player.endRound();
+                        photonView.RPC("Go", LocalPlayerList[(me + 1) % total]);
+                    }
+                    else
+                    {
+                        status = 0;
+                        photonView.RPC("SetFromTo", RpcTarget.All, me, nextVictim);
+                        PhotonNetwork.SendAllOutgoingCommands();
+                        photonView.RPC("Multi", RpcTarget.All, daW, daS, daR);
+                    }
+                }
+            }
+        }
+        // 清空本地陣列防呆
+        DisplayFace.Clear();
+        DisplayType.Clear();
+        multi = false;
+    }
+    [PunRPC]
+    async Task Announcement(string content, int time)
+    {
+        hint.text = content;
+        HintPanel.SetActive(true);
+        await Task.Delay(time);
+        HintPanel.SetActive(false);   
+    }
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
+    {
+        if (PhotonNetwork.IsConnected == false)
+        {
+            SceneManager.LoadScene("StartScene");
+            return;
+        }
+        LoadCardPools();
+        player = gameObject.GetComponent<PlayerHandle>();
+        total = PhotonNetwork.CurrentRoom.PlayerCount;
+        Debug.Log(total);
+        LocalPlayerList = new Photon.Realtime.Player[total];
+        PlayerPanels = new GameObject[total];
+        CardsInType = new List<GameObject>[7];
+        CardsInDisplay = new List<GameObject>[7];
+        isAlive = new bool[total];
+        isPickable = new bool[total];
+        for (int j = 0; j < 7; j++)
+        {
+            List<GameObject> a = new List<GameObject>();
+            List<GameObject> b = new List<GameObject>();
+            CardsInType[j] = a;
+            CardsInDisplay[j] = b;
+        }
+        Wdead = false;
+        Sdead = false;
+        Rdead = false;
+        pickable = true;
+        over = false;
+        reflect = false;
+        SW = Screen.width;
+        SH = Screen.height;
+        cs = (0.7f * SW - 220) / 10;
+        multicount = 0;
+        toolcardprfeb.GetComponent<RectTransform>().sizeDelta = new Vector3(cs, cs, 1);
+        cardpanel.GetComponent<RectTransform>().sizeDelta = new Vector3(0.7f * SW, 2 * cs + 60, 1);
+        count = 0;
+        
+        skillUseCounter = 0;
+        status = 0;
+        displaycount = 0;
+        targetnum = -1;
+        toolcardtype = "none";
+        Application.targetFrameRate = 60;
+        cardpicking = -1;
+        HintPanel.SetActive(false);
+        for (int i = 0; i < 2; i++)
+        {
+            for (int j = 0; j < 10; j++)
+            {
+                position[i * 10 + j] = new Vector3(20 + (cs + 20) * j, 2 * cs + 40 - (cs + 20) * i, 0);
+            }
+        }
+        for (int xxxxx = 1; xxxxx <= 5; xxxxx++)
+        {
+            PickACard(0.5f, xxxxx.ToString());
+        }
+        PickACard(2.5f, "2");
+        for (float r = 1f; r <= 6f; r++)
+        {
+            for (int xxxxx = 0; xxxxx < 2; xxxxx++)
+            {
+                PickACard(0.5f + r, "1");
+            }
+        }
+        RefreshCards();
+        if (PhotonNetwork.IsMasterClient)
+        {
+            Photon.Realtime.Player firstPlayer = null;
+            foreach (var kvp in PhotonNetwork.CurrentRoom.Players)
+            {
+                // 記下房間裡的第一位玩家
+                if (firstPlayer == null)
+                {
+                    firstPlayer = kvp.Value;
+                }
+                photonView.RPC("PlayerList", RpcTarget.All, kvp.Value);
+            }
+
+            // 【修正】：不要用 LocalPlayerList[0]，直接傳入剛剛抓到的 firstPlayer！
+            photonView.RPC("Go", firstPlayer);
+        }
+
+        
+    }
+    public void LoadCardPools()
+    {
+        // 嚴格對應你的 7 種分類
+        string[] types = { "attack", "multiattack", "defense", "effect", "effectdefense", "medicine", "strengthen" };
+
+        foreach (string type in types)
+        {
+            cardPools[type] = new List<string>();
+
+            // 讀取 Resources/Tool/<type>.txt
+            TextAsset txtFile = Resources.Load<TextAsset>("Tool/" + type);
+
+            if (txtFile != null)
+            {
+                // 根據換行符號切割字串 (自動處理 Windows \r\n 與 Mac/Linux \n)
+                string[] lines = txtFile.text.Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+
+                foreach (string line in lines)
+                {
+                    string cardName = line.Trim(); // 去除前後多餘空白
+                    if (!string.IsNullOrEmpty(cardName))
+                    {
+                        cardPools[type].Add(cardName);
+                    }
+                }
+                Debug.Log($"成功載入 {type} 卡池，共 {cardPools[type].Count} 張卡牌。");
+            }
+            else
+            {
+                Debug.LogWarning("找不到卡池檔案: Resources/Tool/" + type + ".txt");
+            }
+        }
+    }
+    //public void PlayCard()
+    //{
+    //    status = 0;
+    //    int[] Damages = new int[3]; //{wisdom, strength, reputation}
+    //    bool m = false; 
+    //    if (displaycount > 0)
+    //    {
+    //        List<string> attemptTypes = new List<string>();
+    //        for (int i = 0; i < 7; i++)
+    //        {
+    //            if (CardsInDisplay[i].Count > 0)
+    //            {
+    //                if (i == 1) m = true;
+    //                foreach (GameObject obj in CardsInDisplay[i])
+    //                {
+    //                    attemptTypes.Add(obj.GetComponent<ToolDisplayController>().tooltype);
+    //                }
+    //            }
+    //        }
+
+    //        // === 【新增】：2. 觸發行動失敗攔截！ ===
+    //        if (player.p.checkActionFailure(attemptTypes))
+    //        {
+    //            // 如果失敗了，銷毀剛剛放到展示區的牌，且【絕對不】發送 GetCard 網路廣播！
+    //            for (int i = 0; i < 7; i++)
+    //            {
+    //                if (CardsInDisplay[i].Count > 0)
+    //                {
+    //                    foreach (GameObject obj in CardsInDisplay[i])
+    //                    {
+    //                        int j = 0;
+    //                        foreach (GameObject o in CardsInType[i])
+    //                        {
+    //                            if (o.GetComponent<ToolCardController>().num == obj.GetComponent<ToolDisplayController>().num) break;
+    //                            else j++;
+    //                        }
+    //                        CardsInType[i][j].GetComponent<ToolCardController>().kill();
+    //                        CardsInType[i].Remove(CardsInType[i][j]);
+    //                        obj.GetComponent<ToolDisplayController>().kill();
+    //                    }
+    //                    CardsInDisplay[i].Clear();
+    //                }
+    //            }
+
+    //            // 摸摸鼻子，重置狀態並強行交棒給下一個人
+    //            PickACard(0.5f, "1"); // 象徵性補發一張牌
+    //            RefreshCards();
+    //            displaycount = 0;
+    //            toolcardtype = "none";
+    //            cardpicking = -1;
+    //            status = 0;
+    //            photonView.RPC("Go", LocalPlayerList[(me + 1) % total]);
+    //            return; // 直接中斷！卡牌作廢！
+    //        }
+    //        for (int i = 0; i < 7; i++)
+    //        {
+    //            Debug.Log(CardsInDisplay[i].Count);
+    //            if (CardsInDisplay[i].Count > 0)
+    //            {
+    //                if(i == 1)
+    //                {
+    //                    m = true;
+    //                }
+    //                if (targetnum == -1)
+    //                {
+    //                    if(i == 0 || i == 3)
+    //                    {
+    //                        int r = 1;
+    //                        for(r = 1; r <= total; ++r)
+    //                        {
+    //                            PlayerPanelController ppc = PlayerPanels[(me + r) % total].GetComponent<PlayerPanelController>();
+    //                            if (ppc.isExist("disappear") || ppc.isExist("hide"))
+    //                            {
+    //                                continue;
+    //                            }
+    //                            else
+    //                            {
+    //                                break;
+    //                            }
+    //                        }
+    //                        targetnum = (me + r) % total;
+    //                    }
+    //                    else
+    //                    {
+    //                        targetnum = me;
+    //                    }
+    //                }
+    //                foreach (GameObject obj in CardsInDisplay[i])
+    //                {
+    //                    photonView.RPC("GetCard", RpcTarget.All, obj.GetComponent<ToolDisplayController>().tooltype, obj.GetComponent<ToolDisplayController>().face);
+    //                    int j = 0;
+    //                    foreach(GameObject o in CardsInType[i])
+    //                    {
+    //                        if(o.GetComponent<ToolCardController>().num == obj.GetComponent<ToolDisplayController>().num)
+    //                        {
+    //                            break;
+    //                        }
+    //                        else
+    //                        {
+    //                            j++;
+    //                        }
+    //                    }
+    //                    CardsInType[i][j].GetComponent<ToolCardController>().kill();
+    //                    CardsInType[i].Remove(CardsInType[i][j]);
+    //                    obj.GetComponent<ToolDisplayController>().kill();
+    //                }
+    //                CardsInDisplay[i].Clear();
+    //            }//else 抽
+    //        }
+    //        //if (DisplayType[0] == "medicine")
+    //        //{
+    //        //    player.p.updateMed();
+    //        //    for (int i = 0; i < DisplayType.Count; i++)
+    //        //    {
+    //        //        Damages[0] += 5;
+    //        //        Damages[1] += 0;
+    //        //        Damages[2] += 0;
+    //        //    }
+    //        //    for (int i = 0; i < 3; ++i)
+    //        //    {
+    //        //        Damages[i] = Calculator(Damages[i], player.p.medRatio[i]);
+    //        //        if (Damages[i] != 0)
+    //        //            Damages[i] += player.p.medAdd[i];
+    //        //    }
+    //        //}
+    //        //else
+    //        //{
+    //        //    player.p.updateAttack();
+    //        //    for (int i = 0; i < DisplayType.Count; i++)
+    //        //    {
+    //        //        Damages[0] -= 5;
+    //        //        Damages[1] += 0;
+    //        //        Damages[2] += 0;
+    //        //    }
+    //        //    for (int i = 0; i < 3; ++i)
+    //        //    {
+    //        //        Damages[i] = Calculator(Damages[i], player.p.attackRatio[i]);
+    //        //        if (Damages[i] != 0)
+    //        //            Damages[i] += player.p.attackAdd[i];
+    //        //    }
+    //        //}
+
+    //        if (DisplayType[0] == "medicine")
+    //        {
+    //            player.p.updateMed();
+    //            for (int i = 0; i < DisplayType.Count; i++)
+    //            {
+    //                // 未來這裡替換成：從 txt 讀取這張藥劑卡的補血量
+    //                Damages[0] += 5;
+    //                Damages[1] += 0;
+    //                Damages[2] += 0;
+    //            }
+    //            for (int i = 0; i < 3; ++i)
+    //            {
+    //                Damages[i] = Calculator(Damages[i], player.p.medRatio[i]);
+    //                if (Damages[i] != 0) Damages[i] += player.p.medAdd[i];
+    //            }
+    //        }
+    //        else if (DisplayType[0] == "effect")
+    //        {
+    //            // 【新增】：獨立的 Effect 處理區塊！
+    //            // 狀態卡預設不造成直接傷害，只傳遞「上狀態」的意圖
+    //            // 未來如果有「附帶微量傷害的毒藥卡」，也可以在這裡從 txt 讀取傷害值
+    //            for (int i = 0; i < 3; ++i)
+    //            {
+    //                Damages[i] = 0;
+    //            }
+    //        }
+    //        else // attack 或 multiattack
+    //        {
+    //            player.p.updateAttack();
+    //            for (int i = 0; i < DisplayType.Count; i++)
+    //            {
+    //                // 未來這裡替換成：從 txt 讀取這張攻擊卡的基礎傷害
+    //                Damages[0] -= 5;
+    //                Damages[1] += 0;
+    //                Damages[2] += 0;
+    //            }
+    //            for (int i = 0; i < 3; ++i)
+    //            {
+    //                Damages[i] = Calculator(Damages[i], player.p.attackRatio[i]);
+    //                if (Damages[i] != 0) Damages[i] += player.p.attackAdd[i];
+    //            }
+    //        }
+
+    //        daW = Damages[0]; 
+    //        daS = Damages[1]; 
+    //        daR = Damages[2];
+
+    //        player.p.overrideFinalDamage(ref daW, ref daS, ref daR);
+
+    //        if (m)
+    //        {
+    //            photonView.RPC("SetFromTo", RpcTarget.All, me, ( me + 1) % total);
+    //            PhotonNetwork.SendAllOutgoingCommands();
+    //            photonView.RPC("Multi", RpcTarget.All, daW, daS,  daR);
+    //            PhotonNetwork.SendAllOutgoingCommands();
+    //        }
+    //        else
+    //        {
+    //            photonView.RPC("SetFromTo", RpcTarget.All, me, targetnum);
+    //            PhotonNetwork.SendAllOutgoingCommands();
+    //            photonView.RPC("Played", RpcTarget.All, daW, daS, daR);
+    //            PhotonNetwork.SendAllOutgoingCommands();
+    //        }
+
+    //        int drawAmount = player.p.getDrawCardCount();
+
+    //        // 方案：出幾張就補幾張，加上被動的額外抽卡數
+    //        // 例如一般人出 1 張就抽 1 張；劭宇出 1 張會抽 (1 + 2 - 1) = 2 張
+    //        for (int i = 0; i < drawAmount; i++)
+    //        {
+    //            int count = 0;
+    //            foreach(var Cards in CardsInType)
+    //            {
+    //                if(Cards == null) continue;
+    //                count += Cards.Count;
+    //            }
+    //            if(count < 20) PickACard(0.5f, "1"); // TODO: 未來記得改成隨機抽卡！
+    //        }
+    //        RefreshCards();
+    //        toolcardtype = "none";
+    //        cardpicking = -1;
+    //    }
+    //    else // 如果跳過不出牌 (displaycount == 0)
+    //    {
+    //        int drawAmount = player.p.getDrawCardCount();
+    //        for (int i = 0; i < drawAmount; i++)
+    //        {
+    //            int count = 0;
+    //            foreach (var Cards in CardsInType)
+    //            {
+    //                if (Cards == null) continue;
+    //                count += Cards.Count;
+    //            }
+    //            if (count < 20)
+    //                PickACard(0.5f, "1"); // TODO: 未來記得改成隨機抽卡！
+
+    //        }
+    //        RefreshCards();
+    //        photonView.RPC("Go", LocalPlayerList[(me + 1) % total]);
+    //    }
+
+    //    displaycount = 0;
+    //}
+
+    public void PlayCard()
+    {
+        status = 0; // 【完美鎖定】：立刻剝奪行動權，杜絕連點與幽靈交棒！
+        int[] Damages = new int[3];
+        bool m = false;
+
+        string playedType = "none"; // 【新增】：用本地變數記下牌型
+        int playedCount = 0;        // 【新增】：用本地變數記下數量
+
+        if (displaycount > 0)
+        {
+            List<string> attemptTypes = new List<string>();
+            for (int i = 0; i < 7; i++)
+            {
+                if (CardsInDisplay[i].Count > 0)
+                {
+                    if (i == 1) m = true;
+                    foreach (GameObject obj in CardsInDisplay[i])
+                    {
+                        attemptTypes.Add(obj.GetComponent<ToolDisplayController>().tooltype);
+                    }
+                }
+            }
+
+            if (player.p.checkActionFailure(attemptTypes))
+            {
+                for (int i = 0; i < 7; i++)
+                {
+                    if (CardsInDisplay[i].Count > 0)
+                    {
+                        foreach (GameObject obj in CardsInDisplay[i])
+                        {
+                            int j = 0;
+                            foreach (GameObject o in CardsInType[i])
+                            {
+                                if (o.GetComponent<ToolCardController>().num == obj.GetComponent<ToolDisplayController>().num) break;
+                                else j++;
+                            }
+                            CardsInType[i][j].GetComponent<ToolCardController>().kill();
+                            CardsInType[i].Remove(CardsInType[i][j]);
+                            obj.GetComponent<ToolDisplayController>().kill();
+                        }
+                        CardsInDisplay[i].Clear();
+                    }
+                }
+                PickACard(0.5f, "1");
+                RefreshCards();
+                displaycount = 0;
+                toolcardtype = "none";
+                cardpicking = -1;
+                photonView.RPC("Go", LocalPlayerList[(me + 1) % total]);
+                return;
+            }
+
+            for (int i = 0; i < 7; i++)
+            {
+                if (CardsInDisplay[i].Count > 0)
+                {
+                    if (i == 1) m = true;
+                    if (targetnum == -1)
+                    {
+                        if (i == 0 || i == 3)
+                        {
+                            int r = 1;
+                            for (r = 1; r <= total; ++r)
+                            {
+                                PlayerPanelController ppc = PlayerPanels[(me + r) % total].GetComponent<PlayerPanelController>();
+                                if (ppc.isExist("disappear") || ppc.isExist("hide")) continue;
+                                else break;
+                            }
+                            targetnum = (me + r) % total;
+                        }
+                        else targetnum = me;
+                    }
+                    foreach (GameObject obj in CardsInDisplay[i])
+                    {
+                        // 【關鍵修改】：把準備打出去的牌型與數量記下來
+                        playedType = obj.GetComponent<ToolDisplayController>().tooltype;
+                        playedCount++;
+
+                        photonView.RPC("GetCard", RpcTarget.All, playedType, obj.GetComponent<ToolDisplayController>().face);
+                        int j = 0;
+                        foreach (GameObject o in CardsInType[i])
+                        {
+                            if (o.GetComponent<ToolCardController>().num == obj.GetComponent<ToolDisplayController>().num) break;
+                            else j++;
+                        }
+                        CardsInType[i][j].GetComponent<ToolCardController>().kill();
+                        CardsInType[i].Remove(CardsInType[i][j]);
+                        obj.GetComponent<ToolDisplayController>().kill();
+                    }
+                    CardsInDisplay[i].Clear();
+                }
+            }
+
+            // 【關鍵修改】：完全不再依賴 DisplayType，改用 playedType 判斷
+            if (playedType == "medicine")
+            {
+                player.p.updateMed();
+                for (int i = 0; i < playedCount; i++)
+                {
+                    Damages[0] += 5; Damages[1] += 0; Damages[2] += 0;
+                }
+                for (int i = 0; i < 3; ++i)
+                {
+                    Damages[i] = Calculator(Damages[i], player.p.medRatio[i]);
+                    if (Damages[i] != 0) Damages[i] += player.p.medAdd[i];
+                }
+            }
+            else if (playedType == "effect")
+            {
+                for (int i = 0; i < 3; ++i) Damages[i] = 0;
+            }
+            else
+            {
+                player.p.updateAttack();
+                for (int i = 0; i < playedCount; i++)
+                {
+                    Damages[0] -= 5; Damages[1] += 0; Damages[2] += 0;
+                }
+                for (int i = 0; i < 3; ++i)
+                {
+                    Damages[i] = Calculator(Damages[i], player.p.attackRatio[i]);
+                    if (Damages[i] != 0) Damages[i] += player.p.attackAdd[i];
+                }
+            }
+
+            daW = Damages[0]; daS = Damages[1]; daR = Damages[2];
+            player.p.overrideFinalDamage(ref daW, ref daS, ref daR);
+
+            if (m)
+            {
+                photonView.RPC("SetFromTo", RpcTarget.All, me, (me + 1) % total);
+                PhotonNetwork.SendAllOutgoingCommands();
+                photonView.RPC("Multi", RpcTarget.All, daW, daS, daR);
+                PhotonNetwork.SendAllOutgoingCommands();
+            }
+            else
+            {
+                photonView.RPC("SetFromTo", RpcTarget.All, me, targetnum);
+                PhotonNetwork.SendAllOutgoingCommands();
+                photonView.RPC("Played", RpcTarget.All, daW, daS, daR);
+                PhotonNetwork.SendAllOutgoingCommands();
+            }
+
+            int drawAmount = player.p.getDrawCardCount();
+            for (int i = 0; i < drawAmount; i++)
+            {
+                int count = 0;
+                foreach (var Cards in CardsInType)
+                {
+                    if (Cards == null) continue;
+                    count += Cards.Count;
+                }
+                if (count < 20) PickACard(0.5f, "1");
+            }
+            RefreshCards();
+            toolcardtype = "none";
+            cardpicking = -1;
+        }
+        else // 跳過不出牌
+        {
+            int drawAmount = player.p.getDrawCardCount();
+            for (int i = 0; i < drawAmount; i++)
+            {
+                int count = 0;
+                foreach (var Cards in CardsInType)
+                {
+                    if (Cards == null) continue;
+                    count += Cards.Count;
+                }
+                if (count < 20) PickACard(0.5f, "1");
+            }
+            RefreshCards();
+            photonView.RPC("Go", LocalPlayerList[(me + 1) % total]);
+        }
+        displaycount = 0;
+    }
+    int Calculator(int originNum, double ratio)
+    {
+        if(ratio <= 1.0f)
+        {
+            return (int)((double)originNum * ratio);
+        }
+        else
+        {
+            int fix = (int)((double)originNum * ratio * 10.0f) % 10;
+            if(fix == 0)
+            {
+                return (int)((double)originNum * ratio);
+            }
+            else
+            {
+                return (int)((double)originNum * ratio + 1.0f);
+            }
+        }
+    }
+    public void Skip()
+    {
+        PickACard(0.5f, "1");
+        RefreshCards();
+    }
+    //public void RespondCard()
+    //{
+    //    int deW, deS, deR, toW, toR, toS;
+    //    int[] Defends = new int[3];
+    //    deW = 0;
+    //    deS = 0;
+    //    deR = 0;
+    //    if (displaycount > 0)
+    //    {
+    //        for (int i = 0; i < 7; i++)
+    //        {
+    //            if (CardsInDisplay[i].Count > 0)
+    //            {
+    //                foreach (GameObject obj in CardsInDisplay[i])
+    //                {
+    //                    photonView.RPC("GetCard", RpcTarget.All, obj.GetComponent<ToolDisplayController>().tooltype, obj.GetComponent<ToolDisplayController>().face);
+    //                    int j = 0;
+    //                    foreach (GameObject o in CardsInType[i])
+    //                    {
+    //                        if (o.GetComponent<ToolCardController>().num == obj.GetComponent<ToolDisplayController>().num)
+    //                        {
+    //                            break;
+    //                        }
+    //                        else
+    //                        {
+    //                            j++;
+    //                        }
+    //                    }
+    //                    if(obj.GetComponent<ToolDisplayController>().face == "2")
+    //                    {
+    //                        deW = daW - 100;
+    //                        deS = daS - 100;
+    //                        deR = daR - 100;
+    //                    }
+    //                    else
+    //                    {
+    //                        Defends[0] += 5;
+    //                        Defends[1] += 0;
+    //                        Defends[2] += 0;
+    //                    } 
+    //                    CardsInType[i][j].GetComponent<ToolCardController>().kill();
+    //                    CardsInType[i].Remove(CardsInType[i][j]);
+    //                    obj.GetComponent<ToolDisplayController>().kill();
+    //                }
+    //                CardsInDisplay[i].Clear();
+    //            }
+    //        }
+    //    }
+    //    player.p.updateDefend();
+    //    for (int i = 0; i < 3; ++i)
+    //    {
+    //        Defends[i] = Calculator(Defends[i], player.p.defendRatio[i]);
+    //        Defends[i] += player.p.defendAdd[i];
+    //    }
+    //    toW = Mathf.Min(0, daW + Defends[0]);
+    //    toS = Mathf.Min(0, daS + Defends[1]);
+    //    toR = Mathf.Min(0, daR + Defends[2]);
+
+    //    photonView.RPC("Responded", RpcTarget.All, toW, toS, toR);
+    //    PhotonNetwork.SendAllOutgoingCommands();
+    //    if (toW == 100 && toS == 100 && toR == 100)
+    //    {
+    //        Debug.Log("沒事");
+    //    }
+    //    else
+    //    {
+
+    //    }
+    //    RefreshCards();
+
+    //    toolcardtype = "none";
+    //    cardpicking = -1;
+    //}
+    public void RespondCard()
+    {
+        status = 0;
+        int deW = 0, deS = 0, deR = 0, toW, toR, toS;
+        int[] Defends = new int[3];
+        bool isReflecting = false;
+
+        if (displaycount > 0)
+        {
+            // 第一步：先掃描檢查展示區有沒有包含反彈卡 (face == "2")
+            for (int i = 0; i < 7; i++)
+            {
+                foreach (GameObject obj in CardsInDisplay[i])
+                {
+                    if (obj.GetComponent<ToolDisplayController>().face == "2")
+                    {
+                        isReflecting = true;
+                    }
+                }
+            }
+
+            // 第二步：回收卡牌，並且【只有非反彈卡】才呼叫 GetCard 廣播
+            for (int i = 0; i < 7; i++)
+            {
+                if (CardsInDisplay[i].Count > 0)
+                {
+                    foreach (GameObject obj in CardsInDisplay[i])
+                    {
+                        var controller = obj.GetComponent<ToolDisplayController>();
+
+                        if (controller.face == "2")
+                        {
+                            // 反彈卡不需要 GetCard 廣播，它的效果由 StartReflection 獨立處理
+                        }
+                        else
+                        {
+                            // 普通防禦卡才需要同步給所有人看
+                            photonView.RPC("GetCard", RpcTarget.All, controller.tooltype, controller.face);
+                            Defends[0] += 5;
+                        }
+
+                        // 回收本地的手牌與展示牌
+                        int j = 0;
+                        foreach (GameObject o in CardsInType[i])
+                        {
+                            if (o.GetComponent<ToolCardController>().num == controller.num) break;
+                            else j++;
+                        }
+                        CardsInType[i][j].GetComponent<ToolCardController>().kill();
+                        CardsInType[i].Remove(CardsInType[i][j]);
+                        obj.GetComponent<ToolDisplayController>().kill();
+                    }
+                    CardsInDisplay[i].Clear();
+                }
+            }
+        }
+
+        // 第三步：分流處理狀態機
+        if (isReflecting)
+        {
+            int originalAttackerIndex = 0;
+            for (int i = 0; i < total; i++)
+            {
+                if (LocalPlayerList[i] == FromAndTo[0]) { originalAttackerIndex = i; break; }
+            }
+            photonView.RPC("StartReflection", RpcTarget.All, me, originalAttackerIndex, daW, daS, daR, multi);
+            PhotonNetwork.SendAllOutgoingCommands();
+        }
+        else
+        {
+            player.p.updateDefend();
+            for (int i = 0; i < 3; ++i)
+            {
+                Defends[i] = Calculator(Defends[i], player.p.defendRatio[i]);
+                Defends[i] += player.p.defendAdd[i];
+            }
+            toW = Mathf.Min(0, daW + Defends[0]);
+            toS = Mathf.Min(0, daS + Defends[1]);
+            toR = Mathf.Min(0, daR + Defends[2]);
+
+            photonView.RPC("Responded", RpcTarget.All, toW, toS, toR);
+            PhotonNetwork.SendAllOutgoingCommands();
+        }
+
+        RefreshCards();
+        toolcardtype = "none";
+        cardpicking = -1;
+        displaycount = 0; // 確保重置計數
+    }
+    public void UpdatePlayerProperties(int w, int s, int r)
+    {
+        if (w < 0 || s < 0 || r < 0)
+        {
+            player.p.onTakeDamage(w, s, r);
+        }
+        int W = (int)PhotonNetwork.LocalPlayer.CustomProperties["Wisdom"] + w;
+        int S = (int)PhotonNetwork.LocalPlayer.CustomProperties["Strength"] + s;
+        int R = (int)PhotonNetwork.LocalPlayer.CustomProperties["Reputation"] + r;
+
+        // 限制血量不要超過上限或低於 0
+        W = Mathf.Clamp(W, 0, maxW);
+        S = Mathf.Clamp(S, 0, maxS);
+        R = Mathf.Clamp(R, 0, maxR);
+
+        // 暫時判定是否歸零
+        bool tempWdead = (W == 0);
+        bool tempSdead = (S == 0);
+        bool tempRdead = (R == 0);
+
+        // 如果滿足死亡條件 (包含30號的單數值歸零特判)
+        if (isOver(tempWdead, tempSdead, tempRdead))
+        {
+            // 呼叫死亡攔截器！看閻羅王收不收！
+            if (player.p.checkRevive(ref W, ref S, ref R))
+            {
+                // 閻王拒收，數值被復活技能修改了，重新更新死亡標記
+                tempWdead = (W == 0);
+                tempSdead = (S == 0);
+                tempRdead = (R == 0);
+
+                // 廣播給所有人看他復活了
+                photonView.RPC("Announcement", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName + " 觸發了免死金牌！", 2500);
+            }
+            else
+            {
+                // 真的死了，發送死亡廣播
+                over = true;
+                photonView.RPC("imDead", RpcTarget.All, me);
+            }
+        }
+
+        // 更新全域死亡標記
+        Wdead = tempWdead;
+        Sdead = tempSdead;
+        Rdead = tempRdead;
+
+        // 將最終正確的數值寫回網路屬性
+        HashTable table = new HashTable();
+        table.Add("Wisdom", W);
+        table.Add("Strength", S);
+        table.Add("Reputation", R);
+        PhotonNetwork.LocalPlayer.SetCustomProperties(table);
+    }
+    public void setPlayerProperties(int w, int s, int r)
+    {
+        HashTable table = new HashTable();
+        if (!Wdead)
+        {
+            table.Add("Wisdom", w);
+        }
+        if (!Sdead)
+        {
+            table.Add("Strength", s);
+        }
+        if (!Rdead)
+        {
+            table.Add("Reputation", r);
+        }
+        PhotonNetwork.LocalPlayer.SetCustomProperties(table);
+    }
+    // Update is called once per frame
+    public void TargetSet(int k)
+    {
+        targetnum = k;
+        PlayerPanelController targetPanel = PlayerPanels[k].GetComponent<PlayerPanelController>();
+        while (targetPanel.isExist("disappear"))
+        {
+            ++targetnum;
+            targetPanel = PlayerPanels[targetnum].GetComponent<PlayerPanelController>();
+        }
+        Photon.Realtime.Player target;
+        target = LocalPlayerList[k];
+        TMP_Text[] texts =  UIparent.GetComponent<Transform>().Find("Round").GetComponentsInChildren<TMP_Text>();
+        foreach(TMP_Text t in texts)
+        {
+            if (t.name == "To")
+            {
+                t.text = target.NickName;
+                break;
+            }
+        }
+    }
+    // 將 rndface 設為預設空字串 ("")。
+    // 如果不傳第二個參數，就會「自動隨機抽」；如果傳了，就會「強制生出那張牌」！
+    public void PickACard(float rnd, string designatedFace = "")
+    {
+        string tooltype = "";
+        int typeIndex = 0;
+
+        // 1. 根據 rnd 決定卡牌「類別」與對應的「陣列 Index」
+        if (rnd < 1) { tooltype = "attack"; typeIndex = 0; }
+        else if (rnd < 2) { tooltype = "multiattack"; typeIndex = 1; }
+        else if (rnd < 3) { tooltype = "defense"; typeIndex = 2; }
+        else if (rnd < 4) { tooltype = "effect"; typeIndex = 3; }
+        else if (rnd < 5) { tooltype = "effectdefense"; typeIndex = 4; }
+        else if (rnd < 6) { tooltype = "medicine"; typeIndex = 5; }
+        else { tooltype = "strengthen"; typeIndex = 6; }
+
+        // 2. 決定卡牌的 Face (檔名)
+        string finalFace = designatedFace;
+
+        // 如果沒有指定卡牌，就從我們剛剛讀好的字典裡「隨機抽一張」
+        if (string.IsNullOrEmpty(finalFace))
+        {
+            if (cardPools.ContainsKey(tooltype) && cardPools[tooltype].Count > 0)
+            {
+                int randomIndex = UnityEngine.Random.Range(0, cardPools[tooltype].Count);
+                finalFace = cardPools[tooltype][randomIndex];
+            }
+            else
+            {
+                Debug.LogWarning(tooltype + " 卡池是空的！請檢查 txt 檔。");
+                finalFace = "ErrorCard"; // 防呆機制
+            }
+        }
+
+        // 3. 生成實體卡牌並塞入對應的陣列中
+        GameObject card = Instantiate(toolcardprfeb, cardpanel);
+        CardsInType[typeIndex].Add(card);
+
+        card.GetComponent<ToolCardController>().tooltype = tooltype;
+        card.GetComponent<ToolCardController>().face = finalFace;
+    }
+    public void RefreshCards()
+    {
+        int L = 0;
+        int t = 0;
+        foreach(var Cards in CardsInType)
+        {
+            int num = 0;
+            if (Cards.Count > 0)
+            {
+                foreach (GameObject Card in Cards) 
+                {
+                    Card.GetComponent<ToolCardController>().num = 100*t + num;
+                    Card.transform.localPosition = position[L];
+                    L++;
+                    num++;
+                }
+            }
+            t++;
+        }
+    }
+    public void RefreshDisplay()
+    {
+        if(status == 1)
+        {
+            int n = 1;
+
+            float x = displayfrom.GetComponent<RectTransform>().sizeDelta.x / 2;
+            float y = displayfrom.GetComponent<RectTransform>().sizeDelta.y;
+            float inter = y / (displaycount + 1);
+            Debug.Log(CardsInDisplay[0].Count);
+            foreach (var Cards in CardsInDisplay)
+            {
+                if (Cards.Count > 0)
+                {
+                    foreach (GameObject Card in Cards)
+                    {
+                        Card.transform.localPosition = new Vector3(x, y - inter * n, 1);
+                        n++;
+                    }
+                }
+            }
+        }
+        else if(status == 2)
+        {
+            int n = 1;
+
+            float x = displayto.GetComponent<RectTransform>().sizeDelta.x / 2;
+            float y = displayto.GetComponent<RectTransform>().sizeDelta.y;
+            float inter = y / (displaycount + 1);
+            foreach (var Cards in CardsInDisplay)
+            {
+                if (Cards.Count > 0)
+                {
+                    foreach (GameObject Card in Cards)
+                    {
+                        Card.transform.localPosition = new Vector3(x, y - inter * n, 1);
+                        n++;
+                    }
+                }
+            }
+        }
+        
+    }
+    public bool isOver(bool w, bool s, bool r)
+    {
+        if (character == "30")
+        {
+            return (w || s || r);
+        }
+        int rst = 0;
+        if (w) ++rst;
+        if (s) ++rst;
+        if (r) ++rst;
+        if(rst >= 2) 
+            return true;
+        else
+            return false;
+    }
+    public void UseSkill()
+    {
+        if(character != "2" || skillUseCounter >= 2)
+            cd = cdLength;
+        ++skillUseCounter;
+        player.useSkill();
+    }
+    void Update()
+    {
+        switch (status)
+        {
+            case 0:
+                hintword.text = "還不是你的回合";
+                skillButton.enabled = false;
+                break;
+            case 1:
+                hintword.text = "請出牌";
+                switch (character)
+                {
+                    case "2":
+                        if (skillUseCounter < 2 && cd == 0)
+                        {
+                            skillButton.enabled = true;
+                        }
+                        else
+                        {
+                            skillButton.enabled = false;
+                        }
+                        break;
+                    case "15": // 劭宇：只能在被攻擊時使用
+                    case "24": // 宥璿：只能在被攻擊時使用
+                    case "30": // 昱全：沒有主動技能
+                        skillButton.enabled = false;
+                        break;
+                    default:
+                        if (cd == 0)
+                        {
+                            skillButton.enabled = true;
+                        }
+                        else
+                        {
+                            skillButton.enabled = false;
+                        }
+                        break;
+                }
+                break;
+            case 2:
+                hintword.text = "請回應";
+                switch (character)
+                {
+                    case "15": // 劭宇的社交蝴蝶
+                        if (cd == 0 && !multi)
+                        {
+                            skillButton.enabled = true;
+                        }
+                        else
+                        {
+                            skillButton.enabled = false;
+                        }
+                        break;
+                    case "24": // 宥璿的一代傳奇
+                        if (cd == 0)
+                        {
+                            skillButton.enabled = true;
+                        }
+                        else
+                        {
+                            skillButton.enabled = false;
+                        }
+                        break;
+                    default: // 其他所有人在這階段都不能按技能
+                        skillButton.enabled = false;
+                        break;
+                }
+                break;
+            //case 3: // 【新增】：動畫與網路結算專用的無敵鎖定狀態
+            //    hintword.text = "動畫結算中...";
+            //    skillButton.enabled = false;
+            //    break;
+        }
+
+        }
+    }
