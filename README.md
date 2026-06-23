@@ -54,7 +54,7 @@ HI，感謝你參與《還沒決定好名字》的製作
 
 
 ### 3.將此卡加入對應類別的卡池中
-在/Assets/Resources/text/Tool/對應類別.txt 中加入demo並換行。
+在/Assets/Resources/Tool/對應類別.txt 中加入demo並換行。
 ```
 ...前面有不少行
 demo
