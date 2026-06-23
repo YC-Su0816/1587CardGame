@@ -1,7 +1,9 @@
 # 1587CardGame
 A card game which directly mimics "God Field" without concerning copyright. I guess that copyright means "Copying is the right thing to do."
 
-HI，感謝你參與《還沒決定好名字》的製作
+# 前言
+HI，感謝你參與《還沒決定好名字》的製作。
+我相信你最感興趣的一定是自己的技能，請在/Assets/Resources/text/CCard/ 中查看。
 
 # 遊戲規則
 ## 背景故事
