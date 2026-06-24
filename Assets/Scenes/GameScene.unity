@@ -229,6 +229,12 @@ MonoBehaviour:
   maxW: 0
   maxS: 0
   maxR: 0
+  Wdead: 0
+  Sdead: 0
+  Rdead: 0
+  multi: 0
+  reflect: 0
+  over: 0
 --- !u!114 &181892503
 MonoBehaviour:
   m_ObjectHideFlags: 0

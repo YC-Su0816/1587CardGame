@@ -1,4 +1,7 @@
+using System;
+using System.Net.NetworkInformation;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -25,6 +28,8 @@ public class ToolDisplayController : MonoBehaviour
             forDisplay = true;
         }
         obj = gameObject;
+        TextAsset det = Resources.Load<TextAsset>("text/Tool/" + tooltype + "/" + face);
+        
         toolname = "";
         discription = "";
         tooleff = "";
@@ -34,8 +39,21 @@ public class ToolDisplayController : MonoBehaviour
         {
             case "attack":
             case "medicine":
-                toolname = "雷電戟" + "(群)";
-                discription = "新版OP神器";
+                if (det != null)
+                {
+                    string[] inf = det.text.Split("\n");
+                    for (int i = 0; i < inf.Length; i++)
+                    {
+                        inf[i] = inf[i].Trim();
+                    }
+                    toolname = inf[3];
+                    discription = inf[4];
+                }
+                else
+                {
+                    toolname = "雷電戟";
+                    discription = "新版OP神器";
+                }
                 if (w < 0) tooleff += "傷智" + (-w) + " ";
                 else if (w > 0) tooleff += "治智" + w + " ";
 
@@ -49,8 +67,22 @@ public class ToolDisplayController : MonoBehaviour
                 if (string.IsNullOrEmpty(tooleff)) tooleff = "無效果";
                 break;
             case "multiattack":
-                toolname = "雷電戟" + "(群)";
-                discription = "新版OP神器";
+                if (det != null)
+                {
+                    string[] inf = det.text.Split("\n");
+                    for (int i = 0; i < inf.Length; i++)
+                    {
+                        inf[i] = inf[i].Trim();
+                    }
+                    toolname = inf[3];
+                    discription = inf[4];
+                }
+                else
+                {
+                    toolname = "雷電戟";
+                    discription = "新版OP神器";
+                }
+                toolname += " (群)";
                 if (w < 0) tooleff += "傷智" + (-w) + " ";
                 else if (w > 0) tooleff += "治智" + w + " ";
 
@@ -64,8 +96,22 @@ public class ToolDisplayController : MonoBehaviour
                 if (string.IsNullOrEmpty(tooleff)) tooleff = "無效果";
                 break;
             case "defense":
-                toolname = "原石";
-                discription = "稀有材料";
+                if (det != null)
+                {
+                    string[] inf = det.text.Split("\n");
+                    for (int i = 0; i < inf.Length; i++)
+                    {
+                        inf[i] = inf[i].Trim();
+                    }
+                    toolname = inf[3];
+                    discription = inf[4];
+                }
+                else
+                {
+                    toolname = "原石";
+                    discription = "稀有材料";
+                }
+                
                 if (w < 0) tooleff += "耗智" + (-w) + " ";
                 else if (w > 0) tooleff += "智防" + w + " ";
 
@@ -78,19 +124,22 @@ public class ToolDisplayController : MonoBehaviour
                 tooleff = tooleff.Trim();
                 if (string.IsNullOrEmpty(tooleff)) tooleff = "無效果";
                 break;
-            case "effect":
-                toolname = "紅姐";
-                discription = "男莖大屠殺";
-                tooleff = "AIDS";
-                break;
-            case "effectdefense":
-                toolname = "老子";
-                discription = "一生二，二生三，三生萬物";
-                tooleff = "免疫";
-                break;
             case "strengthen":
-                toolname = "力量藥水II";
-                discription = "奇妙的藥水";
+                if (det != null)
+                {
+                    string[] inf = det.text.Split("\n");
+                    for (int i = 0; i < inf.Length; i++)
+                    {
+                        inf[i] = inf[i].Trim();
+                    }
+                    toolname = inf[3];
+                    discription = inf[4];
+                }
+                else
+                {
+                    toolname = "力量藥水II";
+                    discription = "奇妙的藥水";
+                }
                 if (w < 0) tooleff += "減智傷" + (-w) + " ";
                 else if (w > 0) tooleff += "增智傷" + w + " ";
 
@@ -102,6 +151,26 @@ public class ToolDisplayController : MonoBehaviour
 
                 tooleff = tooleff.Trim();
                 if (string.IsNullOrEmpty(tooleff)) tooleff = "無效果";
+                break;
+            case "special":
+                if (det != null)
+                {
+                    string[] inf = det.text.Split("\n");
+                    for (int i = 0; i < inf.Length; i++)
+                    {
+                        inf[i] = inf[i].Trim();
+                    }
+                    toolname = inf[0];
+                    discription = inf[1];
+                    tooleff = inf[2];
+                }
+                else
+                {
+                    toolname = "特殊卡牌";
+                    discription = "擁有獨特的效果";
+                    tooleff = "特殊發動";
+                }
+                
                 break;
         }
         
