@@ -66,11 +66,14 @@ public class ToolDisplayController : MonoBehaviour
             case "defense":
                 toolname = "­ì¥Û";
                 discription = "µ}¦³§÷®Æ";
-                if (w > 0) tooleff += "´¼¨¾" + w + " ";
+                if (w < 0) tooleff += "¯Ó´¼" + (-w) + " ";
+                else if (w > 0) tooleff += "´¼¨¾" + w + " ";
 
-                if (s > 0) tooleff += "Åé¨¾" + s + " ";
+                if (s < 0) tooleff += "¯ÓÅé" + (-s) + " ";
+                else if (s > 0) tooleff += "Åé¨¾" + s + " ";
 
-                if (r > 0) tooleff += "ÅA¨¾" + r + " ";
+                if (r < 0) tooleff += "¯ÓÅA" + (-r) + " ";
+                else if (r > 0) tooleff += "ÅA¨¾" + r + " ";
 
                 tooleff = tooleff.Trim();
                 if (string.IsNullOrEmpty(tooleff)) tooleff = "µL®ÄªG";
