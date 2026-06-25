@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class ToolCardController : MonoBehaviour, IPointerClickHandler
 {
@@ -35,7 +36,7 @@ public class ToolCardController : MonoBehaviour, IPointerClickHandler
         displayfrom = roundTransform.Find("FromBoard");
         displayto = roundTransform.Find("ToBoard");
 
-        GetComponent<Image>().sprite = Resources.Load<Sprite>("Tool/" + tooltype + "/" + face);
+        GetComponent<UnityEngine.UI.Image>().sprite = Resources.Load<Sprite>("Tool/" + tooltype + "/" + face);
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -162,13 +163,26 @@ public class ToolCardController : MonoBehaviour, IPointerClickHandler
         tdc.num = num;
         tdc.face = face;
         tdc.forDisplay = false;
+        TextAsset det = Resources.Load<TextAsset>("text/Tool/" + tooltype + "/" + face);
 
         // 【關鍵修改】：根據卡牌種類，給予準備區卡牌對應的基礎展示數值
         // (因為準備階段還沒加上角色倍率，可以先給基礎值或0)
-        if (tooltype == "attack" || tooltype == "multiattack")
-            tdc.init(-5, 0, 0);
-        else if (tooltype == "medicine" || tooltype == "strengthen")
-            tdc.init(5, 0, 0);
+        if (tooltype != "special")
+        {
+            int w = -5, s = 0, r = 0;
+            if (det != null)
+            {
+                string[] inf = det.text.Split("\n");
+                for (int i = 0; i < inf.Length; i++)
+                {
+                    inf[i] = inf[i].Trim();
+                }
+                int.TryParse(inf[0], out w);
+                int.TryParse(inf[1], out s);
+                int.TryParse(inf[2], out r);
+            }
+            tdc.init(w, s, r);
+        }
         else
             tdc.init(0, 0, 0);
     }
