@@ -84,7 +84,7 @@ demo
 
 ## 新增一張special的卡牌
 
-假設你要新增檔案名稱為demo的卡片，你要做三件事
+假設你要新增檔案名稱為demo的卡片，你要做四件事
 ### 1.上傳這張卡牌在遊戲中的資訊
 卡牌的介紹為.txt檔，請簡要介紹這張牌在遊戲中的名字，會賦予什麼效果(ex：虛弱？直接出局？)，他是屬於永久存在(需要其他卡牌來消除效果)還是指定回合後會消失？。我和Gemini會想辦法把他實踐出來XD，除非太過天方夜譚(ex. Remove OS)。  
 請在/Assets/Resources/text/Effect/Special_discription.txt 裡新增效果介紹，並通知作者，待作者審核後，會告訴你此效果排可否實作。  
@@ -107,12 +107,12 @@ demo
 ```
 檔名必須是demo.txt，存在/Assets/Resources/text/Tool/special/ 裡面。
 
-### 2.上傳這張卡牌在遊戲中的顯示
+### 3.上傳這張卡牌在遊戲中的顯示
 請上傳大小在400x400以內的正方形.jpg檔，其實越小越好啦
 檔名必須是demo.jpg，存在/Assets/Resources/Tool/special/ 裡面。
 
 
-### 3.將此卡加入對應類別的卡池中
+### 4.將此卡加入對應類別的卡池中
 在/Assets/Resources/text/Tool/special.txt 中加入三行。**這裡很特別**，請用boolean標註能否在自己的回合出此張牌，以及能否打出這張牌作為回應，之間以英文逗點隔開，不用空格。
 ```
 ...前面有不少行
