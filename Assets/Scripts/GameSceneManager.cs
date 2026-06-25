@@ -1247,9 +1247,10 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             {
                 foreach (GameObject obj in CardsInDisplay[i])
                 {
-                    if (obj.GetComponent<ToolDisplayController>().face == "2") isReflecting = true;
                     if (obj.GetComponent<ToolDisplayController>().tooltype == "special")
                         playedSpecialFaces.Add(obj.GetComponent<ToolDisplayController>().face);
+                    if (playedSpecialFaces[0] == "test_reflect")
+                        isReflecting = true;
                 }
             }
 
@@ -1262,7 +1263,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     {
                         var controller = obj.GetComponent<ToolDisplayController>();
 
-                        if (controller.face == "2")
+                        if (controller.face == "test_reflect")
                         {
                             // 反彈卡不需要 GetCard 廣播，它的效果由 StartReflection 獨立處理
                         }

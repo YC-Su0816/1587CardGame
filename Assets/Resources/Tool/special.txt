@@ -1,1 +1,2 @@
 test_special,true,false,false
+test_reflect,false,true,true
