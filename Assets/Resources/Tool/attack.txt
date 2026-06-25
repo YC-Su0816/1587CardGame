@@ -1,8 +1,4 @@
-1
-2
-3
-4
-5
+test_attack
 phy_study_group
 yj_play_badminton
 galilean_cannon

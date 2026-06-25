@@ -23,10 +23,10 @@ public class ToolDisplayController : MonoBehaviour
     public void init(int w, int s, int r)
     {
         manager = GameObject.Find("GameSceneManager");
-        if (manager.GetComponent<GameSceneManager>().displaytime)
-        {
-            forDisplay = true;
-        }
+        //if (manager.GetComponent<GameSceneManager>().displaytime)
+        //{
+        //    forDisplay = true;
+        //}
         obj = gameObject;
         TextAsset det = Resources.Load<TextAsset>("text/Tool/" + tooltype + "/" + face);
         
@@ -111,19 +111,22 @@ public class ToolDisplayController : MonoBehaviour
                     toolname = "原石";
                     discription = "稀有材料";
                 }
-                
-                if (w < 0) tooleff += "耗智" + (-w) + " ";
-                else if (w > 0) tooleff += "智防" + w + " ";
+                if (!forDisplay || num == 0)
+                {
+                    if (w < 0) tooleff += "耗智" + (-w) + " ";
+                    else if (w > 0) tooleff += "智防" + w + " ";
 
-                if (s < 0) tooleff += "耗體" + (-s) + " ";
-                else if (s > 0) tooleff += "體防" + s + " ";
+                    if (s < 0) tooleff += "耗體" + (-s) + " ";
+                    else if (s > 0) tooleff += "體防" + s + " ";
 
-                if (r < 0) tooleff += "耗譽" + (-r) + " ";
-                else if (r > 0) tooleff += "譽防" + r + " ";
-
-                tooleff = tooleff.Trim();
-                if (string.IsNullOrEmpty(tooleff)) tooleff = "無效果";
-                break;
+                    if (r < 0) tooleff += "耗譽" + (-r) + " ";
+                    else if (r > 0) tooleff += "譽防" + r + " ";
+                }
+                else
+                {
+                    tooleff = "";
+                }
+                    break;
             case "strengthen":
                 if (det != null)
                 {
@@ -140,18 +143,22 @@ public class ToolDisplayController : MonoBehaviour
                     toolname = "力量藥水II";
                     discription = "奇妙的藥水";
                 }
-                if (w < 0) tooleff += "減智傷" + (-w) + " ";
-                else if (w > 0) tooleff += "增智傷" + w + " ";
+                if (!forDisplay)
+                {
+                    if (w < 0) tooleff += "增智傷" + (-w) + " ";
+                    else if (w > 0) tooleff += "減智傷" + w + " ";
 
-                if (s < 0) tooleff += "減體傷" + (-s) + " ";
-                else if (s > 0) tooleff += "增體傷" + s + " ";
+                    if (s < 0) tooleff += "增體傷" + (-s) + " ";
+                    else if (s > 0) tooleff += "減體傷" + s + " ";
 
-                if (r < 0) tooleff += "減譽傷" + (-r) + " ";
-                else if (r > 0) tooleff += "增譽傷" + r + " ";
-
-                tooleff = tooleff.Trim();
-                if (string.IsNullOrEmpty(tooleff)) tooleff = "無效果";
-                break;
+                    if (r < 0) tooleff += "增譽傷" + (-r) + " ";
+                    else if (r > 0) tooleff += "減譽傷" + r + " ";
+                }
+                else
+                {
+                    tooleff = "";
+                }
+                    break;
             case "special":
                 if (det != null)
                 {
