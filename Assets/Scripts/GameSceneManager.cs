@@ -4,6 +4,7 @@ using Photon.Pun.Demo.Asteroids;
 using Photon.Realtime;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.ConstrainedExecution;
 using System.Text;
 using System.Threading;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem.XR;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using static Unity.VisualScripting.Dependencies.Sqlite.SQLite3;
@@ -1471,6 +1473,44 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
 
         card.GetComponent<ToolCardController>().tooltype = tooltype;
         card.GetComponent<ToolCardController>().face = finalFace;
+    }
+
+    public void DiscardACard(string type = "not_specified")
+    {
+        int cardcount = 0;
+        if(type != "not_specified")
+        {
+            for (int i = 0; i < typeNum; i++)
+            {
+                if (CardsInDisplay[i].Count > 0)
+                {
+                    foreach (GameObject obj in CardsInDisplay[i])
+                    {
+                        cardcount++;
+                    }
+                }
+            }
+            int pos = (int)(rand.NextDouble() * cardcount);
+            cardcount = 0;
+            for (int i = 0; i < typeNum; i++)
+            {
+                int j = 0;
+                if (CardsInDisplay[i].Count > 0)
+                {
+                    foreach (GameObject obj in CardsInDisplay[i])
+                    {
+                        if (cardcount == pos)
+                        {
+                            break;
+                        }
+                        cardcount++;
+                        j++;
+                    }
+                    CardsInType[i][j].GetComponent<ToolCardController>().kill();
+                    CardsInType[i].Remove(CardsInType[i][j]);
+                }
+            }
+        }
     }
     public void RefreshCards()
     {
