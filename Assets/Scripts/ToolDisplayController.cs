@@ -179,6 +179,36 @@ public class ToolDisplayController : MonoBehaviour
                 }
                 
                 break;
+            case "unblockable":
+                if(face == "self_defense")
+                {
+                    toolname = "防身術";
+                    discription = "不要碰我！";
+                    if (w < 0) tooleff += "傷智" + (-w) + " ";
+
+                    if (s < 0) tooleff += "傷體" + (-s) + " ";
+
+                    if (r < 0) tooleff += "傷譽" + (-r) + " "; 
+                }
+                if (det != null)
+                {
+                    string[] inf = det.text.Split("\n");
+                    for (int i = 0; i < inf.Length; i++)
+                    {
+                        inf[i] = inf[i].Trim();
+                    }
+                    toolname = inf[0];
+                    discription = inf[1];
+                    tooleff = inf[2];
+                }
+                else
+                {
+                    toolname = "特殊卡牌";
+                    discription = "擁有獨特的效果";
+                    tooleff = "特殊發動";
+                }
+
+                break;
         }
         
         TMP_Text[] texts = GetComponentsInChildren<TMP_Text>();

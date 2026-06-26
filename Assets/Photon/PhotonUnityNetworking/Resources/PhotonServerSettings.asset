@@ -58,6 +58,7 @@ MonoBehaviour:
   - imDead
   - Cleaning
   - StartReflection
+  - CallResponse
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

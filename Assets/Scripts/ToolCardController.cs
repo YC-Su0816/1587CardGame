@@ -64,14 +64,14 @@ public class ToolCardController : MonoBehaviour, IPointerClickHandler
         }
         else if (sta == 2) // 2: 回應階段
         {
-            if (tooltype == "defense")
-                HandleToggleCard(2, displayto);
-            else if (tooltype == "special")
+            if (gameManager.canPlayDefense && tooltype == "defense")
+                HandleDefenseCard(displayto);
+            else if (face == "all_in_vain" || (gameManager.canPlaySpecial && tooltype == "special"))
             {
                 // 【權限判定】：確認這張特別卡允許在「被攻擊/作用時」出牌
                 if (gameManager.specialCardDict.ContainsKey(face) && gameManager.specialCardDict[face].canPlayOnAttacked)
                 {
-                    HandleToggleCard(typeToIndex[tooltype], displayto);
+                    HandleStandardCard(typeToIndex[tooltype], displayto);
                 }
                 else
                 {
@@ -122,7 +122,20 @@ public class ToolCardController : MonoBehaviour, IPointerClickHandler
             gameManager.displaycount++;
         }
     }
-
+    private void HandleDefenseCard(Transform targetDisplay)
+    {
+        for(int i = 0; i < 6; ++i)
+        {
+            if (i == 2) continue;
+            if(gameManager.CardsInDisplay[i].Count != 0)
+            {
+                
+                HandleStandardCard(typeToIndex["defense"], targetDisplay);
+                return;
+            }
+        }
+        HandleToggleCard(typeToIndex["defense"], targetDisplay);
+    }
     // 強化卡的邏輯其實跟防禦卡一樣是疊加的，只是多了一個前提條件
     private void HandleStrengthen(Transform targetDisplay)
     {
