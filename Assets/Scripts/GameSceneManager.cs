@@ -664,7 +664,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
 
         bool wasReflect = reflect; // 記下這次是否為反彈
         reflect = false; // 結算前關閉狀態，避免干擾後續群攻鏈
-        if (DisplayInRally[temp].GetComponent<ToolDisplayController>().face == "all_in_vain")
+        if (k > temp && DisplayInRally[temp].GetComponent<ToolDisplayController>().face == "all_in_vain")
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("算了，就這樣吧...");
@@ -708,12 +708,17 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 HintPanel.SetActive(true);
 
                 // 【真正的防禦者】扣血
+                
+
+                await Task.Delay(3000);
                 if (PhotonNetwork.LocalPlayer == FromAndTo[1])
                 {
                     UpdatePlayerProperties(toW, toS, toR);
+                    if (toW < 0 || toS < 0 || toR < 0)
+                    {
+                        player.p.onTakeDamage(toW, toS, toR);
+                    }
                 }
-
-                await Task.Delay(3000);
                 HintPanel.SetActive(false);
             }
             else
@@ -1361,10 +1366,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     }
     public void UpdatePlayerProperties(int w, int s, int r)
     {
-        if (w < 0 || s < 0 || r < 0)
-        {
-            player.p.onTakeDamage(w, s, r);
-        }
+        
         int W = (int)PhotonNetwork.LocalPlayer.CustomProperties["Wisdom"] + w;
         int S = (int)PhotonNetwork.LocalPlayer.CustomProperties["Strength"] + s;
         int R = (int)PhotonNetwork.LocalPlayer.CustomProperties["Reputation"] + r;
@@ -1669,7 +1671,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                         }
                         break;
                     case "24": // 宥璿的一代傳奇
-                        if (cd == 0)
+                        if (cd == 0 && canPlayDefense)
                         {
                             skillButton.enabled = true;
                         }
