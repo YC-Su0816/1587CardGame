@@ -24,7 +24,7 @@ public class PXVIII : PlayerBase
         handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 1500);
 
         handle.View.RPC("SetFromTo", RpcTarget.All, manager.me, manager.me);
-        handle.View.RPC("GetCard", RpcTarget.All, "unblockable", "XVIIISkill");
+        handle.View.RPC("GetCard", RpcTarget.All, "medicine", "XVIIISkill");
 
         // 消耗體力2點，恢復10點聲譽 (w=0, s=-2, r=10)
         handle.View.RPC("Played", RpcTarget.All, 0, -2, 10);

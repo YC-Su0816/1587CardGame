@@ -77,7 +77,7 @@ public class PlayerPanelController : MonoBehaviourPunCallbacks
         Debug.Log(chara.name);
         Debug.Log(character);
         plname.text = nick;
-        chara.sprite = Resources.Load<Sprite>("CCard/" + character);
+        chara.sprite = Resources.Load<Sprite>("image/CCard/" + character);
         Wisdom = maxWisdom;
         Strength = maxStrength;
         Reputation = maxReputation;
@@ -148,7 +148,7 @@ public class PlayerPanelController : MonoBehaviourPunCallbacks
         controller.setRound(t.isPermanent ? "常駐" : t.lastRound.ToString());
 
         // 設定小圖示圖片
-        effectObj.GetComponent<UnityEngine.UI.Image>().sprite = Resources.Load<Sprite>("Tool/effect/" + effId);
+        effectObj.GetComponent<UnityEngine.UI.Image>().sprite = Resources.Load<Sprite>("image/Tool/effect/" + effId);
 
         updateEffectPosition();
     }

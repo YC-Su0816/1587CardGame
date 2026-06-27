@@ -1011,7 +1011,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         foreach (string type in normalTypes)
         {
             cardPools[type] = new List<string>();
-            TextAsset txtFile = Resources.Load<TextAsset>("Tool/" + type);
+            TextAsset txtFile = Resources.Load<TextAsset>("pool/" + type);
             if (txtFile != null)
             {
                 string[] lines = txtFile.text.Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
@@ -1023,7 +1023,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         }
 
         cardPools["special"] = new List<string>();
-        TextAsset specialTxt = Resources.Load<TextAsset>("Tool/special");
+        TextAsset specialTxt = Resources.Load<TextAsset>("pool/special");
         if (specialTxt != null)
         {
             string[] lines = specialTxt.text.Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);

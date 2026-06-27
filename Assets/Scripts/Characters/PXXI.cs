@@ -17,6 +17,7 @@ public class PXXI : PlayerBase
         attackAdd = new int[3];
         defendAdd = new int[3];
         medAdd = new int[3];
+        newRound();
     }
 
     public override void newRound()
@@ -45,12 +46,6 @@ public class PXXI : PlayerBase
     // 主動技能：抱一下嘛
     public override void useSkill()
     {
-        // 防呆：如果還在冷卻中則不發動 (你的 UI 按鈕應該也會綁定檢查)
-        if (cooldown > 0) return;
-
-        // 進入 3 回合冷卻
-        cooldown = 3;
-
         // 消耗自身 5 點信譽
         manager.UpdatePlayerProperties(0, 0, -5);
 

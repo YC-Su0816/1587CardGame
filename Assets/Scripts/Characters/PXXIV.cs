@@ -39,7 +39,7 @@ public class PXXIV : PlayerBase
         // 如果玩家手殘已經先拉了防禦牌上去才按技能，幫他把展示區清空 (牌會被消耗掉當作防呆代價)
         if (manager.displaycount > 0)
         {
-            for (int i = 0; i < 7; i++)
+            for (int i = 0; i < 6; i++)
             {
                 if (manager.CardsInDisplay[i].Count > 0)
                 {
@@ -57,7 +57,7 @@ public class PXXIV : PlayerBase
         handle.View.RPC("GetCard", RpcTarget.All, "defense", "ISTF");
 
         // 2. 直接強制回傳 0 傷害，完美免疫！
-        handle.View.RPC("Responded", RpcTarget.All, 0, 0, 0);
+        handle.View.RPC("Responded", RpcTarget.All, -manager.daW, -manager.daS, -manager.daR);
 
         // 3. 本地端安全下莊
         manager.status = 0;

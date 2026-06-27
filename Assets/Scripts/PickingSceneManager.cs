@@ -40,7 +40,7 @@ public class PickingSceneManager : MonoBehaviourPunCallbacks
         string[] words = card.Split(' ');
         for(int j = 0; j<3; j++)
         {
-            obj[j].GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("CCard/" + words[j]);
+            obj[j].GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("image/CCard/" + words[j]);
             obj[j].GetComponent<CharacterCard>().card = words[j];
         }
     }

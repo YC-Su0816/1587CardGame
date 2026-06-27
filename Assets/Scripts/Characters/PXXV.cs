@@ -37,7 +37,7 @@ public class PXXV : PlayerBase
 
             // 目標設為自己，走 unblockable 路線
             handle.View.RPC("SetFromTo", RpcTarget.All, manager.me, manager.me);
-            handle.View.RPC("GetCard", RpcTarget.All, "unblockable", "set");
+            handle.View.RPC("GetCard", RpcTarget.All, "medicine", "set");
 
             // 傳入正數 (5, 5, 5) 代表補血
             handle.View.RPC("Played", RpcTarget.All, 5, 5, 5);

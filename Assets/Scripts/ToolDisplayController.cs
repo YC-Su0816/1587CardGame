@@ -34,7 +34,7 @@ public class ToolDisplayController : MonoBehaviour
         discription = "";
         tooleff = "";
         image = obj.GetComponentsInChildren<Image>()[1];
-        image.sprite = Resources.Load<Sprite>("Tool/" + tooltype + "/" + face);
+        image.sprite = Resources.Load<Sprite>("image/Tool/" + tooltype + "/" + face);
         switch (tooltype)
         {
             case "attack":

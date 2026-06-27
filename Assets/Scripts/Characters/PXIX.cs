@@ -28,13 +28,17 @@ public class PXIX : PlayerBase
         int avg = (mine[0] + mine[1] + mine[2]) / 3;
         int finalVal = (int)(avg * 0.5f + 25);
 
-        // 先從本地端設定好數值
-        manager.setPlayerProperties(finalVal, finalVal, finalVal);
+        int[] change = new int[3];
+        for(int i = 0; i < 3; ++i)
+        {
+            change[i] = finalVal - mine[i];
+        }
+
 
         // 再呼叫卡牌展演，送 0 傷害進去過水
         handle.View.RPC("SetFromTo", RpcTarget.All, manager.me, manager.me);
-        handle.View.RPC("GetCard", RpcTarget.All, "unblockable", "XIXSkill");
-        handle.View.RPC("Played", RpcTarget.All, 0, 0, 0);
+        handle.View.RPC("GetCard", RpcTarget.All, "special", "XIXSkill");
+        handle.View.RPC("Played", RpcTarget.All, change[0], change[1], change[2]);
         PhotonNetwork.SendAllOutgoingCommands();
     }
 

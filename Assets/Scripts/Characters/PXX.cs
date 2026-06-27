@@ -87,7 +87,7 @@ public class PXX : PlayerBase
 
         // 呼叫 unblockable 卡牌展演
         handle.View.RPC("SetFromTo", RpcTarget.All, manager.me, manager.me);
-        handle.View.RPC("GetCard", RpcTarget.All, "unblockable", "XXSkill");
+        handle.View.RPC("GetCard", RpcTarget.All, "medicine", "XXSkill");
 
         // 將計算好的屬性變化量（diffs）送進 Played 中結算
         handle.View.RPC("Played", RpcTarget.All, diffs[0], diffs[1], diffs[2]);

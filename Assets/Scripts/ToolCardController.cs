@@ -36,7 +36,7 @@ public class ToolCardController : MonoBehaviour, IPointerClickHandler
         displayfrom = roundTransform.Find("FromBoard");
         displayto = roundTransform.Find("ToBoard");
 
-        GetComponent<UnityEngine.UI.Image>().sprite = Resources.Load<Sprite>("Tool/" + tooltype + "/" + face);
+        GetComponent<UnityEngine.UI.Image>().sprite = Resources.Load<Sprite>("image/Tool/" + tooltype + "/" + face);
     }
 
     public void OnPointerClick(PointerEventData eventData)
