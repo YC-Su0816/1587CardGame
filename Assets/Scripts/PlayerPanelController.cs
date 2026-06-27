@@ -28,10 +28,9 @@ public class PlayerPanelController : MonoBehaviourPunCallbacks
         = new Dictionary<string, (string, string, bool, bool)>()
     {
         // 格式: { "效果代號", ("顯示名稱", "詳細敘述文字", 是否常駐, 能否被藥物消除) }
-        { "disappear", ("隱身", "無法成為單體攻擊與效果的目標。", true, false) }, // 常駐，不可除
-        { "poison",    ("中毒", "每回合開始時，扣除 5 點體力。", false, true) },  // 非常駐，可被藥消除
-        { "burn",      ("灼傷", "體力消耗增加 27%。", false, true) },
-        { "bless",     ("祝福", "智慧回復效果提升。", true, false) },
+        { "disappear", ("神隱", "不可選中，回復狀態。", true, false) }, // 常駐，不可除
+        { "sleep",    ("沉睡", "不可選中，略為降低狀態。", false, true) },  // 非常駐，可被藥消除
+        { "dizzy",      ("失神", "每回合少卡片。", false, true) },
         { "21water",     ("柔水", "降攻、增防。", true, false) },
         { "21knife",     ("鋼刀", "增攻、破防。", true, false) }
     };

@@ -254,40 +254,38 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
 
             if (rand.NextDouble() <= 0.5f)
             {
-                // 50% 機率 A：結束神隱
                 photonView.RPC("Announcement", RpcTarget.All, " 噢！"+ PhotonNetwork.LocalPlayer.NickName + "回來了！", 1500);
                 photonView.RPC("RemoveEffect", RpcTarget.All, me, "disappear");
             }
             else
             {
-                // 50% 機率 B：維持神隱，回復各項數值 3 點
                 photonView.RPC("Announcement", RpcTarget.All, "不行，聯絡不上"+PhotonNetwork.LocalPlayer.NickName + "...", 1500);
 
-                // 加血 (不會顯示卡牌，直接加)
                 UpdatePlayerProperties(3, 3, 3);
 
-                // 維持神隱代表「不可抽牌與行動」，所以強行交棒給下一個人
                 status = 0;
                 player.endRound();
 
-                // 微小的延遲，讓大家看清楚他維持神隱的文字
                 Task.Delay(1500).ContinueWith(t => photonView.RPC("Go", LocalPlayerList[(me + 1) % total]));
-                return; // 直接中斷！本回合跳過！
+                return;
             }
         }
-        if (myPanel.isExist("stun") || myPanel.isExist("freeze")) // 假設有暈眩或結冰
+        if (myPanel.isExist("sleep")) 
         {
-            // 1. 發送全域廣播大字，告訴大家這個人跳過回合
-            photonView.RPC("Announcement", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName + " 無法行動，跳過回合！", 1500);
-
-            // 2. 雖然沒動，但還是要呼叫 UpdateEffect 讓他的負面狀態扣除一回合持續時間
+            photonView.RPC("Announcement", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName + " 睡死了...", 1500);
+            UpdatePlayerProperties(-1, 0, -1);
             photonView.RPC("UpdateEffect", RpcTarget.All, me);
 
-            // 3. 直接強行交棒，不讓本地端進入 status = 1 (請出牌) 的狀態
             status = 0;
             player.endRound();
             photonView.RPC("Go", LocalPlayerList[(me + 1) % total]);
-            return; // 提早結束函式
+            return;
+        }
+        if (myPanel.isExist("dizzy")) // 假設有暈眩或結冰
+        {
+            photonView.RPC("Announcement", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName + " 斷片，遺忘了些什麼", 1500);
+            DiscardACard();
+            photonView.RPC("UpdateEffect", RpcTarget.All, me);
         }
         cd = Mathf.Max(0, cd - 1);
         displaytime = false;
@@ -323,7 +321,10 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         float inter = y / (k + 1);
         temp = k;
         displaytime = true;
-        if(character == "8")
+        daW = wisdomDamage;
+        daS = strengthDamage;
+        daR = reputationDamage;
+        if (character == "8")
         {
             PVIII plr = (PVIII)player.p;
             if (FromAndTo[0] == plr.guessPlayer)
@@ -378,9 +379,6 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         
         if (DisplayType[0] == "attack")
         {
-            daW = wisdomDamage;
-            daS = strengthDamage;
-            daR = reputationDamage;
             if (FromAndTo[1] == PhotonNetwork.LocalPlayer)
             {
                 if (character == "11")
@@ -411,9 +409,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             //HintPanel.SetActive(true);
             //await Task.Delay(2000);
             //HintPanel.SetActive(false);
-            daW = wisdomDamage;
-            daS = strengthDamage;
-            daR = reputationDamage;
+
             if (FromAndTo[1] == PhotonNetwork.LocalPlayer)
             {
                 status = 2;
@@ -450,9 +446,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         else if (DisplayType[0] == "medicine")
         {
             await Task.Delay(2000);
-            daW = wisdomDamage;
-            daS = strengthDamage;
-            daR = reputationDamage;
+
             if (FromAndTo[1] == PhotonNetwork.LocalPlayer)
             {
                 status = 2;
@@ -802,8 +796,31 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                         // 單體反彈結束，或群攻反彈繞完一圈回到自己：清空場地，交棒下家
                         photonView.RPC("Cleaning", RpcTarget.All);
                         status = 0;
-                        player.endRound();
-                        photonView.RPC("Go", LocalPlayerList[(me + 1) % total]);
+                        
+                        if(character == "7")
+                        {
+                            double p = rand.NextDouble();
+                            if(p < 0.2)
+                            {
+                                StringBuilder sb = new StringBuilder(); 
+                                sb.AppendLine("不特別針對誰");
+                                sb.AppendLine("但你們的專題");
+                                sb.AppendLine("配不上稱為研究");
+                                sb.Append(LocalPlayerList[me].NickName + "再次行動");
+                                photonView.RPC("Announcement", RpcTarget.All, sb.ToString(), 2500);
+                                photonView.RPC("Go", LocalPlayerList[me]);
+                            }
+                            else
+                            {
+                                player.endRound();
+                                photonView.RPC("Go", LocalPlayerList[(me + 1) % total]);
+                            }
+                        }
+                        else
+                        {
+                            player.endRound();
+                            photonView.RPC("Go", LocalPlayerList[(me + 1) % total]);
+                        }
                     }
                     else
                     {
@@ -823,8 +840,30 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 {
                     photonView.RPC("Cleaning", RpcTarget.All);
                     status = 0;
-                    player.endRound();
-                    photonView.RPC("Go", LocalPlayerList[(me + 1) % total]);
+                    if (character == "7")
+                    {
+                        double p = rand.NextDouble();
+                        if (p < 0.2)
+                        {
+                            StringBuilder sb = new StringBuilder();
+                            sb.AppendLine("不特別針對誰");
+                            sb.AppendLine("但你們的專題");
+                            sb.AppendLine("配不上稱為研究");
+                            sb.Append(LocalPlayerList[me].NickName + "再次行動");
+                            photonView.RPC("Announcement", RpcTarget.All, sb.ToString(), 2500);
+                            photonView.RPC("Go", LocalPlayerList[me]);
+                        }
+                        else
+                        {
+                            player.endRound();
+                            photonView.RPC("Go", LocalPlayerList[(me + 1) % total]);
+                        }
+                    }
+                    else
+                    {
+                        player.endRound();
+                        photonView.RPC("Go", LocalPlayerList[(me + 1) % total]);
+                    }
                 }
                 else
                 {
@@ -1011,7 +1050,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         }
     }
     
-    public void PlayCard()
+    public async Task PlayCard()
     {
         status = 0; 
         int[] Damages = new int[3];
@@ -1206,6 +1245,14 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 }
             }
             RefreshCards();
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine(LocalPlayerList[me].NickName + " 這個孬種");
+            sb.AppendLine("什麼也不敢做");
+            sb.AppendLine("難怪會失去她");
+            sb.Append(LocalPlayerList[me].NickName + " 抽取卡牌");
+            photonView.RPC("Announcement", RpcTarget.All, sb.ToString(), 2500);
+            PhotonNetwork.SendAllOutgoingCommands();
+            await Task.Delay(2600);
             photonView.RPC("Go", LocalPlayerList[(me + 1) % total]);
         }
         displaycount = 0;

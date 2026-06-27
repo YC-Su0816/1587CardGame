@@ -32,7 +32,7 @@ public class PXVII : PlayerBase
 
         StringBuilder sb = new StringBuilder();
         sb.AppendLine("穿上吊嘎，解放自我！");
-        sb.Append(handle.nickname + " 本回合攻擊力增加 30%！");
+        sb.Append(handle.nickname + " 本回合攻擊力增加 100%！");
 
         // 單純文字展演，不呼叫 GetCard 與 Played，所以這回合還能繼續出牌！
         handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 1500);
@@ -44,7 +44,7 @@ public class PXVII : PlayerBase
     {
         if (isSkillActive)
         {
-            for (int i = 0; i < 3; i++) attackRatio[i] = 1.3;
+            for (int i = 0; i < 3; i++) attackRatio[i] = 2;
         }
         else
         {

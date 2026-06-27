@@ -105,7 +105,7 @@ public class PXIII : PlayerBase
                 break;
         }
         handle.View.RPC("SetFromTo", RpcTarget.All, manager.me, manager.me);
-        handle.View.RPC("GetCard", RpcTarget.All, "unblockable", "dance");
+        handle.View.RPC("GetCard", RpcTarget.All, "medicine", "dance");
         handle.View.RPC("Played", RpcTarget.All, mine[0], mine[1], mine[2]);
         PhotonNetwork.SendAllOutgoingCommands();
     }

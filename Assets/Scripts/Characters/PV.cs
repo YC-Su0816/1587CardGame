@@ -59,7 +59,7 @@ public class PV : PlayerBase
             Damages[i] = (mine[i] - yours[i] + 1) / 2;
         }
         handle.View.RPC("SetFromTo", RpcTarget.All, manager.me, manager.targetnum);
-        handle.View.RPC("GetCard", RpcTarget.All, "unblockable", "king");
+        handle.View.RPC("GetCard", RpcTarget.All, "special", "king");
         handle.View.RPC("Played", RpcTarget.All, Damages[0], Damages[1], Damages[2]);
         //manager.setPlayerProperties((mine[0] + yours[0] + 1) / 2, (mine[1] + yours[1] + 1) / 2, (mine[2] + yours[2] + 1) / 2);
         flag = true;

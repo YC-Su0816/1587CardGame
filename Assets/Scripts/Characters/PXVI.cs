@@ -27,16 +27,16 @@ public class PXVI : PlayerBase
         int finalR = -5;
 
         StringBuilder sb = new StringBuilder();
-        sb.AppendLine("沒有什麼比得上一碗熱騰騰的滷味面，OK？");
+        sb.AppendLine("沒有什麼比得上一碗\n熱騰騰的滷味面，OK？");
 
-        string resultText = (mult > 1.0) ? "【大起】超大碗！(恢復x3)" : "【大落】只有一口...(恢復x0.2)";
+        string resultText = (mult > 1.0) ? "【大起】超大碗！" : "【大落】只有一口...";
         sb.Append(handle.nickname + " 吃麵觸發了 " + resultText);
 
         handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 2000);
 
         // 將目標設為自己，打出無法防禦的滷味面卡牌
         handle.View.RPC("SetFromTo", RpcTarget.All, manager.me, manager.me);
-        handle.View.RPC("GetCard", RpcTarget.All, "unblockable", "mian");
+        handle.View.RPC("GetCard", RpcTarget.All, "medicine", "mian");
 
         // 傳入經過大起大落計算後的數值
         handle.View.RPC("Played", RpcTarget.All, finalW, finalS, finalR);

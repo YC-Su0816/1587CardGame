@@ -28,39 +28,7 @@ public class PXI : PlayerBase
         defendAdd = new int[3];
         medAdd = new int[3];
     }
-    //public override void useSkill()
-    //{
-    //    StringBuilder sb = new StringBuilder();
-    //    sb.AppendLine("1..23，跳！");
-
-    //    if (manager.targetnum == -1) manager.targetnum = (manager.me + 1) % manager.total;
-
-    //    System.Random rand = new System.Random(Guid.NewGuid().GetHashCode());
-    //    if (rand.NextDouble() <= 0.7f)
-    //    {
-    //        sb.AppendLine("...Touch OUT！");
-    //        sb.Append(handle.nickname + " 使用了技能！");
-    //        handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 1500);
-
-    //        handle.View.RPC("SetFromTo", RpcTarget.All, manager.me, manager.targetnum);
-    //        handle.View.RPC("GetCard", RpcTarget.All, "attack", "volleyball");
-    //        handle.View.RPC("Played", RpcTarget.All, -10, -10, 0);
-    //    }
-    //    else
-    //    {
-    //        sb.AppendLine("...觸網+OUTSIDE！");
-    //        sb.Append(handle.nickname + " 攻擊失誤了！");
-    //        handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 1500);
-
-    //        handle.View.RPC("SetFromTo", RpcTarget.All, manager.me, manager.targetnum);
-    //        handle.View.RPC("GetCard", RpcTarget.All, "attack", "volleyball");
-    //        handle.View.RPC("Played", RpcTarget.All, 0, 0, 0);
-    //    }
-
-    //    // 【關鍵】：因為呼叫了 Played 走 attack 路線，交給對手回應，所以要把自己鎖死
-    //    manager.status = 0;
-    //    PhotonNetwork.SendAllOutgoingCommands();
-    //}
+    
     public override void useSkill()
     {
         StringBuilder sb = new StringBuilder();
