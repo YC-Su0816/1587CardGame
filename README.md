@@ -26,7 +26,6 @@ HI，感謝你參與《還沒決定好名字》的製作。
     * strengthen：強化攻擊
     * special：各種特殊卡牌
     * effect：效果顯示，不列入卡池
-    * (已移除)effectdefense
 * 勝利條件：當除了自己以外的玩家全部(社會性)死亡，你即為勝利者。
 
 # 如何協助
@@ -72,11 +71,11 @@ HI，感謝你參與《還沒決定好名字》的製作。
 
 ### 2.上傳這張卡牌在遊戲中的顯示
 請上傳大小在400x400以內的正方形.jpg檔，其實越小越好啦
-檔名必須是demo.jpg，存在/Assets/Resources/Tool/對應類別/ 裡面。
+檔名必須是demo.jpg，存在/Assets/Resources/image/Tool/對應類別/ 裡面。
 
 
 ### 3.將此卡加入對應類別的卡池中
-在/Assets/Resources/Tool/對應類別.txt 中加入demo並換行。
+在/Assets/Resources/pool/對應類別.txt 中加入demo並換行。
 ```
 ...前面有不少行
 demo
@@ -109,19 +108,19 @@ demo
 
 ### 3.上傳這張卡牌在遊戲中的顯示
 請上傳大小在400x400以內的正方形.jpg檔，其實越小越好啦
-檔名必須是demo.jpg，存在/Assets/Resources/Tool/special/ 裡面。
+檔名必須是demo.jpg，存在/Assets/Resources/image/Tool/special/ 裡面。
 
 
 ### 4.將此卡加入對應類別的卡池中
-在/Assets/Resources/text/Tool/special.txt 中加入三行。**這裡很特別**，請用boolean標註能否在自己的回合出此張牌，以及能否打出這張牌作為回應，之間以英文逗點隔開，不用空格。
+在/Assets/Resources/text/Tool/special.txt 中加入三行。**這裡很特別**，請用boolean標註能否在自己的回合出此張牌，能否打出這張牌作為回應，以及對方能不能回應。之間以英文逗點隔開，不用空格。
 ```
 ...前面有不少行
-demo,false,true
+demo,false,true,false
 ```
-例如這樣代表demo不能主動打出，但可作為回應牌使用。
+例如這樣代表demo不能主動打出，但可作為回應牌使用，對方不可回應。
 
 此外，/Assets/Resources/text/CCard/ 裡面有30位電神的技能介紹與數值，前三行對應代三項數值，第四、五行是被動技能的名稱與內容，第676767676767行是主動技能的名稱和內容，第八行是主動技能的冷卻時間，如果有不滿意或者是有任何建議都可以提，我不會聽。好啦我會改:3
-
+也歡迎提出意見修改那些看起來很敷衍的技能。
 
 # 其他
 當卡牌累積到到一定數量後，我們就可以來內測啦~ 我很清楚我的能力，肯定是有數不清的bug
