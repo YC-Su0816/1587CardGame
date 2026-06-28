@@ -1,2 +1,6 @@
 test_strengthen
 spring_like
+chicken_wing
+expensive_equipment
+Lai
+stamp

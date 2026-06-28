@@ -1,2 +1,7 @@
 test_multiattack
 t_equals_mg
+fallen_leaves
+fallen_tree
+masterbation
+mc4
+two_player_game

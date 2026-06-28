@@ -2,3 +2,7 @@ test_special,true,false,false
 test_reflect,false,true,true
 all_in_vain,false,true,false
 mate,true,false,false
+femboy1,true,false,false
+femboy2,true,false,false
+nan_bro,true,false,false
+nameless_doll,true,false,false
