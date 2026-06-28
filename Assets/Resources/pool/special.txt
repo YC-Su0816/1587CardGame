@@ -1,3 +1,4 @@
 test_special,true,false,false
 test_reflect,false,true,true
 all_in_vain,false,true,false
+mate,true,false,false
