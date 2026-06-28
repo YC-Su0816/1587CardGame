@@ -51,20 +51,20 @@ public class ToolDisplayController : MonoBehaviour
                 }
                 else
                 {
-                    toolname = "¹p¹q´u";
-                    discription = "·sª©OP¯«¾¹";
+                    toolname = "é›·é›»æˆŸ";
+                    discription = "æ–°ç‰ˆOPç¥å™¨";
                 }
-                if (w < 0) tooleff += "¶Ë´¼" + (-w) + " ";
-                else if (w > 0) tooleff += "ªv´¼" + w + " ";
+                if (w < 0) tooleff += "å‚·æ™º" + (-w) + " ";
+                else if (w > 0) tooleff += "æ²»æ™º" + w + " ";
 
-                if (s < 0) tooleff += "¶ËÅé" + (-s) + " ";
-                else if (s > 0) tooleff += "ªvÅé" + s + " ";
+                if (s < 0) tooleff += "å‚·é«”" + (-s) + " ";
+                else if (s > 0) tooleff += "æ²»é«”" + s + " ";
 
-                if (r < 0) tooleff += "¶ËÅA" + (-r) + " ";
-                else if (r > 0) tooleff += "ªvÅA" + r + " ";
+                if (r < 0) tooleff += "å‚·è­½" + (-r) + " ";
+                else if (r > 0) tooleff += "æ²»è­½" + r + " ";
 
                 tooleff = tooleff.Trim();
-                if (string.IsNullOrEmpty(tooleff)) tooleff = "µL®ÄªG";
+                if (string.IsNullOrEmpty(tooleff)) tooleff = "ç„¡æ•ˆæœ";
                 break;
             case "multiattack":
                 if (det != null)
@@ -79,21 +79,21 @@ public class ToolDisplayController : MonoBehaviour
                 }
                 else
                 {
-                    toolname = "¹p¹q´u";
-                    discription = "·sª©OP¯«¾¹";
+                    toolname = "é›·é›»æˆŸ";
+                    discription = "æ–°ç‰ˆOPç¥å™¨";
                 }
-                toolname += " (¸s)";
-                if (w < 0) tooleff += "¶Ë´¼" + (-w) + " ";
-                else if (w > 0) tooleff += "ªv´¼" + w + " ";
+                toolname += " (ç¾¤)";
+                if (w < 0) tooleff += "å‚·æ™º" + (-w) + " ";
+                else if (w > 0) tooleff += "æ²»æ™º" + w + " ";
 
-                if (s < 0) tooleff += "¶ËÅé" + (-s) + " ";
-                else if (s > 0) tooleff += "ªvÅé" + s + " ";
+                if (s < 0) tooleff += "å‚·é«”" + (-s) + " ";
+                else if (s > 0) tooleff += "æ²»é«”" + s + " ";
 
-                if (r < 0) tooleff += "¶ËÅA" + (-r) + " ";
-                else if (r > 0) tooleff += "ªvÅA" + r + " ";
+                if (r < 0) tooleff += "å‚·è­½" + (-r) + " ";
+                else if (r > 0) tooleff += "æ²»è­½" + r + " ";
 
                 tooleff = tooleff.Trim();
-                if (string.IsNullOrEmpty(tooleff)) tooleff = "µL®ÄªG";
+                if (string.IsNullOrEmpty(tooleff)) tooleff = "ç„¡æ•ˆæœ";
                 break;
             case "defense":
                 if (det != null)
@@ -108,19 +108,19 @@ public class ToolDisplayController : MonoBehaviour
                 }
                 else
                 {
-                    toolname = "­ì¥Û";
-                    discription = "µ}¦³§÷®Æ";
+                    toolname = "åŸçŸ³";
+                    discription = "ç¨€æœ‰ææ–™";
                 }
                 if (!forDisplay || num == 0)
                 {
-                    if (w < 0) tooleff += "¯Ó´¼" + (-w) + " ";
-                    else if (w > 0) tooleff += "´¼¨¾" + w + " ";
+                    if (w < 0) tooleff += "è€—æ™º" + (-w) + " ";
+                    else if (w > 0) tooleff += "æ™ºé˜²" + w + " ";
 
-                    if (s < 0) tooleff += "¯ÓÅé" + (-s) + " ";
-                    else if (s > 0) tooleff += "Åé¨¾" + s + " ";
+                    if (s < 0) tooleff += "è€—é«”" + (-s) + " ";
+                    else if (s > 0) tooleff += "é«”é˜²" + s + " ";
 
-                    if (r < 0) tooleff += "¯ÓÅA" + (-r) + " ";
-                    else if (r > 0) tooleff += "ÅA¨¾" + r + " ";
+                    if (r < 0) tooleff += "è€—è­½" + (-r) + " ";
+                    else if (r > 0) tooleff += "è­½é˜²" + r + " ";
                 }
                 else
                 {
@@ -140,19 +140,19 @@ public class ToolDisplayController : MonoBehaviour
                 }
                 else
                 {
-                    toolname = "¤O¶qÃÄ¤ôII";
-                    discription = "©_§®ªºÃÄ¤ô";
+                    toolname = "åŠ›é‡è—¥æ°´II";
+                    discription = "å¥‡å¦™çš„è—¥æ°´";
                 }
                 if (!forDisplay)
                 {
-                    if (w < 0) tooleff += "¼W´¼¶Ë" + (-w) + " ";
-                    else if (w > 0) tooleff += "´î´¼¶Ë" + w + " ";
+                    if (w < 0) tooleff += "å¢æ™ºå‚·" + (-w) + " ";
+                    else if (w > 0) tooleff += "æ¸›æ™ºå‚·" + w + " ";
 
-                    if (s < 0) tooleff += "¼WÅé¶Ë" + (-s) + " ";
-                    else if (s > 0) tooleff += "´îÅé¶Ë" + s + " ";
+                    if (s < 0) tooleff += "å¢é«”å‚·" + (-s) + " ";
+                    else if (s > 0) tooleff += "æ¸›é«”å‚·" + s + " ";
 
-                    if (r < 0) tooleff += "¼WÅA¶Ë" + (-r) + " ";
-                    else if (r > 0) tooleff += "´îÅA¶Ë" + r + " ";
+                    if (r < 0) tooleff += "å¢è­½å‚·" + (-r) + " ";
+                    else if (r > 0) tooleff += "æ¸›è­½å‚·" + r + " ";
                 }
                 else
                 {
@@ -173,22 +173,22 @@ public class ToolDisplayController : MonoBehaviour
                 }
                 else
                 {
-                    toolname = "¯S®í¥dµP";
-                    discription = "¾Ö¦³¿W¯Sªº®ÄªG";
-                    tooleff = "¯S®íµo°Ê";
+                    toolname = "ç‰¹æ®Šå¡ç‰Œ";
+                    discription = "æ“æœ‰ç¨ç‰¹çš„æ•ˆæœ";
+                    tooleff = "ç‰¹æ®Šç™¼å‹•";
                 }
                 
                 break;
             case "unblockable":
                 if(face == "self_defense")
                 {
-                    toolname = "¨¾¨­³N";
-                    discription = "¤£­n¸I§Ú¡I";
-                    if (w < 0) tooleff += "¶Ë´¼" + (-w) + " ";
+                    toolname = "é˜²èº«è¡“";
+                    discription = "ä¸è¦ç¢°æˆ‘ï¼";
+                    if (w < 0) tooleff += "å‚·æ™º" + (-w) + " ";
 
-                    if (s < 0) tooleff += "¶ËÅé" + (-s) + " ";
+                    if (s < 0) tooleff += "å‚·é«”" + (-s) + " ";
 
-                    if (r < 0) tooleff += "¶ËÅA" + (-r) + " "; 
+                    if (r < 0) tooleff += "å‚·è­½" + (-r) + " "; 
                 }
                 if (det != null)
                 {
@@ -203,9 +203,9 @@ public class ToolDisplayController : MonoBehaviour
                 }
                 else
                 {
-                    toolname = "¯S®í¥dµP";
-                    discription = "¾Ö¦³¿W¯Sªº®ÄªG";
-                    tooleff = "¯S®íµo°Ê";
+                    toolname = "ç‰¹æ®Šå¡ç‰Œ";
+                    discription = "æ“æœ‰ç¨ç‰¹çš„æ•ˆæœ";
+                    tooleff = "ç‰¹æ®Šç™¼å‹•";
                 }
 
                 break;

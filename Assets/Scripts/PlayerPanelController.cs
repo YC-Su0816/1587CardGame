@@ -14,25 +14,25 @@ public class PlayerPanelController : MonoBehaviourPunCallbacks
 {
     public class Eff
     {
-        public GameObject obj;       // µe­±¤Wªº¤p¹Ï¥Üª«¥ó
-        public string id;            // ®ÄªG¥N¸¹ (ex: "disappear", "poison")
-        public string displayName;   // Åã¥Üªº¤¤¤å¦WºÙ (ex: "Áô¨­", "¤¤¬r")
-        public string description;   // ÂIÀ»Åã¥Üªº¸Ô²Ó¸ê°T
-        public int lastRound;        // ³Ñ¾l¦^¦X¼Æ (-1 ¥Nªí±`¾n)
-        public bool isPermanent;     // ¬O§_¬°±`¾n®ÄªG
-        public bool canCleanByMed;   // ¯à§_³Q¯S©w¥dµP(medicine)®ø°£
+        public GameObject obj;       // ç•«é¢ä¸Šçš„å°åœ–ç¤ºç‰©ä»¶
+        public string id;            // æ•ˆæœä»£è™Ÿ (ex: "disappear", "poison")
+        public string displayName;   // é¡¯ç¤ºçš„ä¸­æ–‡åç¨± (ex: "éš±èº«", "ä¸­æ¯’")
+        public string description;   // é»æ“Šé¡¯ç¤ºçš„è©³ç´°è³‡è¨Š
+        public int lastRound;        // å‰©é¤˜å›åˆæ•¸ (-1 ä»£è¡¨å¸¸é§)
+        public bool isPermanent;     // æ˜¯å¦ç‚ºå¸¸é§æ•ˆæœ
+        public bool canCleanByMed;   // èƒ½å¦è¢«ç‰¹å®šå¡ç‰Œ(medicine)æ¶ˆé™¤
     }
 
-    // ®ÄªGÀRºA¸ê®Æ®w (¬dªíªk)¡G§â©Ò¦³®ÄªGªºÄİ©Ê¼g¦b³o¸Ì¡A¤è«K¥¼¨ÓÀH®É·s¼W
+    // æ•ˆæœéœæ…‹è³‡æ–™åº« (æŸ¥è¡¨æ³•)ï¼šæŠŠæ‰€æœ‰æ•ˆæœçš„å±¬æ€§å¯«åœ¨é€™è£¡ï¼Œæ–¹ä¾¿æœªä¾†éš¨æ™‚æ–°å¢
     private readonly Dictionary<string, (string name, string desc, bool isPerm, bool canClean)> effectDatabase
         = new Dictionary<string, (string, string, bool, bool)>()
     {
-        // ®æ¦¡: { "®ÄªG¥N¸¹", ("Åã¥Ü¦WºÙ", "¸Ô²Ó±Ô­z¤å¦r", ¬O§_±`¾n, ¯à§_³QÃÄª«®ø°£) }
-        { "disappear", ("¯«Áô", "¤£¥i¿ï¤¤¡A¦^´_ª¬ºA¡C", true, false) }, // ±`¾n¡A¤£¥i°£
-        { "sleep",    ("¨IºÎ", "¤£¥i¿ï¤¤¡A²¤¬°­°§Cª¬ºA¡C", false, true) },  // «D±`¾n¡A¥i³QÃÄ®ø°£
-        { "dizzy",      ("¥¢¯«", "¨C¦^¦X¤Ö¥d¤ù¡C", false, true) },
-        { "21water",     ("¬X¤ô", "­°§ğ¡B¼W¨¾¡C", true, false) },
-        { "21knife",     ("¿û¤M", "¼W§ğ¡B¯}¨¾¡C", true, false) }
+        // æ ¼å¼: { "æ•ˆæœä»£è™Ÿ", ("é¡¯ç¤ºåç¨±", "è©³ç´°æ•˜è¿°æ–‡å­—", æ˜¯å¦å¸¸é§, èƒ½å¦è¢«è—¥ç‰©æ¶ˆé™¤) }
+        { "disappear", ("ç¥éš±", "ä¸å¯é¸ä¸­ï¼Œå›å¾©ç‹€æ…‹ã€‚", true, false) }, // å¸¸é§ï¼Œä¸å¯é™¤
+        { "sleep",    ("æ²‰ç¡", "ä¸å¯é¸ä¸­ï¼Œç•¥ç‚ºé™ä½ç‹€æ…‹ã€‚", false, true) },  // éå¸¸é§ï¼Œå¯è¢«è—¥æ¶ˆé™¤
+        { "dizzy",      ("å¤±ç¥", "æ¯å›åˆå°‘å¡ç‰‡ã€‚", false, true) },
+        { "21water",     ("æŸ”æ°´", "é™æ”»ã€å¢é˜²ã€‚", true, false) },
+        { "21knife",     ("é‹¼åˆ€", "å¢æ”»ã€ç ´é˜²ã€‚", true, false) }
     };
 
     public List<Eff> effectlist;
@@ -85,9 +85,9 @@ public class PlayerPanelController : MonoBehaviourPunCallbacks
     }
     void UpdateProperties()
     {
-        wis.text = "´¼¼z¡G" + Wisdom.ToString() + "/" + maxWisdom.ToString();
-        stren.text = "Åé¤O¡G" + Strength.ToString() + "/" + maxStrength.ToString();
-        rep.text = "ÁnÅA¡G" + Reputation.ToString() + "/" + maxReputation.ToString();
+        wis.text = "æ™ºæ…§ï¼š" + Wisdom.ToString() + "/" + maxWisdom.ToString();
+        stren.text = "é«”åŠ›ï¼š" + Strength.ToString() + "/" + maxStrength.ToString();
+        rep.text = "è²è­½ï¼š" + Reputation.ToString() + "/" + maxReputation.ToString();
     }
     // Update is called once per frame
     void Update()
@@ -107,16 +107,16 @@ public class PlayerPanelController : MonoBehaviourPunCallbacks
         
         return false;
     }
-    // ­×§ï«áªº AddEffect¡G²{¦b¥u­n¶Ç®ÄªG¥N¸¹»P«ùÄò¦^¦X§Y¥i
-    public void AddEffect(string effId, int round, bool can) // «O¯d­ì¥» PUN ©I¥sªº°Ñ¼Æ¤¶­±
+    // ä¿®æ”¹å¾Œçš„ AddEffectï¼šç¾åœ¨åªè¦å‚³æ•ˆæœä»£è™Ÿèˆ‡æŒçºŒå›åˆå³å¯
+    public void AddEffect(string effId, int round, bool can) // ä¿ç•™åŸæœ¬ PUN å‘¼å«çš„åƒæ•¸ä»‹é¢
     {
-        // ¦pªG¸ê®Æ®w¸Ì¨S¦³©w¸q³o­Ó®ÄªG¡Aµ¹­Ó¹w³]­È¨¾¤î±Y¼ì
+        // å¦‚æœè³‡æ–™åº«è£¡æ²’æœ‰å®šç¾©é€™å€‹æ•ˆæœï¼Œçµ¦å€‹é è¨­å€¼é˜²æ­¢å´©æ½°
         string dName = effId;
-        string dDesc = "¥¼ª¾®ÄªG";
-        bool isPerm = (round == -1); // ¦pªG¶Ç¤J -1 «h¦Û°Êµø¬°±`¾n
+        string dDesc = "æœªçŸ¥æ•ˆæœ";
+        bool isPerm = (round == -1); // å¦‚æœå‚³å…¥ -1 å‰‡è‡ªå‹•è¦–ç‚ºå¸¸é§
         bool canClean = can;
 
-        // ±q¸ê®Æ®w¼´¨ú¸Ô²Ó³]©w
+        // å¾è³‡æ–™åº«æ’ˆå–è©³ç´°è¨­å®š
         if (effectDatabase.TryGetValue(effId, out var data))
         {
             dName = data.name;
@@ -125,10 +125,10 @@ public class PlayerPanelController : MonoBehaviourPunCallbacks
             canClean = data.canClean;
         }
 
-        // ¥Í¦¨ UI ¤p¹Ï¥Ü
+        // ç”Ÿæˆ UI å°åœ–ç¤º
         GameObject effectObj = Instantiate(ef, gameObject.GetComponent<Transform>());
 
-        // ¶ñ¼g¸ê®Æµ²ºc
+        // å¡«å¯«è³‡æ–™çµæ§‹
         Eff t = new Eff
         {
             obj = effectObj,
@@ -141,19 +141,19 @@ public class PlayerPanelController : MonoBehaviourPunCallbacks
         };
         effectlist.Add(t);
 
-        // --- ¸Ñ¨M»İ¨D 3¡G±N¸ê®Æ¶ëµ¹¤p¹Ï¥Üªº Controller ---
+        // --- è§£æ±ºéœ€æ±‚ 3ï¼šå°‡è³‡æ–™å¡çµ¦å°åœ–ç¤ºçš„ Controller ---
         EffectController controller = effectObj.GetComponent<EffectController>();
         controller.setName(dName);
-        controller.describe = dDesc; // §â¸ê®Æ®wªº´y­z¶ë¹L¥h¡I
-        controller.setRound(t.isPermanent ? "±`¾n" : t.lastRound.ToString());
+        controller.describe = dDesc; // æŠŠè³‡æ–™åº«çš„æè¿°å¡éå»ï¼
+        controller.setRound(t.isPermanent ? "å¸¸é§" : t.lastRound.ToString());
 
-        // ³]©w¤p¹Ï¥Ü¹Ï¤ù
+        // è¨­å®šå°åœ–ç¤ºåœ–ç‰‡
         effectObj.GetComponent<UnityEngine.UI.Image>().sprite = Resources.Load<Sprite>("image/Tool/effect/" + effId);
 
         updateEffectPosition();
     }
 
-    // ­×§ï«áªº UpdateEffect¡G¨C¦^¦X©I¥s®É¡A±`¾n®ÄªG¤£¦©¦^¦X
+    // ä¿®æ”¹å¾Œçš„ UpdateEffectï¼šæ¯å›åˆå‘¼å«æ™‚ï¼Œå¸¸é§æ•ˆæœä¸æ‰£å›åˆ
     public void UpdateEffect()
     {
         if (effectlist == null) return;
@@ -163,23 +163,23 @@ public class PlayerPanelController : MonoBehaviourPunCallbacks
         {
             if (effectlist[i].isPermanent)
             {
-                // ±`¾n®ÄªG¡G¤£¦©´î¦^¦X¡Aª½±µ¬İ¤U¤@­Ó
+                // å¸¸é§æ•ˆæœï¼šä¸æ‰£æ¸›å›åˆï¼Œç›´æ¥çœ‹ä¸‹ä¸€å€‹
                 i++;
                 continue;
             }
 
-            // «D±`¾n®ÄªG¡G¦^¦X¼Æ - 1
+            // éå¸¸é§æ•ˆæœï¼šå›åˆæ•¸ - 1
             effectlist[i].lastRound--;
 
             if (effectlist[i].lastRound > 0)
             {
-                // §ó·s¤p¹Ï¥Ü¤WÅã¥Üªº¼Æ¦r
+                // æ›´æ–°å°åœ–ç¤ºä¸Šé¡¯ç¤ºçš„æ•¸å­—
                 effectlist[i].obj.GetComponent<EffectController>().setRound(effectlist[i].lastRound.ToString());
                 i++;
             }
             else
             {
-                // ¦^¦Xµ²§ô¡A¾P·´®ÄªG
+                // å›åˆçµæŸï¼ŒéŠ·æ¯€æ•ˆæœ
                 Destroy(effectlist[i].obj);
                 effectlist.RemoveAt(i);
                 updateEffectPosition();
@@ -187,7 +187,7 @@ public class PlayerPanelController : MonoBehaviourPunCallbacks
         }
     }
 
-    // ¡i·s¥\¯à¡j¡G·íª±®a¨Ï¥Î Medicine ¥d¤ù®É¡A©I¥s¦¹¨ç¦¡²M°£¥i³Q®ø°£ªº®ÄªG
+    // ã€æ–°åŠŸèƒ½ã€‘ï¼šç•¶ç©å®¶ä½¿ç”¨ Medicine å¡ç‰‡æ™‚ï¼Œå‘¼å«æ­¤å‡½å¼æ¸…é™¤å¯è¢«æ¶ˆé™¤çš„æ•ˆæœ
     public void RemoveMedicineEffects()
     {
         int i = 0;
@@ -207,20 +207,20 @@ public class PlayerPanelController : MonoBehaviourPunCallbacks
     }
     public void RemoveEffect(string effId)
     {
-        // ±q°}¦C§À¤Ú©¹«e¹M¾ú¡A³o¼Ë§R°£¤¸¯À®É¤~¤£·|¼vÅTÁÙ¨SÀË¬d¨ìªº Index
+        // å¾é™£åˆ—å°¾å·´å¾€å‰éæ­·ï¼Œé€™æ¨£åˆªé™¤å…ƒç´ æ™‚æ‰ä¸æœƒå½±éŸ¿é‚„æ²’æª¢æŸ¥åˆ°çš„ Index
         for (int i = effectlist.Count - 1; i >= 0; i--)
         {
             if (effectlist[i].id == effId)
             {
-                // 1. ºR·´µe­±¤Wªº UI ¤p¹Ï¥Ü
+                // 1. æ‘§æ¯€ç•«é¢ä¸Šçš„ UI å°åœ–ç¤º
                 Destroy(effectlist[i].obj);
 
-                // 2. ±q¸ê®Æ°}¦C¤¤²¾°£
+                // 2. å¾è³‡æ–™é™£åˆ—ä¸­ç§»é™¤
                 effectlist.RemoveAt(i);
             }
         }
 
-        // 3. §R°£§¹²¦«á¡A©I¥s§A­ì¥»¼g¦nªº±Æ¦C¨ç¦¡¡AÅı³Ñ¤Uªº¹Ï¥Ü©¹«e¾aÃl
+        // 3. åˆªé™¤å®Œç•¢å¾Œï¼Œå‘¼å«ä½ åŸæœ¬å¯«å¥½çš„æ’åˆ—å‡½å¼ï¼Œè®“å‰©ä¸‹çš„åœ–ç¤ºå¾€å‰é æ”
         updateEffectPosition();
     }
     public void updateEffectPosition()

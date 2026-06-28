@@ -37,8 +37,8 @@ public class PV : PlayerBase
     public override void useSkill()
     {
         StringBuilder sb = new StringBuilder();
-        sb.AppendLine("¨£¨ì¯«...¬°¦ó¤£¸÷¡H");
-        sb.Append(handle.nickname + " ¨Ï¥Î¤F§Ş¯à¡I");
+        sb.AppendLine("è¦‹åˆ°ç¥...ç‚ºä½•ä¸è·ªï¼Ÿ");
+        sb.Append(handle.nickname + " ä½¿ç”¨äº†æŠ€èƒ½ï¼");
         handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 1500);
         if (manager.targetnum == -1)
         {
@@ -66,13 +66,13 @@ public class PV : PlayerBase
         PhotonNetwork.SendAllOutgoingCommands();
 
         //StringBuilder sb = new StringBuilder();
-        //sb.AppendLine("¨£¨ì¯«...¬°¦ó¤£¸÷¡H");
-        //sb.Append(handle.nickname + " ¨Ï¥Î¤F§Ş¯à¡I");
+        //sb.AppendLine("è¦‹åˆ°ç¥...ç‚ºä½•ä¸è·ªï¼Ÿ");
+        //sb.Append(handle.nickname + " ä½¿ç”¨äº†æŠ€èƒ½ï¼");
         //handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 1500);
 
         //if (manager.targetnum == -1) manager.targetnum = (manager.me + 1) % manager.total;
 
-        //int[] mine = manager.handle.getProperties(); // ¨ú¥N­ì¥»ªº CustomProperties ¼gªk
+        //int[] mine = manager.handle.getProperties(); // å–ä»£åŸæœ¬çš„ CustomProperties å¯«æ³•
         //int[] yours = new int[3];
         //yours[0] = (int)manager.LocalPlayerList[manager.targetnum].CustomProperties["Wisdom"];
         //yours[1] = (int)manager.LocalPlayerList[manager.targetnum].CustomProperties["Strength"];
@@ -81,17 +81,17 @@ public class PV : PlayerBase
         //int[] Damages = new int[3];
         //for (int i = 0; i < 3; ++i)
         //{
-        //    // ºâ¥X¹ï¤â­n¦©¦h¤Ö¦å¤~¯à¹F¨ì¥­§¡­È (¥Î­t¼Æªí¥Ü¶Ë®`)
+        //    // ç®—å‡ºå°æ‰‹è¦æ‰£å¤šå°‘è¡€æ‰èƒ½é”åˆ°å¹³å‡å€¼ (ç”¨è² æ•¸è¡¨ç¤ºå‚·å®³)
         //    Damages[i] = -Mathf.Max(0, yours[i] - (mine[i] + yours[i]) / 2);
         //}
 
         //handle.View.RPC("SetFromTo", RpcTarget.All, manager.me, manager.targetnum);
 
-        //// ¡iÃöÁä§ï°Ê¡j¡G¨Ï¥Î unblockable Ãş«¬¡I¨Ã²¾°£¿ù»~ªº Responded ©I¥s
+        //// ã€é—œéµæ”¹å‹•ã€‘ï¼šä½¿ç”¨ unblockable é¡å‹ï¼ä¸¦ç§»é™¤éŒ¯èª¤çš„ Responded å‘¼å«
         //handle.View.RPC("GetCard", RpcTarget.All, "unblockable", "king");
         //handle.View.RPC("Played", RpcTarget.All, Damages[0], Damages[1], Damages[2]);
 
-        //// §ğÀ»ªÌ¥»¦aºİª½±µÀò±o¥­§¡«áªº¦å¶q
+        //// æ”»æ“Šè€…æœ¬åœ°ç«¯ç›´æ¥ç²å¾—å¹³å‡å¾Œçš„è¡€é‡
         //manager.UpdatePlayerProperties(Mathf.Max(0, (mine[0] + yours[0]) / 2 - mine[0]),
         //                               Mathf.Max(0, (mine[1] + yours[1]) / 2 - mine[1]),
         //                               Mathf.Max(0, (mine[2] + yours[2]) / 2 - mine[2]));
@@ -127,9 +127,9 @@ public class PV : PlayerBase
             s = 10;
             r = 10;
             hasRevived = true;
-            return true; // ÄdºI¦¨¥\¡A´_¬¡¡I
+            return true; // æ””æˆªæˆåŠŸï¼Œå¾©æ´»ï¼
         }
-        return false; // ¤w¸g´_¬¡¹L¤F¡A¨Ä¨Ä¦º¤`
+        return false; // å·²ç¶“å¾©æ´»éäº†ï¼Œä¹–ä¹–æ­»äº¡
     }
     // Update is called once per frame
     void Update()

@@ -98,4 +98,7 @@ Desktop.ini
 
 # Linux
 .directory
-*~
+
+# Others
+.vscode/
+*.slnx

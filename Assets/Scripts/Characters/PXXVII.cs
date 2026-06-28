@@ -14,51 +14,51 @@ public class PXXVII : PlayerBase
         attackAdd = new int[3]; defendAdd = new int[3]; medAdd = new int[3];
     }
 
-    // ³Q°Ê§Ş¯à¡G·R±¡ªø¶]
+    // è¢«å‹•æŠ€èƒ½ï¼šæ„›æƒ…é•·è·‘
     public override void newRound()
     {
-        // ¨C¦^¦X¶}©l®É«ì´_©Ò¦³¼Æ­È 1 ÂI
+        // æ¯å›åˆé–‹å§‹æ™‚æ¢å¾©æ‰€æœ‰æ•¸å€¼ 1 é»
         manager.UpdatePlayerProperties(1, 1, 1);
 
-        // ¼½­Ó¤p´£¥Ü©ñ°{
-        manager.photonView.RPC("Announcement", RpcTarget.All, handle.nickname + " ¨ü¨ì·R±¡ªº´ş¼í¡A«ì´_¤F©Ò¦³¼Æ­È¡I", 1500);
+        // æ’­å€‹å°æç¤ºæ”¾é–ƒ
+        manager.photonView.RPC("Announcement", RpcTarget.All, handle.nickname + " å—åˆ°æ„›æƒ…çš„æ»‹æ½¤ï¼Œæ¢å¾©äº†æ‰€æœ‰æ•¸å€¼ï¼", 1500);
     }
 
-    // ¥D°Ê§Ş¯à¡G­^¤å°­¤~ (§N«o 6 ¦^¦X¥Ñ¨t²Î±±ºŞ)
+    // ä¸»å‹•æŠ€èƒ½ï¼šè‹±æ–‡é¬¼æ‰ (å†·å» 6 å›åˆç”±ç³»çµ±æ§ç®¡)
     public override void useSkill()
     {
-        // ±Ò°Ê¿y§ï Buff
+        // å•Ÿå‹•ç¯¡æ”¹ Buff
         isSkillActive = true;
 
         StringBuilder sb = new StringBuilder();
-        sb.AppendLine("¦p¦P¤¤¤åÂ½Ä¶¦¨­^¤å®Éªº»yªk¿ù¶Ã...");
-        sb.Append(handle.nickname + " µo°Ê¤F­^¤å°­¤~¡I");
+        sb.AppendLine("å¦‚åŒä¸­æ–‡ç¿»è­¯æˆè‹±æ–‡æ™‚çš„èªæ³•éŒ¯äº‚...");
+        sb.Append(handle.nickname + " ç™¼å‹•äº†è‹±æ–‡é¬¼æ‰ï¼");
 
-        // ³æ¯Â¤å¦r®iºt¡A¤£±j¨îµ²§ô¦^¦X¡Aª±®a±µ¤U¨Ó¥i¥H°¨¤W¥´¥X§ğÀ»µP
+        // å–®ç´”æ–‡å­—å±•æ¼”ï¼Œä¸å¼·åˆ¶çµæŸå›åˆï¼Œç©å®¶æ¥ä¸‹ä¾†å¯ä»¥é¦¬ä¸Šæ‰“å‡ºæ”»æ“Šç‰Œ
         handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 2000);
         PhotonNetwork.SendAllOutgoingCommands();
     }
 
-    // ÄdºI¾¹¡G¹ê§@µo°e¥X¥h«eªº¼Æ­È¿y§ï
+    // æ””æˆªå™¨ï¼šå¯¦ä½œç™¼é€å‡ºå»å‰çš„æ•¸å€¼ç¯¡æ”¹
     public override void overrideFinalDamage(ref int w, ref int s, ref int r)
     {
-        // ½T«O§Ş¯à¤w±Ò°Ê¡A¦Ó¥B³o±i¯uªº¬O¡u§ğÀ»µP¡v(¦³³y¦¨­t¼Æ¶Ë®`)
+        // ç¢ºä¿æŠ€èƒ½å·²å•Ÿå‹•ï¼Œè€Œä¸”é€™å¼µçœŸçš„æ˜¯ã€Œæ”»æ“Šç‰Œã€(æœ‰é€ æˆè² æ•¸å‚·å®³)
         if (isSkillActive && (w < 0 || s < 0 || r < 0))
         {
-            // ª`·N¡G¦]¬°¶Ë®`¬O¡u­t¼Æ¡v¡A©Ò¥H¦b¼Æ¾Ç¤W¦©³Ì¦hªº¦å¤Ï¦Ó¬O¡u³Ì¤p­È¡v
+            // æ³¨æ„ï¼šå› ç‚ºå‚·å®³æ˜¯ã€Œè² æ•¸ã€ï¼Œæ‰€ä»¥åœ¨æ•¸å­¸ä¸Šæ‰£æœ€å¤šçš„è¡€åè€Œæ˜¯ã€Œæœ€å°å€¼ã€
             int maxDamage = Mathf.Min(w, Mathf.Min(s, r));
 
-            // ±N¤T¶µÄİ©Êªº¶Ë®`¦P®É±j¨î§@¬°¸Ó³Ì¤j¶Ë®`
+            // å°‡ä¸‰é …å±¬æ€§çš„å‚·å®³åŒæ™‚å¼·åˆ¶ä½œç‚ºè©²æœ€å¤§å‚·å®³
             w = maxDamage;
             s = maxDamage;
             r = maxDamage;
 
-            // §ğÀ»µo®g«á¡A®ø¯Ó±¼³o¦¸ªº Buff
+            // æ”»æ“Šç™¼å°„å¾Œï¼Œæ¶ˆè€—æ‰é€™æ¬¡çš„ Buff
             isSkillActive = false;
         }
     }
 
-    // ¦pªG¥L³o¦^¦X¶}¤F§Ş¯à«o¨S§ğÀ»¡A¦^¦Xµ²§ô®É¦Û°Ê§â Buff ¨ú®ø±¼
+    // å¦‚æœä»–é€™å›åˆé–‹äº†æŠ€èƒ½å»æ²’æ”»æ“Šï¼Œå›åˆçµæŸæ™‚è‡ªå‹•æŠŠ Buff å–æ¶ˆæ‰
     public override void endRound()
     {
         isSkillActive = false;

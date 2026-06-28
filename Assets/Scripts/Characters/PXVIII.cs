@@ -15,32 +15,32 @@ public class PXVIII : PlayerBase
 
     public override void newRound() { }
 
-    // ¥D°Ê§Ş¯à¡G±·³õ
+    // ä¸»å‹•æŠ€èƒ½ï¼šæ§å ´
     public override void useSkill()
     {
         StringBuilder sb = new StringBuilder();
-        sb.AppendLine("Pioneer»PFarewell Neverland¬Ò¦³¥X®u¡C");
-        sb.Append(handle.nickname + " ¨Ï¥Î¤F±·³õ¡I");
+        sb.AppendLine("Pioneerèˆ‡Farewell Neverlandçš†æœ‰å‡ºå¸­ã€‚");
+        sb.Append(handle.nickname + " ä½¿ç”¨äº†æ§å ´ï¼");
         handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 1500);
 
         handle.View.RPC("SetFromTo", RpcTarget.All, manager.me, manager.me);
         handle.View.RPC("GetCard", RpcTarget.All, "medicine", "XVIIISkill");
 
-        // ®ø¯ÓÅé¤O2ÂI¡A«ì´_10ÂIÁnÅA (w=0, s=-2, r=10)
+        // æ¶ˆè€—é«”åŠ›2é»ï¼Œæ¢å¾©10é»è²è­½ (w=0, s=-2, r=10)
         handle.View.RPC("Played", RpcTarget.All, 0, -2, 10);
         PhotonNetwork.SendAllOutgoingCommands();
     }
 
-    // ³Q°Ê§Ş¯à¡G¯S§O®e©ö¦¨¬°ª±¯ºªº¥Ø¼Ğ
+    // è¢«å‹•æŠ€èƒ½ï¼šç‰¹åˆ¥å®¹æ˜“æˆç‚ºç©ç¬‘çš„ç›®æ¨™
     public override void updateDefend()
     {
         for (int i = 0; i < 3; i++)
         {
-            defendAdd[i] = -2; // ¨¾¿m­È±`¾n´î¤Ö2
+            defendAdd[i] = -2; // é˜²ç¦¦å€¼å¸¸é§æ¸›å°‘2
         }
     }
 
-    // ³Q°Ê§Ş¯à¡G¦Û§Ú³W¹º (¦^¦Xµ²§ô®É§P©w)
+    // è¢«å‹•æŠ€èƒ½ï¼šè‡ªæˆ‘è¦åŠƒ (å›åˆçµæŸæ™‚åˆ¤å®š)
     public override void endRound()
     {
         PlayerPanelController myPanel = manager.PlayerPanels[manager.me].GetComponent<PlayerPanelController>();
@@ -49,7 +49,7 @@ public class PXVIII : PlayerBase
             System.Random rand = new System.Random(Guid.NewGuid().GetHashCode());
             if (rand.NextDouble() <= 0.2f)
             {
-                manager.photonView.RPC("Announcement", RpcTarget.All, handle.nickname + " ¦Û§Ú³W¹º¡A¶i¤J¤F¯«Áô¡I", 1500);
+                manager.photonView.RPC("Announcement", RpcTarget.All, handle.nickname + " è‡ªæˆ‘è¦åŠƒï¼Œé€²å…¥äº†ç¥éš±ï¼", 1500);
                 manager.photonView.RPC("PutEffect", RpcTarget.All, manager.me, -1, "disappear");
             }
         }

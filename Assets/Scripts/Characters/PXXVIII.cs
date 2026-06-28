@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class PXXVIII : PlayerBase
 {
-    private bool tarotActive = false;  // �ޯ�O�_�o��
-    private bool tarotDamaged = false; // �o�ʴ����O�_������
+    private bool tarotActive = false;  // 技能是否發動
+    private bool tarotDamaged = false; // 發動期間是否有受傷
 
     public override void Init() {
         attackRatio = new double[3];
@@ -30,11 +30,11 @@ public class PXXVIII : PlayerBase
     public override void useSkill()
     {
         tarotActive = true;
-        tarotDamaged = false; // �o�ʮɭ��m���˧P�w
-        manager.photonView.RPC("Announcement", RpcTarget.All, handle.nickname + " �o�ʤF��ù�e�R�I", 1500);
+        tarotDamaged = false; // 發動時重置受傷判定
+        manager.photonView.RPC("Announcement", RpcTarget.All, handle.nickname + " 發動了塔羅占卜！", 1500);
     }
 
-    // �i�ѨM���D 2�j�G�u�n�����ˡA�N���h�^����
+    // 【解決問題 2】：只要有受傷，就失去回血資格
     public override void onTakeDamage(int w, int s, int r)
     {
         if (tarotActive)
@@ -47,47 +47,47 @@ public class PXXVIII : PlayerBase
     {
         if (tarotActive)
         {
-            // �Y��U����ʫe�u���������ˮ`�v
+            // 若到下次行動前「未受到任何傷害」
             if (!tarotDamaged)
             {
                 manager.UpdatePlayerProperties(10, 10, 10);
-                manager.photonView.RPC("Announcement", RpcTarget.All, handle.nickname + " ��ù�e�R�ͮġA�^�_�j�q���A�I", 1500);
+                manager.photonView.RPC("Announcement", RpcTarget.All, handle.nickname + " 塔羅占卜生效，回復大量狀態！", 1500);
             }
-            tarotActive = false; // ���A�Ѱ�
+            tarotActive = false; // 狀態解除
         }
     }
 
-    // �i�ѨM���D 1�j�G�u�_���u���v�~�P�����ƭ�
+    // 【解決問題 1】：只復活「剛剛」才致死的數值
     public override bool checkRevive(ref int w, ref int s, ref int r)
     {
         if (tarotActive)
         {
             bool revived = false;
 
-            // �Q�� handle ���o�u�o�o�ˮ`���U�h���e�v����l���A
+            // 利用 handle 取得「這發傷害扣下去之前」的原始狀態
             int[] oldProps = handle.getProperties();
 
-            // ����G�쥻�٬��� (old > 0) �B �{�b�Q�����F (new <= 0)
+            // 條件：原本還活著 (old > 0) 且 現在被打死了 (new <= 0)
             if (oldProps[0] > 0 && w <= 0) { w = 1; revived = true; }
             if (oldProps[1] > 0 && s <= 0) { s = 1; revived = true; }
             if (oldProps[2] > 0 && r <= 0) { r = 1; revived = true; }
 
             if (revived)
             {
-                tarotActive = false; // ���\�פU�P�R�ˡA��ù�P���ӱ�
+                tarotActive = false; // 成功擋下致命傷，塔羅牌消耗掉
                 return true;
             }
         }
         return false;
     }
 
-    // ���K�ɤW 28 �����Q�ʡG�K�̸s��
+    // 順便補上 28 號的被動：免疫群攻
     public override bool isImmuneToMultiAttack()
     {
         return true;
     }
 
-    // --- ��L������@���Ũ禡 ---
+    // --- 其他必須實作的空函式 ---
     public override void updateAttack() { }
     public override void updateDefend() { }
     public override void updateMed() { }

@@ -14,7 +14,7 @@ public class PI : PlayerBase
 
     public override void useSkill()
     {
-        // 1. ¨¾§b¡G¦pªG®i¥Ü°Ï¦³³Q«ö¤W¥hªº¥dµP¡A¥ýÀ°¦£²MªÅ
+        // 1. é˜²å‘†ï¼šå¦‚æžœå±•ç¤ºå€æœ‰è¢«æŒ‰ä¸ŠåŽ»çš„å¡ç‰Œï¼Œå…ˆå¹«å¿™æ¸…ç©º
         if (manager.displaycount > 0)
         {
             for (int i = 0; i < 7; ++i)
@@ -31,23 +31,23 @@ public class PI : PlayerBase
             manager.displaycount = 0;
         }
 
-        // 2. ¤å¦r®iºt
+        // 2. æ–‡å­—å±•æ¼”
         StringBuilder sb = new StringBuilder();
-        sb.AppendLine("(Âø°T)!&$*#&$%)#!%...");
-        sb.Append(handle.nickname + " ¶i¤J¤F¯«Áô¡I");
+        sb.AppendLine("(é›œè¨Š)!&$*#&$%)#!%...");
+        sb.Append(handle.nickname + " é€²å…¥äº†ç¥žéš±ï¼");
         handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 1500);
 
-        // 3. ©â¤T±i¥d
+        // 3. æŠ½ä¸‰å¼µå¡
         for (int i = 0; i < 3; i++)
         {
-            manager.PickACard(0.5f, "1"); // TODO: ­Y¥¼¨Ó¦³ÀH¾÷©â¥d¦À¡A¥i¦b¦¹´À´«
+            manager.PickACard(0.5f, "1"); // TODO: è‹¥æœªä¾†æœ‰éš¨æ©ŸæŠ½å¡æ± ï¼Œå¯åœ¨æ­¤æ›¿æ›
         }
         manager.RefreshCards();
 
-        // 4. ªþ¥[¡i¯«Áô¡j®ÄªG (-1 ¥Nªí±`¾n)
+        // 4. é™„åŠ ã€ç¥žéš±ã€‘æ•ˆæžœ (-1 ä»£è¡¨å¸¸é§)
         handle.View.RPC("PutEffect", RpcTarget.All, manager.me, -1, "disappear");
 
-        // 5. ¥ß§Yµ²§ô·í«e¦^¦X¡A¥æ´Îµ¹¤U¤@¦ì
+        // 5. ç«‹å³çµæŸç•¶å‰å›žåˆï¼Œäº¤æ£’çµ¦ä¸‹ä¸€ä½
         manager.status = 0;
         manager.player.endRound();
         handle.View.RPC("Go", manager.LocalPlayerList[(manager.me + 1) % manager.total]);
@@ -57,11 +57,11 @@ public class PI : PlayerBase
 
     public override bool checkImmune(string effectName)
     {
-        // ·Å¤å¾§¶®¡GµLªk³Qªþ¥[¥ô¦ó®ÄªG (±Æ°£¦Û¤v¬I©ñªº¡u¯«Áô¡v)
+        // æº«æ–‡å„’é›…ï¼šç„¡æ³•è¢«é™„åŠ ä»»ä½•æ•ˆæžœ (æŽ’é™¤è‡ªå·±æ–½æ”¾çš„ã€Œç¥žéš±ã€)
         if (effectName != "disappear")
         {
-            manager.photonView.RPC("Announcement", RpcTarget.All, handle.nickname + " ·Å¤å¾§¶®¡A§K¬Ì¤Fª¬ºA¡I", 1500);
-            return true; // ÄdºI¦¨¥\
+            manager.photonView.RPC("Announcement", RpcTarget.All, handle.nickname + " æº«æ–‡å„’é›…ï¼Œå…ç–«äº†ç‹€æ…‹ï¼", 1500);
+            return true; // æ””æˆªæˆåŠŸ
         }
         return false;
     }

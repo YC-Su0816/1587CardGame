@@ -50,7 +50,7 @@ public class CharacterCard : MonoBehaviour
             {
                 //obj.GetComponent<Transform>().localScale = picked;
                 obj.GetComponent<Transform>().localScale = Vector3.one * pickScale;
-                Debug.Log("¦³ÂI¨ì");
+                Debug.Log("æœ‰é»žåˆ°");
                 manager.GetComponent<PickingSceneManager>().picking = obj.name;
                 detailbutton.transform.position = Camera.main.WorldToScreenPoint(new Vector3((max.x+min.x)/2,max.y-0.3f,0));
                 detailbutton.gameObject.SetActive(true);
@@ -65,7 +65,7 @@ public class CharacterCard : MonoBehaviour
                 //obj.GetComponent<Transform>().localScale = normal;
 
                 obj.GetComponent<Transform>().localScale = Vector3.one * normScale;
-                Debug.Log("¨SÂI¨ì");
+                Debug.Log("æ²’é»žåˆ°");
             }
 
         }

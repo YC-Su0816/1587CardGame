@@ -4,9 +4,9 @@ using System.Text;
 
 public class PXXI : PlayerBase
 {
-    private bool isWater = false;  // ¹w³]¬° false¡A³o¼Ë²Ä¤@¦^¦X newRound ¤ÏÂà«á´N·|ÅÜ¦¨­è¦n¬O¬X¤ô
+    private bool isWater = false;  // é è¨­ç‚º falseï¼Œé€™æ¨£ç¬¬ä¸€å›åˆ newRound åè½‰å¾Œå°±æœƒè®Šæˆå‰›å¥½æ˜¯æŸ”æ°´
     private bool isInitUI = false;
-    private int cooldown = 0;      // ¥D°Ê§Ş¯à§N«o­p®É¾¹
+    private int cooldown = 0;      // ä¸»å‹•æŠ€èƒ½å†·å»è¨ˆæ™‚å™¨
 
     public override void Init()
     {
@@ -22,16 +22,16 @@ public class PXXI : PlayerBase
 
     public override void newRound()
     {
-        // 1. ¦©°£§N«o®É¶¡
+        // 1. æ‰£é™¤å†·å»æ™‚é–“
 
-        // 2. ¤Á´««¬ºA
+        // 2. åˆ‡æ›å‹æ…‹
         isWater = !isWater;
 
         string effectToAdd = isWater ? "21water" : "21knife";
         string effectToRemove = isWater ? "21knife" : "21water";
-        string formName = isWater ? "¡i¬X¤ô¡j" : "¡i¿û¤M¡j";
+        string formName = isWater ? "ã€æŸ”æ°´ã€‘" : "ã€é‹¼åˆ€ã€‘";
 
-        // 3. §ó·s UI ª¬ºA
+        // 3. æ›´æ–° UI ç‹€æ…‹
         if (isInitUI)
         {
             manager.photonView.RPC("RemoveEffect", RpcTarget.All, manager.me, effectToRemove);
@@ -39,30 +39,30 @@ public class PXXI : PlayerBase
         manager.photonView.RPC("PutEffect", RpcTarget.All, manager.me, 99, effectToAdd);
         isInitUI = true;
 
-        // 4. ¼s¼½¤Á´«³qª¾
-        manager.photonView.RPC("Announcement", RpcTarget.All, handle.nickname + " ¤Á´«¬°" + formName + "ª¬ºA¡I", 1500);
+        // 4. å»£æ’­åˆ‡æ›é€šçŸ¥
+        manager.photonView.RPC("Announcement", RpcTarget.All, handle.nickname + " åˆ‡æ›ç‚º" + formName + "ç‹€æ…‹ï¼", 1500);
     }
 
-    // ¥D°Ê§Ş¯à¡G©ê¤@¤U¹À
+    // ä¸»å‹•æŠ€èƒ½ï¼šæŠ±ä¸€ä¸‹å˜›
     public override void useSkill()
     {
-        // ®ø¯Ó¦Û¨­ 5 ÂI«HÅA
+        // æ¶ˆè€—è‡ªèº« 5 é»ä¿¡è­½
         manager.UpdatePlayerProperties(0, 0, -5);
 
         StringBuilder sb = new StringBuilder();
-        sb.AppendLine("¡u©yÄõ¤H¤Ñ¥Í±a¤s±a¤ô¡A©Ê®æ¸ÌÃø§K¦h¤@¥÷ÄŞ®oªº¬X±¡¡v");
-        sb.Append(handle.nickname + " µ¹¤F§A¤@­Ó¾Ö©ê¡I");
+        sb.AppendLine("ã€Œå®œè˜­äººå¤©ç”Ÿå¸¶å±±å¸¶æ°´ï¼Œæ€§æ ¼è£¡é›£å…å¤šä¸€ä»½å·å³¨çš„æŸ”æƒ…ã€");
+        sb.Append(handle.nickname + " çµ¦äº†ä½ ä¸€å€‹æ“æŠ±ï¼");
         handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 2500);
 
-        // ¦pªG¨S¦³¿ï©w¥Ø¼Ğ¡A¹w³]©ê¤U®a
+        // å¦‚æœæ²’æœ‰é¸å®šç›®æ¨™ï¼Œé è¨­æŠ±ä¸‹å®¶
         if (manager.targetnum == -1)
         {
             manager.targetnum = (manager.me + 1) % manager.total;
         }
 
-        // ¼s¼½¥Ø¼Ğ¨Ãµo®g§ğÀ» (³y¦¨´¼¤O 10¡BÅé¤O 10 ªº¶Ë®`)
+        // å»£æ’­ç›®æ¨™ä¸¦ç™¼å°„æ”»æ“Š (é€ æˆæ™ºåŠ› 10ã€é«”åŠ› 10 çš„å‚·å®³)
         handle.View.RPC("SetFromTo", RpcTarget.All, manager.me, manager.targetnum);
-        handle.View.RPC("GetCard", RpcTarget.All, "attack", "XXISkill"); // ³o¸Ìªº "hug" ¥i¥H´«¦¨§A¹ïÀ³ªº¾Ö©ê¥d­±¹Ï¥Ü
+        handle.View.RPC("GetCard", RpcTarget.All, "attack", "XXISkill"); // é€™è£¡çš„ "hug" å¯ä»¥æ›æˆä½ å°æ‡‰çš„æ“æŠ±å¡é¢åœ–ç¤º
         handle.View.RPC("Played", RpcTarget.All, -10, -10, 0);
         PhotonNetwork.SendAllOutgoingCommands();
     }
@@ -71,12 +71,12 @@ public class PXXI : PlayerBase
     {
         if (isWater)
         {
-            // ¬X¤ô¡G¶Ë®`­È´î¤Ö 30%
+            // æŸ”æ°´ï¼šå‚·å®³å€¼æ¸›å°‘ 30%
             attackRatio[0] = 0.7; attackRatio[1] = 0.7; attackRatio[2] = 0.7;
         }
         else
         {
-            // ¿û¤M¡G¶Ë®`­È¼W¥[ 40%
+            // é‹¼åˆ€ï¼šå‚·å®³å€¼å¢åŠ  40%
             attackRatio[0] = 1.4; attackRatio[1] = 1.4; attackRatio[2] = 1.4;
         }
     }
@@ -85,12 +85,12 @@ public class PXXI : PlayerBase
     {
         if (isWater)
         {
-            // ¬X¤ô¡G¨¾¿m­È¼W¥[ 40%
+            // æŸ”æ°´ï¼šé˜²ç¦¦å€¼å¢åŠ  40%
             defendRatio[0] = 1.4; defendRatio[1] = 1.4; defendRatio[2] = 1.4;
         }
         else
         {
-            // ¿û¤M¡G¨¾¿m­È´î¤Ö 30%
+            // é‹¼åˆ€ï¼šé˜²ç¦¦å€¼æ¸›å°‘ 30%
             defendRatio[0] = 0.7; defendRatio[1] = 0.7; defendRatio[2] = 0.7;
         }
     }

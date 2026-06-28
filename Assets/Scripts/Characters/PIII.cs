@@ -36,8 +36,8 @@ public class PIII : PlayerBase
     public override void useSkill()
     {
         StringBuilder sb = new StringBuilder();
-        sb.AppendLine("ÂÅ¤ú¤w³s½u");
-        sb.Append(handle.nickname + " ¨Ï¥Î¤F§Ş¯à¡I");
+        sb.AppendLine("è—ç‰™å·²é€£ç·š");
+        sb.Append(handle.nickname + " ä½¿ç”¨äº†æŠ€èƒ½ï¼");
         handle.View.RPC("PutEffect", RpcTarget.All, manager.me, 3, "headphone");
         handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 1000);
         PhotonNetwork.SendAllOutgoingCommands();

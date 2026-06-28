@@ -26,7 +26,7 @@ public class RoomSceneManager : MonoBehaviourPunCallbacks
         }
         else
         {
-            textRoomname.text = "¥Ø«e©Ğ¶¡¡G" + PhotonNetwork.CurrentRoom.Name;
+            textRoomname.text = "ç›®å‰æˆ¿é–“ï¼š" + PhotonNetwork.CurrentRoom.Name;
             if(PhotonNetwork.IsMasterClient)
             {
                 playerlist.text = PhotonNetwork.LocalPlayer.NickName;

@@ -32,13 +32,13 @@ public class PXI : PlayerBase
     public override void useSkill()
     {
         StringBuilder sb = new StringBuilder();
-        sb.AppendLine("1..23°A∏ı°I");
+        sb.AppendLine("1..23ÔºåË∑≥ÔºÅ");
         System.Random rand = new System.Random(Guid.NewGuid().GetHashCode());
         float rnd = (float)rand.NextDouble();
         if(rnd <= 0.7f)
         {
-            sb.AppendLine("...Touch OUT°I");
-            sb.Append(handle.nickname + " ®œ•Œ§FßﬁØ‡°I");
+            sb.AppendLine("...Touch OUTÔºÅ");
+            sb.Append(handle.nickname + " ‰ΩøÁî®‰∫ÜÊäÄËÉΩÔºÅ");
             handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 1500);
             if (manager.targetnum == -1)
             {
@@ -51,8 +51,8 @@ public class PXI : PlayerBase
         }
         else
         {
-            sb.AppendLine("...ƒ≤∫Ù+OUTSIDE°I");
-            sb.Append(handle.nickname + " ®œ•Œ§FßﬁØ‡°I");
+            sb.AppendLine("...Ëß∏Á∂≤+OUTSIDEÔºÅ");
+            sb.Append(handle.nickname + " ‰ΩøÁî®‰∫ÜÊäÄËÉΩÔºÅ");
             handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 1500);
             if (manager.targetnum == -1)
             {

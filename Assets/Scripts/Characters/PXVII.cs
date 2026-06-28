@@ -17,7 +17,7 @@ public class PXVII : PlayerBase
 
     public override void newRound()
     {
-        // ¹w³]°_©lª¬ºA³]¬°¡i¯«Áô¡j
+        // é è¨­èµ·å§‹ç‹€æ…‹è¨­ç‚ºã€ç¥éš±ã€‘
         if (!isInitUI)
         {
             manager.photonView.RPC("PutEffect", RpcTarget.All, manager.me, -1, "disappear");
@@ -25,21 +25,21 @@ public class PXVII : PlayerBase
         }
     }
 
-    // ¥D°Ê§Ş¯à¡G¦Q¹Ç¨k
+    // ä¸»å‹•æŠ€èƒ½ï¼šåŠå˜ç”·
     public override void useSkill()
     {
         isSkillActive = true;
 
         StringBuilder sb = new StringBuilder();
-        sb.AppendLine("¬ï¤W¦Q¹Ç¡A¸Ñ©ñ¦Û§Ú¡I");
-        sb.Append(handle.nickname + " ¥»¦^¦X§ğÀ»¤O¼W¥[ 100%¡I");
+        sb.AppendLine("ç©¿ä¸ŠåŠå˜ï¼Œè§£æ”¾è‡ªæˆ‘ï¼");
+        sb.Append(handle.nickname + " æœ¬å›åˆæ”»æ“ŠåŠ›å¢åŠ  100%ï¼");
 
-        // ³æ¯Â¤å¦r®iºt¡A¤£©I¥s GetCard »P Played¡A©Ò¥H³o¦^¦XÁÙ¯àÄ~Äò¥XµP¡I
+        // å–®ç´”æ–‡å­—å±•æ¼”ï¼Œä¸å‘¼å« GetCard èˆ‡ Playedï¼Œæ‰€ä»¥é€™å›åˆé‚„èƒ½ç¹¼çºŒå‡ºç‰Œï¼
         handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 1500);
         PhotonNetwork.SendAllOutgoingCommands();
     }
 
-    // ³Q°Ê§Ş¯à¡G¥»¦^¦X§ğÀ»¤O¼W¥[ 30%
+    // è¢«å‹•æŠ€èƒ½ï¼šæœ¬å›åˆæ”»æ“ŠåŠ›å¢åŠ  30%
     public override void updateAttack()
     {
         if (isSkillActive)
@@ -52,7 +52,7 @@ public class PXVII : PlayerBase
         }
     }
 
-    // ¦^¦Xµ²§ô®É¦Û°Ê¸Ñ°£¦Q¹Çªº¼W¶Ë Buff
+    // å›åˆçµæŸæ™‚è‡ªå‹•è§£é™¤åŠå˜çš„å¢å‚· Buff
     public override void endRound()
     {
         isSkillActive = false;

@@ -14,16 +14,16 @@ public class PXIX : PlayerBase
 
     public override void newRound() { }
 
-    // ¥D°Ê§Ş¯à¡G¸gÀÙ¹ê´f
+    // ä¸»å‹•æŠ€èƒ½ï¼šç¶“æ¿Ÿå¯¦æƒ 
     public override void useSkill()
     {
         StringBuilder sb = new StringBuilder();
-        sb.AppendLine("«OÃÒ¦Û¤vªº³Ì¤j§Q¯q¡I");
-        sb.Append(handle.nickname + " ¨Ï¥Î¤F¸gÀÙ¹ê´f¡I");
+        sb.AppendLine("ä¿è­‰è‡ªå·±çš„æœ€å¤§åˆ©ç›Šï¼");
+        sb.Append(handle.nickname + " ä½¿ç”¨äº†ç¶“æ¿Ÿå¯¦æƒ ï¼");
         handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 1500);
 
-        // ­«·s³]©w¼Æ­È¡G¤TªÌªº¥­§¡­Èªº 0.5 + 25
-        // ¡i­×¥¿¡j¨Ï¥Î¥¿½Tªº handle.getProperties() »yªk
+        // é‡æ–°è¨­å®šæ•¸å€¼ï¼šä¸‰è€…çš„å¹³å‡å€¼çš„ 0.5 + 25
+        // ã€ä¿®æ­£ã€‘ä½¿ç”¨æ­£ç¢ºçš„ handle.getProperties() èªæ³•
         int[] mine = handle.getProperties();
         int avg = (mine[0] + mine[1] + mine[2]) / 3;
         int finalVal = (int)(avg * 0.5f + 25);
@@ -35,17 +35,17 @@ public class PXIX : PlayerBase
         }
 
 
-        // ¦A©I¥s¥dµP®iºt¡A°e 0 ¶Ë®`¶i¥h¹L¤ô
+        // å†å‘¼å«å¡ç‰Œå±•æ¼”ï¼Œé€ 0 å‚·å®³é€²å»éæ°´
         handle.View.RPC("SetFromTo", RpcTarget.All, manager.me, manager.me);
         handle.View.RPC("GetCard", RpcTarget.All, "special", "XIXSkill");
         handle.View.RPC("Played", RpcTarget.All, change[0], change[1], change[2]);
         PhotonNetwork.SendAllOutgoingCommands();
     }
 
-    // ³Q°Ê§Ş¯à¡G£~£¸£~
+    // è¢«å‹•æŠ€èƒ½ï¼šã„ã„§ã„
     public override void overrideFinalDamage(ref int w, ref int s, ref int r)
     {
-        // ¶Ë®`¬°­t¼Æ¤~Ä²µo mod 10 (¦b C# ¸Ì¡A­t¼Æ¨ú¾l¼Æ¨ÌµM·|«O¯d­t¸¹¡A§¹¬ü²Å¦X¦©¦å¹Bºâ)
+        // å‚·å®³ç‚ºè² æ•¸æ‰è§¸ç™¼ mod 10 (åœ¨ C# è£¡ï¼Œè² æ•¸å–é¤˜æ•¸ä¾ç„¶æœƒä¿ç•™è² è™Ÿï¼Œå®Œç¾ç¬¦åˆæ‰£è¡€é‹ç®—)
         if (w < 0) w %= 10;
         if (s < 0) s %= 10;
         if (r < 0) r %= 10;

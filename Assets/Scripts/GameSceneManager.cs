@@ -30,7 +30,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     public bool pickable;
     public bool displaytime = false, playing, responding; 
     public int cardpicking, targetnum, displaycount;
-    public int status; //0: ¨S¨Æ 1: ¥XµP 2: ¦^µP
+    public int status; //0: æ²’äº‹ 1: å‡ºç‰Œ 2: å›ç‰Œ
     public string toolcardtype;
     public Vector3[] position = new Vector3[20];
     public TMP_Text hintword, to, from, hint;
@@ -146,8 +146,8 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     [PunRPC]
     async Task StartReflection(int reflectorIndex, int targetIndex, int w, int s, int r, bool isMultiAttack, bool allowDefense, bool allowSpecial)
     {
-        // ¡iÃöÁä­×´_¡j¡G¥u¦³¦b¡u²Ä¤@¦¸¡v¤Ï¼u®É¡A¤~°O¿ı­ì©l§ğÀ»ªÌ»P¸s§ğ¤U®a¡I
-        // ¦pªG¤w¸g¦b¤Ï¼uª¬ºA¤¤¡]³sÄò¤Ï¼u¡^¡Aµ´¹ï¤£ÂĞ¼g³o¨â­Ó°O¾ĞÅÜ¼Æ¡I
+        // ã€é—œéµä¿®å¾©ã€‘ï¼šåªæœ‰åœ¨ã€Œç¬¬ä¸€æ¬¡ã€åå½ˆæ™‚ï¼Œæ‰è¨˜éŒ„åŸå§‹æ”»æ“Šè€…èˆ‡ç¾¤æ”»ä¸‹å®¶ï¼
+        // å¦‚æœå·²ç¶“åœ¨åå½ˆç‹€æ…‹ä¸­ï¼ˆé€£çºŒåå½ˆï¼‰ï¼Œçµ•å°ä¸è¦†å¯«é€™å…©å€‹è¨˜æ†¶è®Šæ•¸ï¼
         if (!reflect)
         {
             reflectMemoPlayer = LocalPlayerList[targetIndex];
@@ -157,7 +157,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             }
         }
 
-        reflect = true; // ³]¬°¤Ï¼uª¬ºA
+        reflect = true; // è¨­ç‚ºåå½ˆç‹€æ…‹
         int k = DisplayType.Count;
         float x = displayfrom.GetComponent<RectTransform>().sizeDelta.x / 2;
         float y = displayfrom.GetComponent<RectTransform>().sizeDelta.y;
@@ -176,7 +176,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             tdc.forDisplay = true;
             tdc.init(w, s, r);
         }
-        // §ğ¦u¤è°fÂà
+        // æ”»å®ˆæ–¹é€†è½‰
         FromAndTo[0] = LocalPlayerList[reflectorIndex];
         FromAndTo[1] = LocalPlayerList[targetIndex];
         from.text = FromAndTo[0].NickName;
@@ -185,7 +185,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         canPlaySpecial = allowSpecial;
         if (PhotonNetwork.LocalPlayer == LocalPlayerList[targetIndex])
         {
-            status = 2; // ³Q¤Ï¼uªº­ì§ğÀ»ªÌ¥»¦aºİ¶i¤J¦^À³¶¥¬q
+            status = 2; // è¢«åå½ˆçš„åŸæ”»æ“Šè€…æœ¬åœ°ç«¯é€²å…¥å›æ‡‰éšæ®µ
             daW = w;
             daS = s;
             daR = r;
@@ -251,7 +251,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     {
         if (over || !pickable) return;
 
-        // ¡i·s¼WÄdºIÅŞ¿è¡j¡GÀË¬d¦Û¤v·í«e¦³¨S¦³³Q­­¨î¦æ°Êªº®ÄªG
+        // ã€æ–°å¢æ””æˆªé‚è¼¯ã€‘ï¼šæª¢æŸ¥è‡ªå·±ç•¶å‰æœ‰æ²’æœ‰è¢«é™åˆ¶è¡Œå‹•çš„æ•ˆæœ
         PlayerPanelController myPanel = PlayerPanels[me].GetComponent<PlayerPanelController>();
         if (myPanel.isExist("disappear"))
         {
@@ -259,12 +259,12 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
 
             if (rand.NextDouble() <= 0.5f)
             {
-                photonView.RPC("Announcement", RpcTarget.All, " ¾¾¡I"+ PhotonNetwork.LocalPlayer.NickName + "¦^¨Ó¤F¡I", 1500);
+                photonView.RPC("Announcement", RpcTarget.All, " å™¢ï¼"+ PhotonNetwork.LocalPlayer.NickName + "å›ä¾†äº†ï¼", 1500);
                 photonView.RPC("RemoveEffect", RpcTarget.All, me, "disappear");
             }
             else
             {
-                photonView.RPC("Announcement", RpcTarget.All, "¤£¦æ¡AÁpµ¸¤£¤W"+PhotonNetwork.LocalPlayer.NickName + "...", 1500);
+                photonView.RPC("Announcement", RpcTarget.All, "ä¸è¡Œï¼Œè¯çµ¡ä¸ä¸Š"+PhotonNetwork.LocalPlayer.NickName + "...", 1500);
 
                 UpdatePlayerProperties(3, 3, 3);
 
@@ -277,7 +277,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         }
         if (myPanel.isExist("sleep")) 
         {
-            photonView.RPC("Announcement", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName + " ºÎ¦º¤F...", 1500);
+            photonView.RPC("Announcement", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName + " ç¡æ­»äº†...", 1500);
             UpdatePlayerProperties(-1, 0, -1);
             photonView.RPC("UpdateEffect", RpcTarget.All, me);
 
@@ -286,9 +286,9 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             photonView.RPC("Go", LocalPlayerList[(me + 1) % total]);
             return;
         }
-        if (myPanel.isExist("dizzy")) // °²³]¦³·w¯t©Îµ²¦B
+        if (myPanel.isExist("dizzy")) // å‡è¨­æœ‰æšˆçœ©æˆ–çµå†°
         {
-            photonView.RPC("Announcement", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName + " Â_¤ù¡A¿ò§Ñ¤F¨Ç¤°»ò", 1500);
+            photonView.RPC("Announcement", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName + " æ–·ç‰‡ï¼Œéºå¿˜äº†äº›ä»€éº¼", 1500);
             DiscardACard();
             photonView.RPC("UpdateEffect", RpcTarget.All, me);
         }
@@ -336,7 +336,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             {
                 switch (plr.guessType)
                 {
-                    case "§ğÀ»":
+                    case "æ”»æ“Š":
                         if (DisplayType[0] == "attack" || DisplayType[0] == "multiattack")
                         {
                             plr.rightGuess();
@@ -346,7 +346,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                             plr.wrongGuess();
                         }
                         break;
-                    case "¨¾¿m":
+                    case "é˜²ç¦¦":
                         if (DisplayType[0] == "defense")
                         {
                             plr.rightGuess();
@@ -356,7 +356,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                             plr.wrongGuess();
                         }
                         break;
-                    case "¨ä¥L":
+                    case "å…¶ä»–":
                         if (DisplayType[0] == "medicine" || DisplayType[0] == "special")
                         {
                             plr.rightGuess();
@@ -392,7 +392,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     float rnd = (float)rand.NextDouble();
                     if (rnd <= 0.2f)
                     {
-                        photonView.RPC("Announcement", RpcTarget.All, "©I...¸ú¹L¤F", 1500);
+                        photonView.RPC("Announcement", RpcTarget.All, "å‘¼...èº²éäº†", 1500);
                         PhotonNetwork.SendAllOutgoingCommands();
                         photonView.RPC("Responded", RpcTarget.All, -daW, -daS, -daR);
                         PhotonNetwork.SendAllOutgoingCommands();
@@ -406,11 +406,11 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         }
         else if (DisplayType[0] == "unblockable")
         {
-            // ¡i¤£¥i¨¾¿m¸ô½u¡j¡Gª½±µÅã¥Ü¤å¦r¡B±j¨î¦©¦å¡Bµ²§ô¦^¦X¡I
+            // ã€ä¸å¯é˜²ç¦¦è·¯ç·šã€‘ï¼šç›´æ¥é¡¯ç¤ºæ–‡å­—ã€å¼·åˆ¶æ‰£è¡€ã€çµæŸå›åˆï¼
             await Task.Delay(2000);
             //StringBuilder sb = new StringBuilder();
-            //sb.AppendLine(FromAndTo[0].NickName + " ¹ï " + FromAndTo[1].NickName);
-            //sb.AppendLine("µo°Ê¤FµLªk¨¾¿mªº§Ş¯à¡I");
+            //sb.AppendLine(FromAndTo[0].NickName + " å° " + FromAndTo[1].NickName);
+            //sb.AppendLine("ç™¼å‹•äº†ç„¡æ³•é˜²ç¦¦çš„æŠ€èƒ½ï¼");
             //HintPanel.SetActive(true);
             //await Task.Delay(2000);
             //HintPanel.SetActive(false);
@@ -421,14 +421,14 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 canPlayDefense = true;
                 canPlaySpecial = false;
             }
-            //if (wisdomDamage < 0) sb.AppendLine("³y¦¨ " + (-wisdomDamage).ToString() + " ÂI´¼¤O·l®`");
-            //if (strengthDamage < 0) sb.AppendLine("³y¦¨ " + (-strengthDamage).ToString() + " ÂIÅé¤O®ø¯Ó");
-            //if (reputationDamage < 0) sb.AppendLine("½ÚÁ½ " + (-reputationDamage).ToString() + " ÂIÁnÅA");
+            //if (wisdomDamage < 0) sb.AppendLine("é€ æˆ " + (-wisdomDamage).ToString() + " é»æ™ºåŠ›æå®³");
+            //if (strengthDamage < 0) sb.AppendLine("é€ æˆ " + (-strengthDamage).ToString() + " é»é«”åŠ›æ¶ˆè€—");
+            //if (reputationDamage < 0) sb.AppendLine("èª¹è¬— " + (-reputationDamage).ToString() + " é»è²è­½");
 
             //hint.text = sb.ToString();
             //HintPanel.SetActive(true);
 
-            //// ¨ü®`ªÌª½±µ±j¦æ¦©¦å
+            //// å—å®³è€…ç›´æ¥å¼·è¡Œæ‰£è¡€
             //if (FromAndTo[1] == PhotonNetwork.LocalPlayer)
             //{
             //    UpdatePlayerProperties(wisdomDamage, strengthDamage, reputationDamage);
@@ -436,7 +436,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
 
             //await Task.Delay(3000);
 
-            // µo°ÊªÌª½±µµ²§ô¦^¦X¨Ã¥æ´Î
+            // ç™¼å‹•è€…ç›´æ¥çµæŸå›åˆä¸¦äº¤æ£’
             //if (FromAndTo[0] == PhotonNetwork.LocalPlayer)
             //{
             //    status = 0;
@@ -459,33 +459,33 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 canPlaySpecial = false;
             }
             //StringBuilder sb = new StringBuilder();
-            //sb.AppendLine(FromAndTo[0].NickName + " ¹ï " + FromAndTo[1].NickName);
+            //sb.AppendLine(FromAndTo[0].NickName + " å° " + FromAndTo[1].NickName);
 
             //if (wisdomDamage <= 0)
             //{
-            //    sb.AppendLine("³y¦¨ " + (-wisdomDamage).ToString() + " ÂI´¼¤O·l®`");
+            //    sb.AppendLine("é€ æˆ " + (-wisdomDamage).ToString() + " é»æ™ºåŠ›æå®³");
             //}
             //else
             //{
-            //    sb.AppendLine("¦^´_ " + wisdomDamage.ToString() + " ÂI´¼¤O");
+            //    sb.AppendLine("å›å¾© " + wisdomDamage.ToString() + " é»æ™ºåŠ›");
             //}
 
             //if (strengthDamage <= 0)
             //{
-            //    sb.AppendLine("³y¦¨ " + (-strengthDamage).ToString() + " ÂIÅé¤O®ø¯Ó");
+            //    sb.AppendLine("é€ æˆ " + (-strengthDamage).ToString() + " é»é«”åŠ›æ¶ˆè€—");
             //}
             //else
             //{
-            //    sb.AppendLine("¦^´_ " + strengthDamage.ToString() + " ÂIÅé¤O");
+            //    sb.AppendLine("å›å¾© " + strengthDamage.ToString() + " é»é«”åŠ›");
             //}
 
             //if (reputationDamage <= 0)
             //{
-            //    sb.Append("½ÚÁ½ " + (-reputationDamage).ToString() + " ÂIÁnÅA");
+            //    sb.Append("èª¹è¬— " + (-reputationDamage).ToString() + " é»è²è­½");
             //}
             //else
             //{
-            //    sb.Append("®¾¦^ " + reputationDamage.ToString() + " ÂIÁnÅA");
+            //    sb.Append("æŒ½å› " + reputationDamage.ToString() + " é»è²è­½");
             //}
             //hint.text = sb.ToString();
             //HintPanel.SetActive(true);
@@ -522,7 +522,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void Multi(int wisdomDamage, int strengthDamage, int reputationDamage)
     {
-        Debug.Log("¦¬¨ì¸s§ğ");
+        Debug.Log("æ”¶åˆ°ç¾¤æ”»");
         multi = true;
         int k = DisplayType.Count;
         float x = displayfrom.GetComponent<RectTransform>().sizeDelta.x / 2;
@@ -540,28 +540,28 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             detail.transform.localPosition = new Vector3(x, y - inter * (i + 1), 1);
 
             ToolDisplayController tdc = detail.GetComponent<ToolDisplayController>();
-            // 1. ¥ı½á­È
+            // 1. å…ˆè³¦å€¼
             tdc.tooltype = DisplayType[i];
             tdc.face = DisplayFace[i];
             tdc.forDisplay = true;
 
-            // 2. «á©I¥s init (¶Ç¤J¸s§ğ­ì©l¶Ë®`)
+            // 2. å¾Œå‘¼å« init (å‚³å…¥ç¾¤æ”»åŸå§‹å‚·å®³)
             tdc.init(wisdomDamage, strengthDamage, reputationDamage);
         }
         if (FromAndTo[1] == PhotonNetwork.LocalPlayer)
         {
             if (player.p.isImmuneToMultiAttack())
             {
-                photonView.RPC("Announcement", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName + " ¤£¨ü¸sÅé§ğÀ»¼vÅT¡I", 1500);
+                photonView.RPC("Announcement", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName + " ä¸å—ç¾¤é«”æ”»æ“Šå½±éŸ¿ï¼", 1500);
                 PhotonNetwork.SendAllOutgoingCommands();
-                photonView.RPC("Responded", RpcTarget.All, 0, 0, 0); // ¦Û°Ê¦w¥ş¤U²ø
+                photonView.RPC("Responded", RpcTarget.All, 0, 0, 0); // è‡ªå‹•å®‰å…¨ä¸‹èŠ
                 return;
             }
 
-            // ¡i¤É¯Å¡j¡G2. ³Q°Ê°{Á×ÀË´ú (¨ú¥N­ì¥»¼g¦ºªº 11 ¸¹)
+            // ã€å‡ç´šã€‘ï¼š2. è¢«å‹•é–ƒé¿æª¢æ¸¬ (å–ä»£åŸæœ¬å¯«æ­»çš„ 11 è™Ÿ)
             if (player.p.checkPassiveDodge())
             {
-                photonView.RPC("Announcement", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName + " ¸ú¹L¤F§ğÀ»¡I", 1500);
+                photonView.RPC("Announcement", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName + " èº²éäº†æ”»æ“Šï¼", 1500);
                 PhotonNetwork.SendAllOutgoingCommands();
                 photonView.RPC("Responded", RpcTarget.All, 0, 0, 0);
                 return;
@@ -586,7 +586,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             {
                 switch (plr.guessType)
                 {
-                    case "§ğÀ»":
+                    case "æ”»æ“Š":
                         if (DisplayType[temp] == "attack" || DisplayType[temp] == "multiattack")
                         {
                             plr.rightGuess();
@@ -596,7 +596,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                             plr.wrongGuess();
                         }
                         break;
-                    case "¨¾¿m":
+                    case "é˜²ç¦¦":
                         if (DisplayType[temp] == "defense")
                         {
                             plr.rightGuess();
@@ -606,7 +606,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                             plr.wrongGuess();
                         }
                         break;
-                    case "¨ä¥L":
+                    case "å…¶ä»–":
                         if (DisplayType[temp] == "medicine" || DisplayType[temp] == "special")
                         {
                             plr.rightGuess();
@@ -631,7 +631,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 detail2.transform.localPosition = new Vector3(x, y - inter * (i - temp + 1), 1);
 
                 ToolDisplayController tdc = detail2.GetComponent<ToolDisplayController>();
-                // 1. ¥ı½á­È
+                // 1. å…ˆè³¦å€¼
                 tdc.forDisplay = true;
                 if (i == temp)
                     tdc.num = 0;
@@ -644,7 +644,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         }
         await Task.Delay(2000);
 
-        // 1. §ä¥X¯u¥¿ªº§ğÀ»ªÌ»P¨¾¿mªÌ Index
+        // 1. æ‰¾å‡ºçœŸæ­£çš„æ”»æ“Šè€…èˆ‡é˜²ç¦¦è€… Index
         int attIdx = 0, defIdx = 0;
         for (int i = 0; i < total; ++i)
         {
@@ -653,23 +653,23 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         }
         string defCharacter = PlayerPanels[defIdx].GetComponent<PlayerPanelController>().character;
 
-        // 2. ¡i½T©w©ÊÀH¾÷¡j¡G§Q¥ÎÂù¤èID»P¶Ë®`­È·í§@ºØ¤l¡A½T«O¥şºôºâ¥X¤@¼Ëªº¾÷²v¡A¸Ñ¨M¥­¦æ®ÉªÅ¡I
+        // 2. ã€ç¢ºå®šæ€§éš¨æ©Ÿã€‘ï¼šåˆ©ç”¨é›™æ–¹IDèˆ‡å‚·å®³å€¼ç•¶ä½œç¨®å­ï¼Œç¢ºä¿å…¨ç¶²ç®—å‡ºä¸€æ¨£çš„æ©Ÿç‡ï¼Œè§£æ±ºå¹³è¡Œæ™‚ç©ºï¼
         
 
         // ==========================================
-        // ±¡ªp B¡G¥¿±`¶Ë®`µ²ºâ (¥]§t³Q 2¸¹ ¤ÏÀ»¡A©Î¤@¯ë¤Ï¼u©R¤¤)
+        // æƒ…æ³ Bï¼šæ­£å¸¸å‚·å®³çµç®— (åŒ…å«è¢« 2è™Ÿ åæ“Šï¼Œæˆ–ä¸€èˆ¬åå½ˆå‘½ä¸­)
         // ==========================================
         
 
-        bool wasReflect = reflect; // °O¤U³o¦¸¬O§_¬°¤Ï¼u
-        reflect = false; // µ²ºâ«eÃö³¬ª¬ºA¡AÁ×§K¤zÂZ«áÄò¸s§ğÃì
+        bool wasReflect = reflect; // è¨˜ä¸‹é€™æ¬¡æ˜¯å¦ç‚ºåå½ˆ
+        reflect = false; // çµç®—å‰é—œé–‰ç‹€æ…‹ï¼Œé¿å…å¹²æ“¾å¾ŒçºŒç¾¤æ”»éˆ
         if (k > temp && DisplayInRally[temp].GetComponent<ToolDisplayController>().face == "all_in_vain")
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("ºâ¤F¡A´N³o¼Ë§a...");
-            sb.AppendLine("¨÷¤£Ä¹XXX...");
-            sb.AppendLine("¹PÁôµêªÅ¡A¸õ¥X¤T¬É");
-            sb.Append(FromAndTo[1].NickName + "¨Ï©Ò¦³¥¢®Ä");
+            sb.AppendLine("ç®—äº†ï¼Œå°±é€™æ¨£å§...");
+            sb.AppendLine("å·ä¸è´XXX...");
+            sb.AppendLine("ééš±è™›ç©ºï¼Œè·³å‡ºä¸‰ç•Œ");
+            sb.Append(FromAndTo[1].NickName + "ä½¿æ‰€æœ‰å¤±æ•ˆ");
             
             hint.text = sb.ToString();
             HintPanel.SetActive(true);
@@ -687,26 +687,26 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             else toS = Mathf.Min(0, daS + s);
             if (daR > 0) toR = daR + +Mathf.Min(0, r);
             else toR = Mathf.Min(0, daR + r);
-            // ²Î¤@Åã¥Ü¨ü¶Ë¤å¦r
+            // çµ±ä¸€é¡¯ç¤ºå—å‚·æ–‡å­—
             StringBuilder sb = new StringBuilder();
             if (DisplayType[0] == "attack" || DisplayType[0] == "multiattack" || DisplayType[0] == "medicine")
             {
-                if (wasReflect) sb.AppendLine(FromAndTo[0].NickName + " ¤Ï¼uµ¹ " + FromAndTo[1].NickName);
-                else sb.AppendLine(FromAndTo[0].NickName + " ¹ï " + FromAndTo[1].NickName);
+                if (wasReflect) sb.AppendLine(FromAndTo[0].NickName + " åå½ˆçµ¦ " + FromAndTo[1].NickName);
+                else sb.AppendLine(FromAndTo[0].NickName + " å° " + FromAndTo[1].NickName);
 
-                if (toW <= 0) sb.AppendLine("³y¦¨ " + (-toW).ToString() + " ÂI´¼¤O·l®`");
-                else sb.AppendLine("¦^´_ " + toW.ToString() + " ÂI´¼¤O");
+                if (toW <= 0) sb.AppendLine("é€ æˆ " + (-toW).ToString() + " é»æ™ºåŠ›æå®³");
+                else sb.AppendLine("å›å¾© " + toW.ToString() + " é»æ™ºåŠ›");
 
-                if (toS <= 0) sb.AppendLine("³y¦¨ " + (-toS).ToString() + " ÂIÅé¤O®ø¯Ó");
-                else sb.AppendLine("¦^´_ " + toS.ToString() + " ÂIÅé¤O");
+                if (toS <= 0) sb.AppendLine("é€ æˆ " + (-toS).ToString() + " é»é«”åŠ›æ¶ˆè€—");
+                else sb.AppendLine("å›å¾© " + toS.ToString() + " é»é«”åŠ›");
 
-                if (toR <= 0) sb.Append("½ÚÁ½ " + (-toR).ToString() + " ÂIÁnÅA");
-                else sb.Append("®¾¦^ " + toR.ToString() + " ÂIÁnÅA");
+                if (toR <= 0) sb.Append("èª¹è¬— " + (-toR).ToString() + " é»è²è­½");
+                else sb.Append("æŒ½å› " + toR.ToString() + " é»è²è­½");
 
                 hint.text = sb.ToString();
                 HintPanel.SetActive(true);
 
-                // ¡i¯u¥¿ªº¨¾¿mªÌ¡j¦©¦å
+                // ã€çœŸæ­£çš„é˜²ç¦¦è€…ã€‘æ‰£è¡€
                 
 
                 await Task.Delay(3000);
@@ -724,10 +724,10 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             {
                 if (DisplayFace[0] == "king")
                 {
-                    sb.AppendLine("§Ú¶i¹L¥|¦¸NTUEE");
-                    sb.AppendLine("¦Ó§A...");
-                    sb.AppendLine("¤S¶i¹L´X¦¸¥x¤j");
-                    sb.Append(FromAndTo[1].NickName + "®i²{¤ıªº­·½d");
+                    sb.AppendLine("æˆ‘é€²éå››æ¬¡NTUEE");
+                    sb.AppendLine("è€Œä½ ...");
+                    sb.AppendLine("åˆé€²éå¹¾æ¬¡å°å¤§");
+                    sb.Append(FromAndTo[1].NickName + "å±•ç¾ç‹çš„é¢¨ç¯„");
 
                     hint.text = sb.ToString();
                     HintPanel.SetActive(true);
@@ -736,8 +736,8 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 }
                 else
                 {
-                    sb.AppendLine("¤£ª¾¹D­n¶ñ¤°»ò");
-                    sb.AppendLine("¦A»¡§a");
+                    sb.AppendLine("ä¸çŸ¥é“è¦å¡«ä»€éº¼");
+                    sb.AppendLine("å†èªªå§");
                     sb.Append(FromAndTo[1].NickName + "Error! not...");
 
                     hint.text = sb.ToString();
@@ -748,12 +748,12 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             }
 
                 bool is13Reflecting = false;
-            // 2¸¹ ¨¾¨­³N³Q°Êµ²ºâ¡GÅı¡i¯u¥¿ªº§ğÀ»ªÌ¡j¦©¦å
+            // 2è™Ÿ é˜²èº«è¡“è¢«å‹•çµç®—ï¼šè®“ã€çœŸæ­£çš„æ”»æ“Šè€…ã€‘æ‰£è¡€
             if ((DisplayType[0] == "attack" || DisplayType[0] == "multiattack") && (toW < 0 || toS < 0 || toR < 0))
             {
                 if (defCharacter == "2" && PhotonNetwork.LocalPlayer == FromAndTo[0])
                 {
-                    photonView.RPC("Announcement", RpcTarget.All, "¨¾¨­³N¡I", 1500);
+                    photonView.RPC("Announcement", RpcTarget.All, "é˜²èº«è¡“ï¼", 1500);
                     photonView.RPC("Cleaning", RpcTarget.All);
                     await Task.Delay(1600);
                     PhotonNetwork.SendAllOutgoingCommands();
@@ -769,7 +769,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     if (syncRand.NextDouble() <= 0.25f) is13Reflecting = true;
                     if (is13Reflecting)
                     {
-                        hint.text = "¹ï¤W²´¤F¡I";
+                        hint.text = "å°ä¸Šçœ¼äº†ï¼";
                         HintPanel.SetActive(true);
                         await Task.Delay(2000);
                         HintPanel.SetActive(false);
@@ -781,24 +781,24 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
 
                             PhotonNetwork.SendAllOutgoingCommands();
                         }
-                        return; // ¦¨¥\¥´¥X·s§ğÀ»¥d¡Aª½±µ¤¤Â_¥»¦¸µ²ºâ¡AÅıª¬ºA¾÷¶i¤J¤U¤@½ü
+                        return; // æˆåŠŸæ‰“å‡ºæ–°æ”»æ“Šå¡ï¼Œç›´æ¥ä¸­æ–·æœ¬æ¬¡çµç®—ï¼Œè®“ç‹€æ…‹æ©Ÿé€²å…¥ä¸‹ä¸€è¼ª
                     }
                 }
                 
             }
         }
 
-        // === ´İ§½³B²z»P¦^¦X¥æ´Î ===
-        if (PhotonNetwork.LocalPlayer == FromAndTo[0]) // ­ì«h¤W¥Ñµo°_§ğÀ»ªº¤H­t³d²MªÅ»P¥æ´Î
+        // === æ®˜å±€è™•ç†èˆ‡å›åˆäº¤æ£’ ===
+        if (PhotonNetwork.LocalPlayer == FromAndTo[0]) // åŸå‰‡ä¸Šç”±ç™¼èµ·æ”»æ“Šçš„äººè² è²¬æ¸…ç©ºèˆ‡äº¤æ£’
         {
             if (wasReflect)
             {
-                // ¤Ï¼u´İ§½¡G¥æ´ÎÅŞ¿è¥Ñ¤Ï¼u°_ÂI (reflectMemoPlayer) ±µºŞ
+                // åå½ˆæ®˜å±€ï¼šäº¤æ£’é‚è¼¯ç”±åå½ˆèµ·é» (reflectMemoPlayer) æ¥ç®¡
                 if (PhotonNetwork.LocalPlayer == reflectMemoPlayer)
                 {
                     if (!multi || reflectMemoNext == me)
                     {
-                        // ³æÅé¤Ï¼uµ²§ô¡A©Î¸s§ğ¤Ï¼uÂ¶§¹¤@°é¦^¨ì¦Û¤v¡G²MªÅ³õ¦a¡A¥æ´Î¤U®a
+                        // å–®é«”åå½ˆçµæŸï¼Œæˆ–ç¾¤æ”»åå½ˆç¹å®Œä¸€åœˆå›åˆ°è‡ªå·±ï¼šæ¸…ç©ºå ´åœ°ï¼Œäº¤æ£’ä¸‹å®¶
                         photonView.RPC("Cleaning", RpcTarget.All);
                         status = 0;
                         
@@ -808,10 +808,10 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                             if(p < 0.2)
                             {
                                 StringBuilder sb = new StringBuilder(); 
-                                sb.AppendLine("¤£¯S§O°w¹ï½Ö");
-                                sb.AppendLine("¦ı§A­Ìªº±MÃD");
-                                sb.AppendLine("°t¤£¤WºÙ¬°¬ã¨s");
-                                sb.Append(LocalPlayerList[me].NickName + "¦A¦¸¦æ°Ê");
+                                sb.AppendLine("ä¸ç‰¹åˆ¥é‡å°èª°");
+                                sb.AppendLine("ä½†ä½ å€‘çš„å°ˆé¡Œ");
+                                sb.AppendLine("é…ä¸ä¸Šç¨±ç‚ºç ”ç©¶");
+                                sb.Append(LocalPlayerList[me].NickName + "å†æ¬¡è¡Œå‹•");
                                 photonView.RPC("Announcement", RpcTarget.All, sb.ToString(), 2500);
                                 photonView.RPC("Go", LocalPlayerList[me]);
                             }
@@ -829,7 +829,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     }
                     else
                     {
-                        // ¸s§ğ©|¥¼µ²§ô¡AÄ~Äò¶Çµ¹¤U¤@­Ó±Æ¶¤ªº¤H
+                        // ç¾¤æ”»å°šæœªçµæŸï¼Œç¹¼çºŒå‚³çµ¦ä¸‹ä¸€å€‹æ’éšŠçš„äºº
                         photonView.RPC("Cleaning", RpcTarget.All);
                         status = 0;
                         photonView.RPC("SetFromTo", RpcTarget.All, me, reflectMemoNext);
@@ -840,7 +840,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             }
             else
             {
-                // ¤@¯ë§ğÀ»´İ§½
+                // ä¸€èˆ¬æ”»æ“Šæ®˜å±€
                 if (!multi)
                 {
                     photonView.RPC("Cleaning", RpcTarget.All);
@@ -851,10 +851,10 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                         if (p < 0.2)
                         {
                             StringBuilder sb = new StringBuilder();
-                            sb.AppendLine("¤£¯S§O°w¹ï½Ö");
-                            sb.AppendLine("¦ı§A­Ìªº±MÃD");
-                            sb.AppendLine("°t¤£¤WºÙ¬°¬ã¨s");
-                            sb.Append(LocalPlayerList[me].NickName + "¦A¦¸¦æ°Ê");
+                            sb.AppendLine("ä¸ç‰¹åˆ¥é‡å°èª°");
+                            sb.AppendLine("ä½†ä½ å€‘çš„å°ˆé¡Œ");
+                            sb.AppendLine("é…ä¸ä¸Šç¨±ç‚ºç ”ç©¶");
+                            sb.Append(LocalPlayerList[me].NickName + "å†æ¬¡è¡Œå‹•");
                             photonView.RPC("Announcement", RpcTarget.All, sb.ToString(), 2500);
                             photonView.RPC("Go", LocalPlayerList[me]);
                         }
@@ -872,12 +872,12 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 }
                 else
                 {
-                    // Ä~Äò¶Ç»¼¸s§ğ
+                    // ç¹¼çºŒå‚³éç¾¤æ”»
                     photonView.RPC("Cleaning", RpcTarget.All);
                     int nextVictim = (defIdx + 1) % total;
                     if (nextVictim == attIdx)
                     {
-                        // Â¶§¹¤@°é¦^¨ì¦Û¤v¡Aµ²§ô
+                        // ç¹å®Œä¸€åœˆå›åˆ°è‡ªå·±ï¼ŒçµæŸ
                         status = 0;
                         player.endRound();
                         photonView.RPC("Go", LocalPlayerList[(me + 1) % total]);
@@ -892,7 +892,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 }
             }
         }
-        // ²MªÅ¥»¦a°}¦C¨¾§b
+        // æ¸…ç©ºæœ¬åœ°é™£åˆ—é˜²å‘†
         DisplayFace.Clear();
         DisplayType.Clear();
         multi = false;
@@ -995,7 +995,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             Photon.Realtime.Player firstPlayer = null;
             foreach (var kvp in PhotonNetwork.CurrentRoom.Players)
             {
-                // °O¤U©Ğ¶¡¸Ìªº²Ä¤@¦ìª±®a
+                // è¨˜ä¸‹æˆ¿é–“è£¡çš„ç¬¬ä¸€ä½ç©å®¶
                 if (firstPlayer == null)
                 {
                     firstPlayer = kvp.Value;
@@ -1003,7 +1003,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 photonView.RPC("PlayerList", RpcTarget.All, kvp.Value);
             }
 
-            // ¡i­×¥¿¡j¡G¤£­n¥Î LocalPlayerList[0]¡Aª½±µ¶Ç¤J­è­è§ì¨ìªº firstPlayer¡I
+            // ã€ä¿®æ­£ã€‘ï¼šä¸è¦ç”¨ LocalPlayerList[0]ï¼Œç›´æ¥å‚³å…¥å‰›å‰›æŠ“åˆ°çš„ firstPlayerï¼
             photonView.RPC("Go", firstPlayer);
         }
 
@@ -1051,7 +1051,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     };
                 }
             }
-            Debug.Log($"¦¨¥\¸ü¤J special ¥d¦À¡A¦@ {cardPools["special"].Count} ±i¥dµP¡C");
+            Debug.Log($"æˆåŠŸè¼‰å…¥ special å¡æ± ï¼Œå…± {cardPools["special"].Count} å¼µå¡ç‰Œã€‚");
         }
     }
     
@@ -1166,12 +1166,12 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 //For special effect
                 if (playedFace == "magic_mirror")
                 {
-                    // ¦b³o¸Ì¼gÅ]Ãèªº®ÄªG
-                    Debug.Log("µo°Ê¤FÅ]Ãè¡I");
+                    // åœ¨é€™è£¡å¯«é­”é¡çš„æ•ˆæœ
+                    Debug.Log("ç™¼å‹•äº†é­”é¡ï¼");
                 }
                 else if (playedFace == "time_stop")
                 {
-                    // ¦b³o¸Ì¼g®É¶¡°±¤îªº®ÄªG
+                    // åœ¨é€™è£¡å¯«æ™‚é–“åœæ­¢çš„æ•ˆæœ
                 }
             }
             else if (playedType == "medicine")
@@ -1232,7 +1232,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             toolcardtype = "none";
             cardpicking = -1;
         }
-        else // ¸õ¹L¤£¥XµP
+        else // è·³éä¸å‡ºç‰Œ
         {
             int drawAmount = player.p.getDrawCardCount();
             for (int i = 0; i < drawAmount; i++)
@@ -1251,10 +1251,10 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             }
             RefreshCards();
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine(LocalPlayerList[me].NickName + " ³o­ÓÑeºØ");
-            sb.AppendLine("¤°»ò¤]¤£´±°µ");
-            sb.AppendLine("Ãø©Ç·|¥¢¥h¦o");
-            sb.Append(LocalPlayerList[me].NickName + " ©â¨ú¥dµP");
+            sb.AppendLine(LocalPlayerList[me].NickName + " é€™å€‹å­¬ç¨®");
+            sb.AppendLine("ä»€éº¼ä¹Ÿä¸æ•¢åš");
+            sb.AppendLine("é›£æ€ªæœƒå¤±å»å¥¹");
+            sb.Append(LocalPlayerList[me].NickName + " æŠ½å–å¡ç‰Œ");
             photonView.RPC("Announcement", RpcTarget.All, sb.ToString(), 2500);
             PhotonNetwork.SendAllOutgoingCommands();
             await Task.Delay(2600);
@@ -1315,7 +1315,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         List<string> playedSpecialFaces = new List<string>();
         if (displaycount > 0)
         {
-            // ²Ä¤@¨B¡G¥ı±½´yÀË¬d®i¥Ü°Ï¦³¨S¦³¥]§t¤Ï¼u¥d (face == "2")
+            // ç¬¬ä¸€æ­¥ï¼šå…ˆæƒææª¢æŸ¥å±•ç¤ºå€æœ‰æ²’æœ‰åŒ…å«åå½ˆå¡ (face == "2")
             for (int i = 0; i < typeNum; i++)
             {
                 foreach (GameObject obj in CardsInDisplay[i])
@@ -1331,7 +1331,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 }
             }
 
-            // ²Ä¤G¨B¡G¦^¦¬¥dµP¡A¨Ã¥B¡i¥u¦³«D¤Ï¼u¥d¡j¤~©I¥s GetCard ¼s¼½
+            // ç¬¬äºŒæ­¥ï¼šå›æ”¶å¡ç‰Œï¼Œä¸¦ä¸”ã€åªæœ‰éåå½ˆå¡ã€‘æ‰å‘¼å« GetCard å»£æ’­
             for (int i = 0; i < typeNum; i++)
             {
                 if (CardsInDisplay[i].Count > 0)
@@ -1342,11 +1342,11 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
 
                         if (controller.face == "test_reflect")
                         {
-                            // ¤Ï¼u¥d¤£»İ­n GetCard ¼s¼½¡A¥¦ªº®ÄªG¥Ñ StartReflection ¿W¥ß³B²z
+                            // åå½ˆå¡ä¸éœ€è¦ GetCard å»£æ’­ï¼Œå®ƒçš„æ•ˆæœç”± StartReflection ç¨ç«‹è™•ç†
                         }
                         else
                         {
-                            // ´¶³q¨¾¿m¥d¤~»İ­n¦P¨Bµ¹©Ò¦³¤H¬İ
+                            // æ™®é€šé˜²ç¦¦å¡æ‰éœ€è¦åŒæ­¥çµ¦æ‰€æœ‰äººçœ‹
                             photonView.RPC("GetCard", RpcTarget.All, controller.tooltype, controller.face);
                             if(controller.tooltype == "defense")
                             {
@@ -1359,7 +1359,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                             
                         }
 
-                        // ¦^¦¬¥»¦aªº¤âµP»P®i¥ÜµP
+                        // å›æ”¶æœ¬åœ°çš„æ‰‹ç‰Œèˆ‡å±•ç¤ºç‰Œ
                         int j = 0;
                         foreach (GameObject o in CardsInType[i])
                         {
@@ -1385,7 +1385,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 }
             }
         }
-        // ²Ä¤T¨B¡G¤À¬y³B²zª¬ºA¾÷
+        // ç¬¬ä¸‰æ­¥ï¼šåˆ†æµè™•ç†ç‹€æ…‹æ©Ÿ
         if (isReflecting)
         {
             int originalAttackerIndex = 0;
@@ -1414,7 +1414,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         RefreshCards();
         toolcardtype = "none";
         cardpicking = -1;
-        displaycount = 0; // ½T«O­«¸m­p¼Æ
+        displaycount = 0; // ç¢ºä¿é‡ç½®è¨ˆæ•¸
     }
     public void UpdatePlayerProperties(int w, int s, int r)
     {
@@ -1423,44 +1423,44 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         int S = (int)PhotonNetwork.LocalPlayer.CustomProperties["Strength"] + s;
         int R = (int)PhotonNetwork.LocalPlayer.CustomProperties["Reputation"] + r;
 
-        // ­­¨î¦å¶q¤£­n¶W¹L¤W­­©Î§C©ó 0
+        // é™åˆ¶è¡€é‡ä¸è¦è¶…éä¸Šé™æˆ–ä½æ–¼ 0
         W = Mathf.Clamp(W, 0, maxW);
         S = Mathf.Clamp(S, 0, maxS);
         R = Mathf.Clamp(R, 0, maxR);
 
-        // ¼È®É§P©w¬O§_Âk¹s
+        // æš«æ™‚åˆ¤å®šæ˜¯å¦æ­¸é›¶
         bool tempWdead = (W == 0);
         bool tempSdead = (S == 0);
         bool tempRdead = (R == 0);
 
-        // ¦pªGº¡¨¬¦º¤`±ø¥ó (¥]§t30¸¹ªº³æ¼Æ­ÈÂk¹s¯S§P)
+        // å¦‚æœæ»¿è¶³æ­»äº¡æ¢ä»¶ (åŒ…å«30è™Ÿçš„å–®æ•¸å€¼æ­¸é›¶ç‰¹åˆ¤)
         if (isOver(tempWdead, tempSdead, tempRdead))
         {
-            // ©I¥s¦º¤`ÄdºI¾¹¡I¬İÀFÃ¹¤ı¦¬¤£¦¬¡I
+            // å‘¼å«æ­»äº¡æ””æˆªå™¨ï¼çœ‹é–»ç¾…ç‹æ”¶ä¸æ”¶ï¼
             if (player.p.checkRevive(ref W, ref S, ref R))
             {
-                // ÀF¤ı©Ú¦¬¡A¼Æ­È³Q´_¬¡§Ş¯à­×§ï¤F¡A­«·s§ó·s¦º¤`¼Ğ°O
+                // é–»ç‹æ‹’æ”¶ï¼Œæ•¸å€¼è¢«å¾©æ´»æŠ€èƒ½ä¿®æ”¹äº†ï¼Œé‡æ–°æ›´æ–°æ­»äº¡æ¨™è¨˜
                 tempWdead = (W == 0);
                 tempSdead = (S == 0);
                 tempRdead = (R == 0);
 
-                // ¼s¼½µ¹©Ò¦³¤H¬İ¥L´_¬¡¤F
-                photonView.RPC("Announcement", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName + " Ä²µo¤F§K¦ºª÷µP¡I", 2500);
+                // å»£æ’­çµ¦æ‰€æœ‰äººçœ‹ä»–å¾©æ´»äº†
+                photonView.RPC("Announcement", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName + " è§¸ç™¼äº†å…æ­»é‡‘ç‰Œï¼", 2500);
             }
             else
             {
-                // ¯uªº¦º¤F¡Aµo°e¦º¤`¼s¼½
+                // çœŸçš„æ­»äº†ï¼Œç™¼é€æ­»äº¡å»£æ’­
                 over = true;
                 photonView.RPC("imDead", RpcTarget.All, me);
             }
         }
 
-        // §ó·s¥ş°ì¦º¤`¼Ğ°O
+        // æ›´æ–°å…¨åŸŸæ­»äº¡æ¨™è¨˜
         Wdead = tempWdead;
         Sdead = tempSdead;
         Rdead = tempRdead;
 
-        // ±N³Ì²×¥¿½Tªº¼Æ­È¼g¦^ºô¸ôÄİ©Ê
+        // å°‡æœ€çµ‚æ­£ç¢ºçš„æ•¸å€¼å¯«å›ç¶²è·¯å±¬æ€§
         HashTable table = new HashTable();
         table.Add("Wisdom", W);
         table.Add("Strength", S);
@@ -1506,14 +1506,14 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             }
         }
     }
-    // ±N rndface ³]¬°¹w³]ªÅ¦r¦ê ("")¡C
-    // ¦pªG¤£¶Ç²Ä¤G­Ó°Ñ¼Æ¡A´N·|¡u¦Û°ÊÀH¾÷©â¡v¡F¦pªG¶Ç¤F¡A´N·|¡u±j¨î¥Í¥X¨º±iµP¡v¡I
+    // å°‡ rndface è¨­ç‚ºé è¨­ç©ºå­—ä¸² ("")ã€‚
+    // å¦‚æœä¸å‚³ç¬¬äºŒå€‹åƒæ•¸ï¼Œå°±æœƒã€Œè‡ªå‹•éš¨æ©ŸæŠ½ã€ï¼›å¦‚æœå‚³äº†ï¼Œå°±æœƒã€Œå¼·åˆ¶ç”Ÿå‡ºé‚£å¼µç‰Œã€ï¼
     public void PickACard(float rnd, string designatedFace = "")
     {
         string tooltype = "";
         int typeIndex = 0;
 
-        // 1. ®Ú¾Ú rnd ¨M©w¥dµP¡uÃş§O¡v»P¹ïÀ³ªº¡u°}¦C Index¡v
+        // 1. æ ¹æ“š rnd æ±ºå®šå¡ç‰Œã€Œé¡åˆ¥ã€èˆ‡å°æ‡‰çš„ã€Œé™£åˆ— Indexã€
         if (rnd < 1) { tooltype = "attack"; typeIndex = 0; }
         else if (rnd < 2) { tooltype = "multiattack"; typeIndex = 1; }
         else if (rnd < 3) { tooltype = "defense"; typeIndex = 2; }
@@ -1521,10 +1521,10 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         else if (rnd < 5) { tooltype = "strengthen"; typeIndex = 4; }
         else { tooltype = "special"; typeIndex = 5; } // rnd < 6
 
-        // 2. ¨M©w¥dµPªº Face (ÀÉ¦W)
+        // 2. æ±ºå®šå¡ç‰Œçš„ Face (æª”å)
         string finalFace = designatedFace;
 
-        // ¦pªG¨S¦³«ü©w¥dµP¡A´N±q§Ú­Ì­è­èÅª¦nªº¦r¨å¸Ì¡uÀH¾÷©â¤@±i¡v
+        // å¦‚æœæ²’æœ‰æŒ‡å®šå¡ç‰Œï¼Œå°±å¾æˆ‘å€‘å‰›å‰›è®€å¥½çš„å­—å…¸è£¡ã€Œéš¨æ©ŸæŠ½ä¸€å¼µã€
         if (string.IsNullOrEmpty(finalFace))
         {
             if (cardPools.ContainsKey(tooltype) && cardPools[tooltype].Count > 0)
@@ -1534,12 +1534,12 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             }
             else
             {
-                Debug.LogWarning(tooltype + " ¥d¦À¬OªÅªº¡I½ĞÀË¬d txt ÀÉ¡C");
-                finalFace = "ErrorCard"; // ¨¾§b¾÷¨î
+                Debug.LogWarning(tooltype + " å¡æ± æ˜¯ç©ºçš„ï¼è«‹æª¢æŸ¥ txt æª”ã€‚");
+                finalFace = "ErrorCard"; // é˜²å‘†æ©Ÿåˆ¶
             }
         }
 
-        // 3. ¥Í¦¨¹êÅé¥dµP¨Ã¶ë¤J¹ïÀ³ªº°}¦C¤¤
+        // 3. ç”Ÿæˆå¯¦é«”å¡ç‰Œä¸¦å¡å…¥å°æ‡‰çš„é™£åˆ—ä¸­
         GameObject card = Instantiate(toolcardprfeb, cardpanel);
         CardsInType[typeIndex].Add(card);
 
@@ -1674,11 +1674,11 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         switch (status)
         {
             case 0:
-                hintword.text = "ÁÙ¤£¬O§Aªº¦^¦X";
+                hintword.text = "é‚„ä¸æ˜¯ä½ çš„å›åˆ";
                 skillButton.enabled = false;
                 break;
             case 1:
-                hintword.text = "½Ğ¥XµP";
+                hintword.text = "è«‹å‡ºç‰Œ";
                 switch (character)
                 {
                     case "2":
@@ -1691,9 +1691,9 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                             skillButton.enabled = false;
                         }
                         break;
-                    case "15": // Êo¦t¡G¥u¯à¦b³Q§ğÀ»®É¨Ï¥Î
-                    case "24": // «ÉÂ{¡G¥u¯à¦b³Q§ğÀ»®É¨Ï¥Î
-                    case "30": // ¬R¥ş¡G¨S¦³¥D°Ê§Ş¯à
+                    case "15": // åŠ­å®‡ï¼šåªèƒ½åœ¨è¢«æ”»æ“Šæ™‚ä½¿ç”¨
+                    case "24": // å®¥ç’¿ï¼šåªèƒ½åœ¨è¢«æ”»æ“Šæ™‚ä½¿ç”¨
+                    case "30": // æ˜±å…¨ï¼šæ²’æœ‰ä¸»å‹•æŠ€èƒ½
                         skillButton.enabled = false;
                         break;
                     default:
@@ -1709,10 +1709,10 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 }
                 break;
             case 2:
-                hintword.text = "½Ğ¦^À³";
+                hintword.text = "è«‹å›æ‡‰";
                 switch (character)
                 {
-                    case "15": // Êo¦tªºªÀ¥æ½¹½º
+                    case "15": // åŠ­å®‡çš„ç¤¾äº¤è´è¶
                         if (cd == 0 && !multi)
                         {
                             skillButton.enabled = true;
@@ -1722,7 +1722,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                             skillButton.enabled = false;
                         }
                         break;
-                    case "24": // «ÉÂ{ªº¤@¥N¶Ç©_
+                    case "24": // å®¥ç’¿çš„ä¸€ä»£å‚³å¥‡
                         if (cd == 0 && canPlayDefense)
                         {
                             skillButton.enabled = true;
@@ -1732,13 +1732,13 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                             skillButton.enabled = false;
                         }
                         break;
-                    default: // ¨ä¥L©Ò¦³¤H¦b³o¶¥¬q³£¤£¯à«ö§Ş¯à
+                    default: // å…¶ä»–æ‰€æœ‰äººåœ¨é€™éšæ®µéƒ½ä¸èƒ½æŒ‰æŠ€èƒ½
                         skillButton.enabled = false;
                         break;
                 }
                 break;
-            //case 3: // ¡i·s¼W¡j¡G°Êµe»Pºô¸ôµ²ºâ±M¥ÎªºµL¼ÄÂê©wª¬ºA
-            //    hintword.text = "°Êµeµ²ºâ¤¤...";
+            //case 3: // ã€æ–°å¢ã€‘ï¼šå‹•ç•«èˆ‡ç¶²è·¯çµç®—å°ˆç”¨çš„ç„¡æ•µé–å®šç‹€æ…‹
+            //    hintword.text = "å‹•ç•«çµç®—ä¸­...";
             //    skillButton.enabled = false;
             //    break;
         }

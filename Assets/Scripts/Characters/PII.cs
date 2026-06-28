@@ -37,8 +37,8 @@ public class PII : PlayerBase
         if (flag) 
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("¡IÀ¿³Ø");
-            sb.Append(handle.nickname + " ¨Ï¥Î¤F§Ş¯à¡I");
+            sb.AppendLine("ï¼æ“¦å–€");
+            sb.Append(handle.nickname + " ä½¿ç”¨äº†æŠ€èƒ½ï¼");
             manager.setPlayerProperties(recordedWisdom, recordedStrength, recordedReputation);
             handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 1000);
             PhotonNetwork.SendAllOutgoingCommands();
@@ -46,8 +46,8 @@ public class PII : PlayerBase
         else
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("³ØÀ¿¡I");
-            sb.Append(handle.nickname + " ¨Ï¥Î¤F§Ş¯à¡I");
+            sb.AppendLine("å–€æ“¦ï¼");
+            sb.Append(handle.nickname + " ä½¿ç”¨äº†æŠ€èƒ½ï¼");
             int[] properties = handle.getProperties();
             recordedWisdom = properties[0];
             recordedStrength = properties[1];

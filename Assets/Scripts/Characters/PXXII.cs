@@ -17,14 +17,14 @@ public class PXXII : PlayerBase
     public override void useSkill()
     {
         StringBuilder sb = new StringBuilder();
-        sb.AppendLine("¤º±²¤§¾l¡A¬İ¬İ½Ò¥~Åªª«¦ó¹Á¤£¬O¬ü¨Æ¤@¼Î¡H");
-        sb.Append(handle.nickname + " ¨I®û©ó»´¤p»¡¤§¤¤...");
+        sb.AppendLine("å…§æ²ä¹‹é¤˜ï¼Œçœ‹çœ‹èª²å¤–è®€ç‰©ä½•å˜—ä¸æ˜¯ç¾äº‹ä¸€æ¨ï¼Ÿ");
+        sb.Append(handle.nickname + " æ²‰æµ¸æ–¼è¼•å°èªªä¹‹ä¸­...");
         handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 1500);
 
-        // ¥Ø¼Ğ¿ï¦Û¤v¡Aµo®g¤£¥i¨¾¿mªº¸É¦å¥d
+        // ç›®æ¨™é¸è‡ªå·±ï¼Œç™¼å°„ä¸å¯é˜²ç¦¦çš„è£œè¡€å¡
         handle.View.RPC("SetFromTo", RpcTarget.All, manager.me, manager.me);
         handle.View.RPC("GetCard", RpcTarget.All, "unblockable", "XXIISkill");
-        handle.View.RPC("Played", RpcTarget.All, 10, 10, 0); // «ì´_10ÂI´¼¤O»PÅé¤O
+        handle.View.RPC("Played", RpcTarget.All, 10, 10, 0); // æ¢å¾©10é»æ™ºåŠ›èˆ‡é«”åŠ›
         PhotonNetwork.SendAllOutgoingCommands();
     }
 
@@ -32,9 +32,9 @@ public class PXXII : PlayerBase
     {
         if (!hasRevived)
         {
-            w = 5; s = 5; r = 5; // ³]©w»¡´_¬¡µ¹ 5 ÂI¼Æ­È
+            w = 5; s = 5; r = 5; // è¨­å®šèªªå¾©æ´»çµ¦ 5 é»æ•¸å€¼
             hasRevived = true;
-            return true; // ÀF¤ı©Ú¦¬¡A´_¬¡¦¨¥\¡I
+            return true; // é–»ç‹æ‹’æ”¶ï¼Œå¾©æ´»æˆåŠŸï¼
         }
         return false;
     }

@@ -20,7 +20,7 @@ public class PXXX : PlayerBase
         
     }
 
-    // ¥D°Ê§Þ¯à¡G©ê¤@¤U¹À
+    // ä¸»å‹•æŠ€èƒ½ï¼šæŠ±ä¸€ä¸‹å˜›
     public override void useSkill()
     {
         

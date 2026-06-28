@@ -30,7 +30,7 @@ public class PIX : PlayerBase
     {
         StringBuilder sb = new StringBuilder();
         sb.AppendLine("Dio lin lou mou");
-        sb.Append(handle.nickname + " �ϥΤF�ޯ�I");
+        sb.Append(handle.nickname + " 使用了技能！");
         handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 1500);
         if (manager.targetnum == -1)
         {

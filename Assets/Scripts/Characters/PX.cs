@@ -30,8 +30,8 @@ public class PX : PlayerBase
     public override void useSkill()
     {
         StringBuilder sb = new StringBuilder();
-        sb.AppendLine("¶}©l¹ê¬ICPR");
-        sb.Append(handle.nickname + " ¨Ï¥Î¤F§Ş¯à¡I");
+        sb.AppendLine("é–‹å§‹å¯¦æ–½CPR");
+        sb.Append(handle.nickname + " ä½¿ç”¨äº†æŠ€èƒ½ï¼");
         handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 1500);
         handle.View.RPC("SetFromTo", RpcTarget.All, manager.me, manager.me);
         handle.View.RPC("GetCard", RpcTarget.All, "medicine", "redcorss");

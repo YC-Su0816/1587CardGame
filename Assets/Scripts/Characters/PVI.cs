@@ -36,7 +36,7 @@ public class PVI : PlayerBase
     {
         StringBuilder sb = new StringBuilder();
         sb.AppendLine("zzz...");
-        sb.Append(handle.nickname + " �ϥΤF�ޯ�I");
+        sb.Append(handle.nickname + " 使用了技能！");
         handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 2000);
         handle.View.RPC("PutEffect", RpcTarget.All, manager.me, 1, "sleep");
         PhotonNetwork.SendAllOutgoingCommands();

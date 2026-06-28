@@ -10,11 +10,11 @@ public class ToolCardController : MonoBehaviour, IPointerClickHandler
     public string face, tooltype;
     public GameObject discription;
 
-    // ±N­ì¥»´²¸¨ªº Find ©M GetComponent ¶°¤¤§Ö¨ú¡A´î¤Ö®Ä¯à®ö¶O
+    // å°‡åŸæœ¬æ•£è½çš„ Find å’Œ GetComponent é›†ä¸­å¿«å–ï¼Œæ¸›å°‘æ•ˆèƒ½æµªè²»
     private GameSceneManager gameManager;
     private Transform displayfrom, displayto;
 
-    // «Ø¥ß¥dµPÃş«¬»P°}¦C Index ªº¹ïÀ³ªí (Ãş¦ü Hash Map / Lookup Table)
+    // å»ºç«‹å¡ç‰Œé¡å‹èˆ‡é™£åˆ— Index çš„å°æ‡‰è¡¨ (é¡ä¼¼ Hash Map / Lookup Table)
     private readonly Dictionary<string, int> typeToIndex = new Dictionary<string, int>
     {
         { "attack", 0 },
@@ -27,11 +27,11 @@ public class ToolCardController : MonoBehaviour, IPointerClickHandler
 
     void Start()
     {
-        // ¥u¦bªì©l¤Æ®É§ä¤@¦¸¨Ã¦s¦¨°Ñ¦Ò (Reference)
+        // åªåœ¨åˆå§‹åŒ–æ™‚æ‰¾ä¸€æ¬¡ä¸¦å­˜æˆåƒè€ƒ (Reference)
         GameObject canva = GameObject.Find("Canvas");
         gameManager = GameObject.Find("GameSceneManager").GetComponent<GameSceneManager>();
 
-        // µ½¥Î transform.Find ¥i¥Hª½±µ§ä¤lª«¥ó¡A¤£»İ°Ê¥Î¥ş°ì´M§ä
+        // å–„ç”¨ transform.Find å¯ä»¥ç›´æ¥æ‰¾å­ç‰©ä»¶ï¼Œä¸éœ€å‹•ç”¨å…¨åŸŸå°‹æ‰¾
         Transform roundTransform = canva.transform.Find("Round");
         displayfrom = roundTransform.Find("FromBoard");
         displayto = roundTransform.Find("ToBoard");
@@ -43,7 +43,7 @@ public class ToolCardController : MonoBehaviour, IPointerClickHandler
     {
         int sta = gameManager.status;
 
-        if (sta == 1) // 1: ¥XµP¶¥¬q
+        if (sta == 1) // 1: å‡ºç‰Œéšæ®µ
         {
             if (tooltype == "strengthen")
                 HandleStrengthen(displayfrom);
@@ -51,31 +51,31 @@ public class ToolCardController : MonoBehaviour, IPointerClickHandler
                 HandleStandardCard(typeToIndex[tooltype], displayfrom);
             else if (tooltype == "special")
             {
-                // ¡iÅv­­§P©w¡j¡G½T»{³o±i¯S§O¥d¤¹³\¦b¡u¦Û¤vªº¦^¦X¡v¥XµP
+                // ã€æ¬Šé™åˆ¤å®šã€‘ï¼šç¢ºèªé€™å¼µç‰¹åˆ¥å¡å…è¨±åœ¨ã€Œè‡ªå·±çš„å›åˆã€å‡ºç‰Œ
                 if (gameManager.specialCardDict.ContainsKey(face) && gameManager.specialCardDict[face].canPlayOnTurn)
                 {
                     HandleStandardCard(typeToIndex[tooltype], displayfrom);
                 }
                 else
                 {
-                    Debug.Log("³o±i¯S®íµP¤£¯à¦b¥D°Ê¦^¦X¥´¥X¡I");
+                    Debug.Log("é€™å¼µç‰¹æ®Šç‰Œä¸èƒ½åœ¨ä¸»å‹•å›åˆæ‰“å‡ºï¼");
                 }
             }
         }
-        else if (sta == 2) // 2: ¦^À³¶¥¬q
+        else if (sta == 2) // 2: å›æ‡‰éšæ®µ
         {
             if (gameManager.canPlayDefense && tooltype == "defense")
                 HandleDefenseCard(displayto);
             else if (face == "all_in_vain" || (gameManager.canPlaySpecial && tooltype == "special"))
             {
-                // ¡iÅv­­§P©w¡j¡G½T»{³o±i¯S§O¥d¤¹³\¦b¡u³Q§ğÀ»/§@¥Î®É¡v¥XµP
+                // ã€æ¬Šé™åˆ¤å®šã€‘ï¼šç¢ºèªé€™å¼µç‰¹åˆ¥å¡å…è¨±åœ¨ã€Œè¢«æ”»æ“Š/ä½œç”¨æ™‚ã€å‡ºç‰Œ
                 if (gameManager.specialCardDict.ContainsKey(face) && gameManager.specialCardDict[face].canPlayOnAttacked)
                 {
                     HandleStandardCard(typeToIndex[tooltype], displayto);
                 }
                 else
                 {
-                    Debug.Log("³o±i¯S®íµP¤£¯à·í§@¨¾¿m/¦^À³¥´¥X¡I");
+                    Debug.Log("é€™å¼µç‰¹æ®Šç‰Œä¸èƒ½ç•¶ä½œé˜²ç¦¦/å›æ‡‰æ‰“å‡ºï¼");
                 }
             }
         }
@@ -83,7 +83,7 @@ public class ToolCardController : MonoBehaviour, IPointerClickHandler
         gameManager.RefreshDisplay();
     }
 
-    // ³B²z¤@¯ë·|¡u²MªÅ¥ş³õ¡vªº¥dµP (§ğÀ»¡B¸É¦å¡B®ÄªGµ¥)
+    // è™•ç†ä¸€èˆ¬æœƒã€Œæ¸…ç©ºå…¨å ´ã€çš„å¡ç‰Œ (æ”»æ“Šã€è£œè¡€ã€æ•ˆæœç­‰)
     private void HandleStandardCard(int targetIndex, Transform targetDisplay)
     {
         List<GameObject> currentDisplay = gameManager.CardsInDisplay[targetIndex];
@@ -105,19 +105,19 @@ public class ToolCardController : MonoBehaviour, IPointerClickHandler
     {
         List<GameObject> currentDisplay = gameManager.CardsInDisplay[targetIndex];
 
-        // ´M§ä³o±iµP¬O§_¤w¸g¦b°}¦C¤¤
+        // å°‹æ‰¾é€™å¼µç‰Œæ˜¯å¦å·²ç¶“åœ¨é™£åˆ—ä¸­
         int existingIndex = currentDisplay.FindIndex(card => card.GetComponent<ToolDisplayController>().num == num);
 
         if (existingIndex >= 0)
         {
-            // ¦pªG¤w¸g¦b¸Ì­±¡A´N§â¥¦¬å±¼ (¨ú®ø¿ï¨ú)
+            // å¦‚æœå·²ç¶“åœ¨è£¡é¢ï¼Œå°±æŠŠå®ƒç æ‰ (å–æ¶ˆé¸å–)
             currentDisplay[existingIndex].GetComponent<ToolDisplayController>().kill();
             currentDisplay.RemoveAt(existingIndex);
             gameManager.displaycount--;
         }
         else
         {
-            // ¦pªG¤£¦b¸Ì­±¡A´N¥[¶i¥h
+            // å¦‚æœä¸åœ¨è£¡é¢ï¼Œå°±åŠ é€²å»
             AddCardToDisplay(targetIndex, targetDisplay);
             gameManager.displaycount++;
         }
@@ -136,17 +136,17 @@ public class ToolCardController : MonoBehaviour, IPointerClickHandler
         }
         HandleToggleCard(typeToIndex["defense"], targetDisplay);
     }
-    // ±j¤Æ¥dªºÅŞ¿è¨ä¹ê¸ò¨¾¿m¥d¤@¼Ë¬OÅ|¥[ªº¡A¥u¬O¦h¤F¤@­Ó«e´£±ø¥ó
+    // å¼·åŒ–å¡çš„é‚è¼¯å…¶å¯¦è·Ÿé˜²ç¦¦å¡ä¸€æ¨£æ˜¯ç–ŠåŠ çš„ï¼Œåªæ˜¯å¤šäº†ä¸€å€‹å‰ææ¢ä»¶
     private void HandleStrengthen(Transform targetDisplay)
     {
-        // ¥²¶·¥ı¦³´¶³q§ğÀ»¥d (Index 0) ¤~¯à¥´±j¤Æ¥d
+        // å¿…é ˆå…ˆæœ‰æ™®é€šæ”»æ“Šå¡ (Index 0) æ‰èƒ½æ‰“å¼·åŒ–å¡
         if (gameManager.CardsInDisplay[0].Count != 0)
         {
             HandleToggleCard(typeToIndex["strengthen"], targetDisplay);
         }
     }
 
-    // ­t³d²MªÅ©Ò¦³®i¥Ü°Ïªº°j°é
+    // è² è²¬æ¸…ç©ºæ‰€æœ‰å±•ç¤ºå€çš„è¿´åœˆ
     private void ClearAllDisplays()
     {
         for (int y = 0; y < 6; y++)
@@ -162,8 +162,8 @@ public class ToolCardController : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    // ­t³d¥Í¦¨¹êÅé¨Ã¥[¤J®i¥Ü°Ï
-    // ­t³d¥Í¦¨¹êÅé¨Ã¥[¤J®i¥Ü°Ï
+    // è² è²¬ç”Ÿæˆå¯¦é«”ä¸¦åŠ å…¥å±•ç¤ºå€
+    // è² è²¬ç”Ÿæˆå¯¦é«”ä¸¦åŠ å…¥å±•ç¤ºå€
     private void AddCardToDisplay(int targetIndex, Transform targetDisplay)
     {
         GameObject detail = Instantiate(discription, targetDisplay);
@@ -171,15 +171,15 @@ public class ToolCardController : MonoBehaviour, IPointerClickHandler
 
         ToolDisplayController tdc = detail.GetComponent<ToolDisplayController>();
 
-        // ¡iÃöÁä­×§ï¡j¡G¥²¶·¡u¥ı¡vµ¹©w tooltype ©M face¡A¤~¯à©I¥s init¡I
+        // ã€é—œéµä¿®æ”¹ã€‘ï¼šå¿…é ˆã€Œå…ˆã€çµ¦å®š tooltype å’Œ faceï¼Œæ‰èƒ½å‘¼å« initï¼
         tdc.tooltype = tooltype;
         tdc.num = num;
         tdc.face = face;
         tdc.forDisplay = false;
         TextAsset det = Resources.Load<TextAsset>("text/Tool/" + tooltype + "/" + face);
 
-        // ¡iÃöÁä­×§ï¡j¡G®Ú¾Ú¥dµPºØÃş¡Aµ¹¤©·Ç³Æ°Ï¥dµP¹ïÀ³ªº°òÂ¦®i¥Ü¼Æ­È
-        // (¦]¬°·Ç³Æ¶¥¬qÁÙ¨S¥[¤W¨¤¦â­¿²v¡A¥i¥H¥ıµ¹°òÂ¦­È©Î0)
+        // ã€é—œéµä¿®æ”¹ã€‘ï¼šæ ¹æ“šå¡ç‰Œç¨®é¡ï¼Œçµ¦äºˆæº–å‚™å€å¡ç‰Œå°æ‡‰çš„åŸºç¤å±•ç¤ºæ•¸å€¼
+        // (å› ç‚ºæº–å‚™éšæ®µé‚„æ²’åŠ ä¸Šè§’è‰²å€ç‡ï¼Œå¯ä»¥å…ˆçµ¦åŸºç¤å€¼æˆ–0)
         if (tooltype != "special")
         {
             int w = -5, s = 0, r = 0;

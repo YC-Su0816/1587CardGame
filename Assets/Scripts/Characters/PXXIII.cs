@@ -32,15 +32,15 @@ public class PXXIII : PlayerBase
     public override void useSkill()
     {
         StringBuilder sb = new StringBuilder();
-        sb.AppendLine("¥Õµæ ¤À¨É¤F¤@«hreel");
-        sb.AppendLine("§A¦³ 99+ «h°T®§");
-        sb.Append(handle.nickname + " ¨Ï¥Î¤F§Ş¯à¡I");
+        sb.AppendLine("ç™½èœ åˆ†äº«äº†ä¸€å‰‡reel");
+        sb.AppendLine("ä½ æœ‰ 99+ å‰‡è¨Šæ¯");
+        sb.Append(handle.nickname + " ä½¿ç”¨äº†æŠ€èƒ½ï¼");
         handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 1000);
 
-        // ¨Ï¥Î·F¤ù¡A´£¤É 10% ¥¢±Ñ²v
+        // ä½¿ç”¨å¹¹ç‰‡ï¼Œæå‡ 10% å¤±æ•—ç‡
         fail = (fail <= 0.65f) ? fail + 0.1f : 0.75f;
 
-        // ¡i·s¼W¡j¡G­ì¥»º|±¼ªº§ğÀ»ÅŞ¿è
+        // ã€æ–°å¢ã€‘ï¼šåŸæœ¬æ¼æ‰çš„æ”»æ“Šé‚è¼¯
         if (manager.targetnum == -1)
         {
             manager.targetnum = (manager.me + 1) % manager.total;
@@ -48,34 +48,34 @@ public class PXXIII : PlayerBase
 
         handle.View.RPC("SetFromTo", RpcTarget.All, manager.me, manager.targetnum);
 
-        // ¡i­×¥¿¡j¨Ï¥Î«ü©wªº§Ş¯à¥d¤ù¹Ï¥Ü
+        // ã€ä¿®æ­£ã€‘ä½¿ç”¨æŒ‡å®šçš„æŠ€èƒ½å¡ç‰‡åœ–ç¤º
         handle.View.RPC("GetCard", RpcTarget.All, "attack", "XXIIISkill");
-        handle.View.RPC("Played", RpcTarget.All, -20, 0, 0); // ¹ï¥Ø¼Ğ³y¦¨ 20 ÂI´¼¤O¶Ë®`
+        handle.View.RPC("Played", RpcTarget.All, -20, 0, 0); // å°ç›®æ¨™é€ æˆ 20 é»æ™ºåŠ›å‚·å®³
 
-        // ¦]¬°¬O attack (¥i¨¾¿m)¡A¥²¶·±N¦Û¤vª¬ºAÂê¦º¡A¥æµ¹¨t²Îµ¥«İ¹ï¤â¦^À³
+        // å› ç‚ºæ˜¯ attack (å¯é˜²ç¦¦)ï¼Œå¿…é ˆå°‡è‡ªå·±ç‹€æ…‹é–æ­»ï¼Œäº¤çµ¦ç³»çµ±ç­‰å¾…å°æ‰‹å›æ‡‰
         manager.status = 0;
         PhotonNetwork.SendAllOutgoingCommands();
     }
 
-    // ­t³d´£¨Ñ·í«eªºÅ|¥[¼Æ­È
+    // è² è²¬æä¾›ç•¶å‰çš„ç–ŠåŠ æ•¸å€¼
     public override void updateAttack()
     {
         
     }
 
-    // ­t³dÂY»ë¤l§P©w³o¦¸¥XµP¬O§_³Q§ì¥]
+    // è² è²¬æ“²éª°å­åˆ¤å®šé€™æ¬¡å‡ºç‰Œæ˜¯å¦è¢«æŠ“åŒ…
     public override bool checkActionFailure(System.Collections.Generic.List<string> attemptTypes)
     {
-        // ¥u¦³¥´¥X§ğÀ»©Î¸s§ğ®É¤~·|Ä²µo§ì¥]§P©w
+        // åªæœ‰æ‰“å‡ºæ”»æ“Šæˆ–ç¾¤æ”»æ™‚æ‰æœƒè§¸ç™¼æŠ“åŒ…åˆ¤å®š
         System.Random rand = new System.Random(System.Guid.NewGuid().GetHashCode());
         if (rand.Next(100) < fail)
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("§Úªº¥DÃD......");
-            sb.AppendLine("¯y½S¡I(ªO·¾¥W³´)");
-            sb.Append(handle.nickname + " ¾D¹J°¸µo©Ê¨Æ¬G¡I");
+            sb.AppendLine("æˆ‘çš„ä¸»é¡Œ......");
+            sb.AppendLine("ç °ç£…ï¼(æ¿æºå‡¹é™·)");
+            sb.Append(handle.nickname + " é­é‡å¶ç™¼æ€§äº‹æ•…ï¼");
             handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 2000);
-            return true; // ¦æ°Êª½±µ§@¼o
+            return true; // è¡Œå‹•ç›´æ¥ä½œå»¢
         }
         return false;
     }

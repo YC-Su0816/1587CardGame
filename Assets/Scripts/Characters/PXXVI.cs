@@ -13,31 +13,31 @@ public class PXXVI : PlayerBase
         attackAdd = new int[3]; defendAdd = new int[3]; medAdd = new int[3];
     }
 
-    // ³Q°Ê§Ş¯à¡GºPÅ|¾÷ (¹ê¥Î©Ê«İÄ³¡A¥Ø«e§¹¥ş¤£¼vÅT¹CÀ¸ÅŞ¿è)
+    // è¢«å‹•æŠ€èƒ½ï¼šæ‘ºç–Šæ©Ÿ (å¯¦ç”¨æ€§å¾…è­°ï¼Œç›®å‰å®Œå…¨ä¸å½±éŸ¿éŠæˆ²é‚è¼¯)
     public override void newRound() { }
 
-    // ¥D°Ê§Ş¯à¡G¥j¤å®Ô»w (§N«o®É¶¡: 2¦^¦X¥Ñ¨t²Î±µºŞ)
+    // ä¸»å‹•æŠ€èƒ½ï¼šå¤æ–‡æœ—èª¦ (å†·å»æ™‚é–“: 2å›åˆç”±ç³»çµ±æ¥ç®¡)
     public override void useSkill()
     {
         System.Random rand = new System.Random(Guid.NewGuid().GetHashCode());
         StringBuilder sb = new StringBuilder();
 
-        sb.AppendLine("´ú¸Õ¡mÀë¤§ªZ°h¼B«¾«¾¡n»P¡mî¿¨û³}¤jÆ[¶é¡nªºÅª­µ...");
+        sb.AppendLine("æ¸¬è©¦ã€Šç‡­ä¹‹æ­¦é€€åŠ‰å§¥å§¥ã€‹èˆ‡ã€Šè¹‡å”é€›å¤§è§€åœ’ã€‹çš„è®€éŸ³...");
 
         if (rand.NextDouble() <= 0.95f)
         {
-            sb.Append("¼Ğµù¦¨¥\¡I" + handle.nickname + " «ì´_¤F©Ò¦³¼Æ­È¡I");
+            sb.Append("æ¨™è¨»æˆåŠŸï¼" + handle.nickname + " æ¢å¾©äº†æ‰€æœ‰æ•¸å€¼ï¼");
             handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 2000);
 
             handle.View.RPC("SetFromTo", RpcTarget.All, manager.me, manager.me);
             handle.View.RPC("GetCard", RpcTarget.All, "medicine", "AI");
 
-            // ¶Ç¤J¥¿¼Æ (5, 5, 5) ¸É¦å¡A¨t²Î·|À°¦£¶]§¹°Êµe¸òµ²§ô¦^¦X
+            // å‚³å…¥æ­£æ•¸ (5, 5, 5) è£œè¡€ï¼Œç³»çµ±æœƒå¹«å¿™è·‘å®Œå‹•ç•«è·ŸçµæŸå›åˆ
             handle.View.RPC("Played", RpcTarget.All, 5, 5, 5);
         }
         else
         {
-            sb.Append("¼Ğµù¥¢±Ñ¡I¼Ò«¬µo¥Í±Y¼ì...");
+            sb.Append("æ¨™è¨»å¤±æ•—ï¼æ¨¡å‹ç™¼ç”Ÿå´©æ½°...");
             handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 2000);
             handle.View.RPC("SetFromTo", RpcTarget.All, manager.me, manager.me);
             handle.View.RPC("GetCard", RpcTarget.All, "medicine", "AI");
