@@ -515,6 +515,11 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     canPlayDefense = false;
                     canPlaySpecial = false;
                 }
+                else if (DisplayFace[0] == "mate")
+                {
+                    canPlayDefense = false;
+                    canPlaySpecial = true;
+                }
             }
         }
             
@@ -722,7 +727,39 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             }
             else
             {
-                if (DisplayFace[0] == "king")
+                if (DisplayFace[0] == "mate")
+                {
+                    sb = new StringBuilder();
+                    sb.AppendLine("抗瓊珶以和予兮...");
+                    sb.AppendLine("指潛淵而為期");
+                    sb.Append(FromAndTo[0].NickName + " 與 " + FromAndTo[1].NickName + " 締結了契約");
+
+                    hint.text = sb.ToString();
+                    HintPanel.SetActive(true);
+
+                    if (PhotonNetwork.LocalPlayer == FromAndTo[0])
+                    {
+                        Player targetPlayer = FromAndTo[1];
+
+                        int targetW = (int)targetPlayer.CustomProperties["Wisdom"];
+                        int targetS = (int)targetPlayer.CustomProperties["Strength"];
+                        int targetR = (int)targetPlayer.CustomProperties["Reputation"];
+
+                        int myW = (int)PhotonNetwork.LocalPlayer.CustomProperties["Wisdom"];
+                        int myS = (int)PhotonNetwork.LocalPlayer.CustomProperties["Strength"];
+                        int myR = (int)PhotonNetwork.LocalPlayer.CustomProperties["Reputation"];
+
+                        int diffW = Mathf.Min(targetW, maxW) - myW;
+                        int diffS = Mathf.Min(targetS, maxS) - myS;
+                        int diffR = Mathf.Min(targetR, maxR) - myR;
+
+                        UpdatePlayerProperties(diffW, diffS, diffR);
+                    }
+
+                    await Task.Delay(3000);
+                    HintPanel.SetActive(false);
+                }
+                else if (DisplayFace[0] == "king")
                 {
                     sb.AppendLine("我進過四次NTUEE");
                     sb.AppendLine("而你...");
@@ -971,7 +1008,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             PickACard(4.67f, "test_strengthen");
             PickACard(5.67f, "test_special");
         }
-        PickACard(5.67f, "all_in_vain");
+        PickACard(5.67f, "mate");
         for (int x = 0; x < 3; ++x)
         {
             float rnd = (float)(6*rand.NextDouble());
@@ -1158,9 +1195,13 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 }
             }
 
+            bool isStandardAction = true;
 
             if (playedType == "special")
             {
+                isStandardAction = false;
+                photonView.RPC("SetFromTo", RpcTarget.All, me, targetnum);
+                PhotonNetwork.SendAllOutgoingCommands();
                 photonView.RPC("Played", RpcTarget.All, 0, 0, 0);
                 PhotonNetwork.SendAllOutgoingCommands();
                 //For special effect
@@ -1174,43 +1215,47 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     // 在這裡寫時間停止的效果
                 }
             }
-            else if (playedType == "medicine")
+            
+            if (isStandardAction)
             {
-                player.p.updateMed();
-                
-                for (int i = 0; i < 3; ++i)
+                if (playedType == "medicine")
                 {
-                    Damages[i] = Calculator(Damages[i], player.p.medRatio[i]);
-                    if (Damages[i] != 0) Damages[i] += player.p.medAdd[i];
+                    player.p.updateMed();
+
+                    for (int i = 0; i < 3; ++i)
+                    {
+                        Damages[i] = Calculator(Damages[i], player.p.medRatio[i]);
+                        if (Damages[i] != 0) Damages[i] += player.p.medAdd[i];
+                    }
                 }
-            }
-            else
-            {
-                player.p.updateAttack();
-                
-                for (int i = 0; i < 3; ++i)
+                else
                 {
-                    Damages[i] = Calculator(Damages[i], player.p.attackRatio[i]);
-                    if (Damages[i] != 0) Damages[i] += player.p.attackAdd[i];
+                    player.p.updateAttack();
+                
+                    for (int i = 0; i < 3; ++i)
+                    {
+                        Damages[i] = Calculator(Damages[i], player.p.attackRatio[i]);
+                        if (Damages[i] != 0) Damages[i] += player.p.attackAdd[i];
+                    }
                 }
-            }
 
-            daW = Damages[0]; daS = Damages[1]; daR = Damages[2];
-            player.p.overrideFinalDamage(ref daW, ref daS, ref daR);
+                daW = Damages[0]; daS = Damages[1]; daR = Damages[2];
+                player.p.overrideFinalDamage(ref daW, ref daS, ref daR);
 
-            if (m)
-            {
-                photonView.RPC("SetFromTo", RpcTarget.All, me, (me + 1) % total);
-                PhotonNetwork.SendAllOutgoingCommands();
-                photonView.RPC("Multi", RpcTarget.All, daW, daS, daR);
-                PhotonNetwork.SendAllOutgoingCommands();
-            }
-            else
-            {
-                photonView.RPC("SetFromTo", RpcTarget.All, me, targetnum);
-                PhotonNetwork.SendAllOutgoingCommands();
-                photonView.RPC("Played", RpcTarget.All, daW, daS, daR);
-                PhotonNetwork.SendAllOutgoingCommands();
+                if (m)
+                {
+                    photonView.RPC("SetFromTo", RpcTarget.All, me, (me + 1) % total);
+                    PhotonNetwork.SendAllOutgoingCommands();
+                    photonView.RPC("Multi", RpcTarget.All, daW, daS, daR);
+                    PhotonNetwork.SendAllOutgoingCommands();
+                }
+                else
+                {
+                    photonView.RPC("SetFromTo", RpcTarget.All, me, targetnum);
+                    PhotonNetwork.SendAllOutgoingCommands();
+                    photonView.RPC("Played", RpcTarget.All, daW, daS, daR);
+                    PhotonNetwork.SendAllOutgoingCommands();
+                }
             }
 
             int drawAmount = player.p.getDrawCardCount();
