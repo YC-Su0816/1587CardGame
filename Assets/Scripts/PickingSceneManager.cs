@@ -36,7 +36,7 @@ public class PickingSceneManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void ReceiveValue(string card)
     {
-        Debug.Log("¦¬" + card);
+        Debug.Log("æ”¶" + card);
         string[] words = card.Split(' ');
         for(int j = 0; j<3; j++)
         {
@@ -114,7 +114,7 @@ public class PickingSceneManager : MonoBehaviourPunCallbacks
         if (changedProps.ContainsKey("Picking"))
         {
             decided++;
-            Debug.Log("¿ï¤F");
+            Debug.Log("é¸äº†");
         }
         if(decided == PhotonNetwork.CurrentRoom.PlayerCount)
         {
@@ -135,11 +135,11 @@ public class PickingSceneManager : MonoBehaviourPunCallbacks
         }
         if (everypickingstatus)
         {
-            wait.text = "¥¿¦b¤Þ¾É¶i¤J±Ð«Ç"+sb.ToString();
+            wait.text = "æ­£åœ¨å¼•å°Žé€²å…¥æ•™å®¤"+sb.ToString();
         }
         else if(selfpickingstatus)
         {
-            wait.text = "µ¥«Ý¨ä¥Lª±®a½T»{"+sb.ToString();
+            wait.text = "ç­‰å¾…å…¶ä»–çŽ©å®¶ç¢ºèª"+sb.ToString();
         }
         else
         {
@@ -162,9 +162,9 @@ public class PickingSceneManager : MonoBehaviourPunCallbacks
         {
             inf[i] = inf[i].Trim();
         }
-        string[] p = {"´¼¼z:", inf[0].ToString(), "Åé¤O:", inf[1].ToString(), "ÁnÅA:", inf[2].ToString()};
+        string[] p = {"æ™ºæ…§:", inf[0].ToString(), "é«”åŠ›:", inf[1].ToString(), "è²è­½:", inf[2].ToString()};
         pro.text = String.Join(" ", p);
-        bepp.text = "³Q°Ê " + inf[3] + "\n" + inf[4];
-        ving.text = "¥D°Ê " + inf[5] + "\n" + inf[6];
+        bepp.text = "è¢«å‹• " + inf[3] + "\n" + inf[4];
+        ving.text = "ä¸»å‹• " + inf[5] + "\n" + inf[6];
     }
 }

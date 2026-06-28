@@ -14,27 +14,27 @@ public class PXIV : PlayerBase
 
     public override void newRound() { }
 
-    // ¥D°Ê§Ş¯à¡G©â¤ô¾÷
+    // ä¸»å‹•æŠ€èƒ½ï¼šæŠ½æ°´æ©Ÿ
     public override void useSkill()
     {
         StringBuilder sb = new StringBuilder();
-        sb.AppendLine("±Ò°Ê©â¤ô¾÷¡I");
-        sb.Append(handle.nickname + " ¨Ï¥Î¤F§Ş¯à¡I");
+        sb.AppendLine("å•Ÿå‹•æŠ½æ°´æ©Ÿï¼");
+        sb.Append(handle.nickname + " ä½¿ç”¨äº†æŠ€èƒ½ï¼");
         handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 1500);
 
-        // ±N¥Ø¼Ğ³]¬°¦Û¤v¡A¥´¥XµLªk¨¾¿mªº©â¤ô¾÷¥dµP
+        // å°‡ç›®æ¨™è¨­ç‚ºè‡ªå·±ï¼Œæ‰“å‡ºç„¡æ³•é˜²ç¦¦çš„æŠ½æ°´æ©Ÿå¡ç‰Œ
         handle.View.RPC("SetFromTo", RpcTarget.All, manager.me, manager.me);
         handle.View.RPC("GetCard", RpcTarget.All, "medicine", "watermachine");
 
-        // ®¾¦^ 15 ÂIÁnÅA (w=0, s=0, r=15)
+        // æŒ½å› 15 é»è²è­½ (w=0, s=0, r=15)
         handle.View.RPC("Played", RpcTarget.All, 0, 0, 15);
         PhotonNetwork.SendAllOutgoingCommands();
     }
 
-    // ³Q°Ê§Ş¯à¡G§@ªÌ¬İ¨ìªº­­°Ê
+    // è¢«å‹•æŠ€èƒ½ï¼šä½œè€…çœ‹åˆ°çš„é™å‹•
     public override void overrideFinalDamage(ref int w, ref int s, ref int r)
     {
-        // ½T«O³o¬O¤@¦¸¦³¹ï¶Hªº³æÅé§ğÀ»
+        // ç¢ºä¿é€™æ˜¯ä¸€æ¬¡æœ‰å°è±¡çš„å–®é«”æ”»æ“Š
         if (manager.targetnum >= 0 && manager.targetnum < manager.total)
         {
             var targetProps = manager.LocalPlayerList[manager.targetnum].CustomProperties;
@@ -46,30 +46,30 @@ public class PXIV : PlayerBase
             StringBuilder sb = new StringBuilder();
             if (tw == targetPanel.maxWisdom && w < 0)
             {
-                sb.AppendLine("³y¦¨¤T­¿´¼¼z¶Ë®`");
+                sb.AppendLine("é€ æˆä¸‰å€æ™ºæ…§å‚·å®³");
                 w *= 3;
             }
             if (ts == targetPanel.maxStrength && s < 0)
             {
-                sb.AppendLine("³y¦¨¤T­¿Åé¤O¶Ë®`");
+                sb.AppendLine("é€ æˆä¸‰å€é«”åŠ›å‚·å®³");
                 s *= 3;
             }
             if (tr == targetPanel.maxReputation && r < 0)
             {
-                sb.AppendLine("³y¦¨¤T­¿ÁnÅA¶Ë®`");
+                sb.AppendLine("é€ æˆä¸‰å€è²è­½å‚·å®³");
                 r *= 3;
             }
             if (sb.ToString() != "")
             {
-                manager.photonView.RPC("Announcement", RpcTarget.All, handle.nickname + " ³Q°Ê¥Í®Ä\n" + sb.ToString(), 2000);
+                manager.photonView.RPC("Announcement", RpcTarget.All, handle.nickname + " è¢«å‹•ç”Ÿæ•ˆ\n" + sb.ToString(), 2000);
             }
             
-            // §PÂ_¥Ø¼Ğ¬O§_¬°¡uº¡¼Æ­È¡v
+            // åˆ¤æ–·ç›®æ¨™æ˜¯å¦ç‚ºã€Œæ»¿æ•¸å€¼ã€
             //if (tw == targetPanel.maxWisdom && ts == targetPanel.maxStrength && tr == targetPanel.maxReputation)
             //{
-            //    manager.photonView.RPC("Announcement", RpcTarget.All, handle.nickname + " ªº­­°ÊÃzÀ»¡I¶Ë®`Â½­¿¡I", 1500);
+            //    manager.photonView.RPC("Announcement", RpcTarget.All, handle.nickname + " çš„é™å‹•çˆ†æ“Šï¼å‚·å®³ç¿»å€ï¼", 1500);
 
-            //    // °w¹ï­ì¥»¦³¦©¦åªºÄİ©Ê¡A³y¦¨Âù­¿¶Ë®`
+            //    // é‡å°åŸæœ¬æœ‰æ‰£è¡€çš„å±¬æ€§ï¼Œé€ æˆé›™å€å‚·å®³
             //    if (w < 0) w *= 3;
             //    if (s < 0) s *= 3;
             //    if (r < 0) r *= 3;

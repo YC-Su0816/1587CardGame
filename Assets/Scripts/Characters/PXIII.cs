@@ -30,12 +30,12 @@ public class PXIII : PlayerBase
     }
     //public override void useSkill()
     //{
-    //    // Âê©w¦Û¤v
+    //    // é–å®šè‡ªå·±
     //    manager.status = 0;
 
     //    StringBuilder sb = new StringBuilder();
-    //    sb.AppendLine("(ºë´ïªº»R«º)");
-    //    sb.Append(handle.nickname + " ¨Ï¥Î¤F§Ş¯à¡I");
+    //    sb.AppendLine("(ç²¾æ¹›çš„èˆå§¿)");
+    //    sb.Append(handle.nickname + " ä½¿ç”¨äº†æŠ€èƒ½ï¼");
 
     //    int[] mine = manager.handle.getProperties();
     //    int lowest = 100;
@@ -49,20 +49,20 @@ public class PXIII : PlayerBase
     //        }
     //    }
 
-    //    int[] heal = new int[3]; // ¥Î¨Ó°O¿ı­n¸É¦h¤Ö¦å
+    //    int[] heal = new int[3]; // ç”¨ä¾†è¨˜éŒ„è¦è£œå¤šå°‘è¡€
     //    switch (index)
     //    {
     //        case 0: heal[0] = (int)((manager.maxW - mine[0]) * 0.8f); break;
     //        case 1: heal[1] = (int)((manager.maxS - mine[1]) * 0.8f); break;
-    //        case 2: heal[2] = (int)((manager.maxR - mine[2]) * 0.8f); break; // ­×¥¿¤F³o¸Ìªº mine[0] ¿ù»~¡I
+    //        case 2: heal[2] = (int)((manager.maxR - mine[2]) * 0.8f); break; // ä¿®æ­£äº†é€™è£¡çš„ mine[0] éŒ¯èª¤ï¼
     //    }
 
-    //    // ª½±µ¥Î unblockable ¨Ó¨q¥dµP¡A¨Ã¥B±j¨î¥[¦åµ¹¦Û¤v
+    //    // ç›´æ¥ç”¨ unblockable ä¾†ç§€å¡ç‰Œï¼Œä¸¦ä¸”å¼·åˆ¶åŠ è¡€çµ¦è‡ªå·±
     //    handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 1500);
     //    handle.View.RPC("SetFromTo", RpcTarget.All, manager.me, manager.me);
     //    handle.View.RPC("GetCard", RpcTarget.All, "unblockable", "dance");
 
-    //    // ª`·N¡G¦]¬° Played() ¸Ì­±ªº unblockable ¬O¥Î¨Ó¡u¦©¦å¡vªº¡A©Ò¥H§Ú­Ì¶Ç¤J¥¿¼Æ¡A¦b UpdatePlayerProperties ¸Ì´N·|ÅÜ¦¨¸É¦å¡I
+    //    // æ³¨æ„ï¼šå› ç‚º Played() è£¡é¢çš„ unblockable æ˜¯ç”¨ä¾†ã€Œæ‰£è¡€ã€çš„ï¼Œæ‰€ä»¥æˆ‘å€‘å‚³å…¥æ­£æ•¸ï¼Œåœ¨ UpdatePlayerProperties è£¡å°±æœƒè®Šæˆè£œè¡€ï¼
     //    handle.View.RPC("Played", RpcTarget.All, heal[0], heal[1], heal[2]);
     //    PhotonNetwork.SendAllOutgoingCommands();
     //}
@@ -70,8 +70,8 @@ public class PXIII : PlayerBase
     {
         manager.status = 0;
         StringBuilder sb = new StringBuilder();
-        sb.AppendLine("(ºë´ïªº»R«º)");
-        sb.Append(handle.nickname + " ¨Ï¥Î¤F§Ş¯à¡I");
+        sb.AppendLine("(ç²¾æ¹›çš„èˆå§¿)");
+        sb.Append(handle.nickname + " ä½¿ç”¨äº†æŠ€èƒ½ï¼");
         int[] mine = new int[3];
         mine[0] = (int)manager.LocalPlayerList[manager.me].CustomProperties["Wisdom"];
         mine[1] = (int)manager.LocalPlayerList[manager.me].CustomProperties["Strength"];

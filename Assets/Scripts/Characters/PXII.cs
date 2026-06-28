@@ -31,9 +31,9 @@ public class PXII : PlayerBase
     public override void useSkill()
     {
         StringBuilder sb = new StringBuilder();
-        sb.AppendLine("ª`·N¨ì¡AµM«á...");
-        sb.AppendLine("±oÃÒ¡CQ.E.D.");
-        sb.Append(handle.nickname + " ¨Ï¥Î¤F§Ş¯à¡I");
+        sb.AppendLine("æ³¨æ„åˆ°ï¼Œç„¶å¾Œ...");
+        sb.AppendLine("å¾—è­‰ã€‚Q.E.D.");
+        sb.Append(handle.nickname + " ä½¿ç”¨äº†æŠ€èƒ½ï¼");
         int[] mine = new int[3];
         mine[0] = (int)manager.LocalPlayerList[manager.me].CustomProperties["Wisdom"];
         mine[1] = (int)manager.LocalPlayerList[manager.me].CustomProperties["Strength"];
@@ -68,21 +68,21 @@ public class PXII : PlayerBase
         if(rnd1 <= 0.3f)
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("¦³ÆF·P¤F¡I");
+            sb.AppendLine("æœ‰éˆæ„Ÿäº†ï¼");
             if (rnd2 <= 0.33f)
             {
                 manager.UpdatePlayerProperties(5, 0, 0);
-                sb.Append("´¼¼z«ì´_5ÂI");
+                sb.Append("æ™ºæ…§æ¢å¾©5é»");
             }
             else if(rnd2 <= 0.67f)
             {
                 manager.UpdatePlayerProperties(0, 5, 0);
-                sb.Append("Åé¤O«ì´_5ÂI");
+                sb.Append("é«”åŠ›æ¢å¾©5é»");
             }
             else
             {
                 manager.UpdatePlayerProperties(0, 0, 5);
-                sb.Append("ÁnÅA«ì´_5ÂI");
+                sb.Append("è²è­½æ¢å¾©5é»");
             }
             handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 1500);
             PhotonNetwork.SendAllOutgoingCommands();

@@ -15,40 +15,40 @@ public class PXVI : PlayerBase
 
     public override void newRound() { }
 
-    // ¥D°Ê§Ş¯à¡Gº±¨ı­±
+    // ä¸»å‹•æŠ€èƒ½ï¼šæ»·å‘³é¢
     public override void useSkill()
     {
         System.Random rand = new System.Random(Guid.NewGuid().GetHashCode());
         double mult = (rand.NextDouble() > 0.5) ? 3.0 : 0.2;
 
-        // ­pºâ³Ì²×¸É¦å¶q (´¼¼z°òÂ¦ 5¡AÅé¤O°òÂ¦ 10)¡AÁnÅA©T©w¦© 5 ¤£¨ü¼vÅT
+        // è¨ˆç®—æœ€çµ‚è£œè¡€é‡ (æ™ºæ…§åŸºç¤ 5ï¼Œé«”åŠ›åŸºç¤ 10)ï¼Œè²è­½å›ºå®šæ‰£ 5 ä¸å—å½±éŸ¿
         int finalW = (mult > 1.0) ? 15 : 1;
         int finalS = (mult > 1.0) ? 30 : 2;
         int finalR = -5;
 
         StringBuilder sb = new StringBuilder();
-        sb.AppendLine("¨S¦³¤°»ò¤ñ±o¤W¤@¸J\n¼öÄËÄËªºº±¨ı­±¡AOK¡H");
+        sb.AppendLine("æ²’æœ‰ä»€éº¼æ¯”å¾—ä¸Šä¸€ç¢—\nç†±é¨°é¨°çš„æ»·å‘³é¢ï¼ŒOKï¼Ÿ");
 
-        string resultText = (mult > 1.0) ? "¡i¤j°_¡j¶W¤j¸J¡I" : "¡i¤j¸¨¡j¥u¦³¤@¤f...";
-        sb.Append(handle.nickname + " ¦YÄÑÄ²µo¤F " + resultText);
+        string resultText = (mult > 1.0) ? "ã€å¤§èµ·ã€‘è¶…å¤§ç¢—ï¼" : "ã€å¤§è½ã€‘åªæœ‰ä¸€å£...";
+        sb.Append(handle.nickname + " åƒéºµè§¸ç™¼äº† " + resultText);
 
         handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 2000);
 
-        // ±N¥Ø¼Ğ³]¬°¦Û¤v¡A¥´¥XµLªk¨¾¿mªºº±¨ı­±¥dµP
+        // å°‡ç›®æ¨™è¨­ç‚ºè‡ªå·±ï¼Œæ‰“å‡ºç„¡æ³•é˜²ç¦¦çš„æ»·å‘³é¢å¡ç‰Œ
         handle.View.RPC("SetFromTo", RpcTarget.All, manager.me, manager.me);
         handle.View.RPC("GetCard", RpcTarget.All, "medicine", "mian");
 
-        // ¶Ç¤J¸g¹L¤j°_¤j¸¨­pºâ«áªº¼Æ­È
+        // å‚³å…¥ç¶“éå¤§èµ·å¤§è½è¨ˆç®—å¾Œçš„æ•¸å€¼
         handle.View.RPC("Played", RpcTarget.All, finalW, finalS, finalR);
         PhotonNetwork.SendAllOutgoingCommands();
     }
 
-    // «Ê¸Ë³Q°ÊÂY»ë¤lÅŞ¿è¡A®M¥Îµ¹©Ò¦³¥XµP¦æ°Ê
+    // å°è£è¢«å‹•æ“²éª°å­é‚è¼¯ï¼Œå¥—ç”¨çµ¦æ‰€æœ‰å‡ºç‰Œè¡Œå‹•
     private void ApplyDaQiDaLuo(double[] ratioArray, string actionType)
     {
         System.Random rand = new System.Random(Guid.NewGuid().GetHashCode());
 
-        // 50% ¤j°_ (x3)¡A50% ¤j¸¨ (x0.2)
+        // 50% å¤§èµ· (x3)ï¼Œ50% å¤§è½ (x0.2)
         double mult = (rand.NextDouble() > 0.5) ? 3.0 : 0.2;
 
         for (int i = 0; i < 3; i++)
@@ -56,23 +56,23 @@ public class PXVI : PlayerBase
             ratioArray[i] = mult;
         }
 
-        string resultText = (mult > 1.0) ? "¡i¤j°_¡j¼Æ­ÈÃzµo¡I(x3)" : "¡i¤j¸¨¡j³n®zµL¤O...(x0.2)";
+        string resultText = (mult > 1.0) ? "ã€å¤§èµ·ã€‘æ•¸å€¼çˆ†ç™¼ï¼(x3)" : "ã€å¤§è½ã€‘è»Ÿå¼±ç„¡åŠ›...(x0.2)";
         manager.photonView.RPC("Announcement", RpcTarget.All, handle.nickname + actionType + resultText, 1500);
     }
 
     public override void updateAttack()
     {
-        ApplyDaQiDaLuo(attackRatio, " ªº§ğÀ»Ä²µo¤F ");
+        ApplyDaQiDaLuo(attackRatio, " çš„æ”»æ“Šè§¸ç™¼äº† ");
     }
 
     public override void updateDefend()
     {
-        ApplyDaQiDaLuo(defendRatio, " ªº¨¾¦uÄ²µo¤F ");
+        ApplyDaQiDaLuo(defendRatio, " çš„é˜²å®ˆè§¸ç™¼äº† ");
     }
 
     public override void updateMed()
     {
-        ApplyDaQiDaLuo(medRatio, " ªºªvÀøÄ²µo¤F ");
+        ApplyDaQiDaLuo(medRatio, " çš„æ²»ç™‚è§¸ç™¼äº† ");
     }
 
     public override void endRound() { }

@@ -19,14 +19,14 @@ public class PXX : PlayerBase
     {
         if (cooldown > 0) cooldown--;
 
-        // ³Q°Ê§Ş¯à¡G¦Û«ß (¨C¦^¦X¦^´_ 2 ÂI´¼¤O»PÅé¤O)
+        // è¢«å‹•æŠ€èƒ½ï¼šè‡ªå¾‹ (æ¯å›åˆå›å¾© 2 é»æ™ºåŠ›èˆ‡é«”åŠ›)
         manager.UpdatePlayerProperties(2, 2, 0);
 
-        // ¼½­Ó¤p´£¥ÜÅı¤j®aª¾¹D¥L¨Ä¨ÄºÎÄ±¸É¦å¤F
-        manager.photonView.RPC("Announcement", RpcTarget.All, handle.nickname + " ³z¹L¦Û«ßºû«ù¤F¨}¦n§@®§¡I", 1500);
+        // æ’­å€‹å°æç¤ºè®“å¤§å®¶çŸ¥é“ä»–ä¹–ä¹–ç¡è¦ºè£œè¡€äº†
+        manager.photonView.RPC("Announcement", RpcTarget.All, handle.nickname + " é€éè‡ªå¾‹ç¶­æŒäº†è‰¯å¥½ä½œæ¯ï¼", 1500);
     }
 
-    // ¥D°Ê§Ş¯à¡G¤¤Âå (§N«o®É¶¡: 5¦^¦X)
+    // ä¸»å‹•æŠ€èƒ½ï¼šä¸­é†« (å†·å»æ™‚é–“: 5å›åˆ)
     public override void useSkill()
     {
         if (cooldown > 0) return;
@@ -34,10 +34,10 @@ public class PXX : PlayerBase
 
         System.Random rand = new System.Random(Guid.NewGuid().GetHashCode());
 
-        // ¨Ï¥Î¥¿½Tªº getProperties Àò¨ú·í«eÄİ©Ê
+        // ä½¿ç”¨æ­£ç¢ºçš„ getProperties ç²å–ç•¶å‰å±¬æ€§
         int[] mine = handle.getProperties();
 
-        // Àò¨ú³Ì¤j­È¤W­­
+        // ç²å–æœ€å¤§å€¼ä¸Šé™
         int[] maxes = new int[] { manager.maxW, manager.maxS, manager.maxR };
 
         int lowestVal = int.MaxValue;
@@ -45,7 +45,7 @@ public class PXX : PlayerBase
         int highestVal = int.MinValue;
         int highestIdx = -1;
 
-        // ±½´y§ä¥X³Ì°ª»P³Ì§Cªº¼Æ­È¤Î¨ä¯Á¤Ş
+        // æƒææ‰¾å‡ºæœ€é«˜èˆ‡æœ€ä½çš„æ•¸å€¼åŠå…¶ç´¢å¼•
         for (int i = 0; i < 3; i++)
         {
             if (mine[i] < lowestVal)
@@ -62,34 +62,34 @@ public class PXX : PlayerBase
 
         int[] diffs = new int[3] { 0, 0, 0 };
         StringBuilder sb = new StringBuilder();
-        sb.AppendLine("±æ»D°İ¤Á...");
+        sb.AppendLine("æœ›èå•åˆ‡...");
 
         if (rand.NextDouble() <= 0.8f)
         {
-            // 80% ¾÷²v¡G¦¨¥\¡A³Ì§C¼Æ­È«ì´_¦Ü³Ì¤j­Èªº 0.8
-            sb.Append("¶EÂ_¦¨¥\¡I³Ì§C¼Æ­È¤j´T«ì´_¡I");
+            // 80% æ©Ÿç‡ï¼šæˆåŠŸï¼Œæœ€ä½æ•¸å€¼æ¢å¾©è‡³æœ€å¤§å€¼çš„ 0.8
+            sb.Append("è¨ºæ–·æˆåŠŸï¼æœ€ä½æ•¸å€¼å¤§å¹…æ¢å¾©ï¼");
             int targetVal = (int)(maxes[lowestIdx] * 0.8f);
 
-            // ¨Ï¥Î Mathf.Max ½T«O¦pªG­ì¥»¼Æ­È¤w¸g°ª©ó 0.8 ¤£·|¤Ï¦V¦©¦å
+            // ä½¿ç”¨ Mathf.Max ç¢ºä¿å¦‚æœåŸæœ¬æ•¸å€¼å·²ç¶“é«˜æ–¼ 0.8 ä¸æœƒåå‘æ‰£è¡€
             diffs[lowestIdx] = Mathf.Max(0, targetVal - mine[lowestIdx]);
         }
         else
         {
-            // 20% ¾÷²v¡G¥¢±Ñ¡A³Ì°ª¼Æ­ÈÅÜ¬°·í«e³Ì§C¼Æ­È - 1
-            sb.Append("¶EÂ_¥¢»~...³Ì°ª¼Æ­È¼É¶^¡I");
+            // 20% æ©Ÿç‡ï¼šå¤±æ•—ï¼Œæœ€é«˜æ•¸å€¼è®Šç‚ºç•¶å‰æœ€ä½æ•¸å€¼ - 1
+            sb.Append("è¨ºæ–·å¤±èª¤...æœ€é«˜æ•¸å€¼æš´è·Œï¼");
             int targetVal = lowestVal - 1;
 
-            // ³o¸Ìºâ¥X¨Óªº diffs ¥²©w¬°­t¼Æ¡]¦©¦å¡^
+            // é€™è£¡ç®—å‡ºä¾†çš„ diffs å¿…å®šç‚ºè² æ•¸ï¼ˆæ‰£è¡€ï¼‰
             diffs[highestIdx] = targetVal - mine[highestIdx];
         }
 
         handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 2500);
 
-        // ©I¥s unblockable ¥dµP®iºt
+        // å‘¼å« unblockable å¡ç‰Œå±•æ¼”
         handle.View.RPC("SetFromTo", RpcTarget.All, manager.me, manager.me);
         handle.View.RPC("GetCard", RpcTarget.All, "medicine", "XXSkill");
 
-        // ±N­pºâ¦nªºÄİ©ÊÅÜ¤Æ¶q¡]diffs¡^°e¶i Played ¤¤µ²ºâ
+        // å°‡è¨ˆç®—å¥½çš„å±¬æ€§è®ŠåŒ–é‡ï¼ˆdiffsï¼‰é€é€² Played ä¸­çµç®—
         handle.View.RPC("Played", RpcTarget.All, diffs[0], diffs[1], diffs[2]);
         PhotonNetwork.SendAllOutgoingCommands();
     }

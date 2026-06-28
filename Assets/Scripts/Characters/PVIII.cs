@@ -55,9 +55,9 @@ public class PVIII : PlayerBase
                 nameList.Add(manager.LocalPlayerList[i].NickName);
             }
         }
-        typeList.Add("§ğÀ»");
-        typeList.Add("¨¾¿m");
-        typeList.Add("¨ä¥L");
+        typeList.Add("æ”»æ“Š");
+        typeList.Add("é˜²ç¦¦");
+        typeList.Add("å…¶ä»–");
         mono.init(this, nameList, typeList);
     }
     public void confirmChoice(string pChoice, string tChoice)
@@ -73,7 +73,7 @@ public class PVIII : PlayerBase
         }
         StringBuilder sb = new StringBuilder();
         sb.AppendLine("En Passant and... Check");
-        sb.Append(handle.nickname + " ¨Ï¥Î¤F§Ş¯à¡I");
+        sb.Append(handle.nickname + " ä½¿ç”¨äº†æŠ€èƒ½ï¼");
         handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 1500);
         PhotonNetwork.SendAllOutgoingCommands();
     }
@@ -106,9 +106,9 @@ public class PVIII : PlayerBase
     }
     public override void endRound()
     {
-        Debug.Log("§Ú³Û¤F");
+        Debug.Log("æˆ‘å–Šäº†");
         manager.UpdatePlayerProperties(0, -2, 0);
-        Debug.Log("Update¡H");
+        Debug.Log("Updateï¼Ÿ");
     }
 
     // Update is called once per frame

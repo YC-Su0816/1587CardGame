@@ -12,7 +12,7 @@ public class PIV : PlayerBase
     bool haveUsedSkill;
     public override void Init()
     {
-        incrementCounter = 0;  // ±q 0 ¶}©l¤ñ¸ûª½Æ[
+        incrementCounter = 0;  // å¾ 0 é–‹å§‹æ¯”è¼ƒç›´è§€
         chanceCounter = 0.0f;
         flag = false;
         haveUsedSkill = false;
@@ -38,9 +38,9 @@ public class PIV : PlayerBase
     public override void useSkill()
     {
         StringBuilder sb = new StringBuilder();
-        sb.AppendLine("(­è±q¿ì¤½«Ç¦^¨Ó)");
-        sb.AppendLine("¶â...¤@§â¤T¤H«n­è¦n");
-        sb.Append(handle.nickname + " ¨Ï¥Î¤F§Ş¯à¡I");
+        sb.AppendLine("(å‰›å¾è¾¦å…¬å®¤å›ä¾†)");
+        sb.AppendLine("å—¯...ä¸€æŠŠä¸‰äººå—å‰›å¥½");
+        sb.Append(handle.nickname + " ä½¿ç”¨äº†æŠ€èƒ½ï¼");
         handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 1000);
         manager.UpdatePlayerProperties(0, -8, -8);
         flag = true;
@@ -48,25 +48,25 @@ public class PIV : PlayerBase
         PhotonNetwork.SendAllOutgoingCommands();
     }
 
-    // ­t³d´£¨Ñ·í«eªºÅ|¥[¼Æ­È
+    // è² è²¬æä¾›ç•¶å‰çš„ç–ŠåŠ æ•¸å€¼
     public override void updateAttack()
     {
-        int bonus = incrementCounter; // ª`·N¡G¦]¬°§A incrementCounter ¾A¥Î´îªº (­t¼Æ)¡A©Ò¥HÂ½­¿·|§ó­t
+        int bonus = incrementCounter; // æ³¨æ„ï¼šå› ç‚ºä½  incrementCounter é©ç”¨æ¸›çš„ (è² æ•¸)ï¼Œæ‰€ä»¥ç¿»å€æœƒæ›´è² 
         if (flag)
         {
-            bonus *= 2; // ¦³®¬¹L®Ñ®É¡A¼W¶ËÂ½­¿
+            bonus *= 2; // æœ‰æ‚”éæ›¸æ™‚ï¼Œå¢å‚·ç¿»å€
         }
 
         for (int i = 0; i < 3; ++i)
         {
-            attackAdd[i] = bonus; // §âºâ¦nªº bonus ¯u¥¿¶ëµ¹§ğÀ»¥[¦¨¡I
+            attackAdd[i] = bonus; // æŠŠç®—å¥½çš„ bonus çœŸæ­£å¡çµ¦æ”»æ“ŠåŠ æˆï¼
         }
     }
 
-    // ­t³dÂY»ë¤l§P©w³o¦¸¥XµP¬O§_³Q§ì¥]
+    // è² è²¬æ“²éª°å­åˆ¤å®šé€™æ¬¡å‡ºç‰Œæ˜¯å¦è¢«æŠ“åŒ…
     public override bool checkActionFailure(System.Collections.Generic.List<string> attemptTypes)
     {
-        // ¥u¦³¥´¥X§ğÀ»©Î¸s§ğ®É¤~·|Ä²µo§ì¥]§P©w
+        // åªæœ‰æ‰“å‡ºæ”»æ“Šæˆ–ç¾¤æ”»æ™‚æ‰æœƒè§¸ç™¼æŠ“åŒ…åˆ¤å®š
         if (attemptTypes.Contains("attack") || attemptTypes.Contains("multiattack"))
         {
             System.Random rand = new System.Random(Guid.NewGuid().GetHashCode());
@@ -74,33 +74,33 @@ public class PIV : PlayerBase
 
             if (rnd > chanceCounter || flag)
             {
-                // ¨S³Q§ì¥] (¦¨¥\¥XµP)
+                // æ²’è¢«æŠ“åŒ… (æˆåŠŸå‡ºç‰Œ)
                 StringBuilder sb = new StringBuilder();
-                sb.AppendLine("³¶»îµn¤J¤¤");
-                sb.Append("¼H¼H¡A¨S³Q§ì¨ì");
+                sb.AppendLine("é›€é­‚ç™»å…¥ä¸­");
+                sb.Append("å˜»å˜»ï¼Œæ²’è¢«æŠ“åˆ°");
                 handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 1000);
 
-                chanceCounter += 0.1f; // ¥¢±Ñ²v¼W¥[ 10%
-                incrementCounter -= 1; // ¶Ë®`¼W¥[ (­t¼Æ§ó­t)
+                chanceCounter += 0.1f; // å¤±æ•—ç‡å¢åŠ  10%
+                incrementCounter -= 1; // å‚·å®³å¢åŠ  (è² æ•¸æ›´è² )
 
-                flag = false; // ¦¨¥\¥XµP«á®ø¯Ó±¼®¬¹L®Ñªº§K¦º®ÄªG
-                return false; // ¦^¶Ç false ¥Nªí¡u¦æ°Ê¨S¦³¥¢±Ñ¡v
+                flag = false; // æˆåŠŸå‡ºç‰Œå¾Œæ¶ˆè€—æ‰æ‚”éæ›¸çš„å…æ­»æ•ˆæœ
+                return false; // å›å‚³ false ä»£è¡¨ã€Œè¡Œå‹•æ²’æœ‰å¤±æ•—ã€
             }
             else
             {
-                // ³Q§ì¥]¤F¡I
+                // è¢«æŠ“åŒ…äº†ï¼
                 StringBuilder sb = new StringBuilder();
-                sb.AppendLine("³¶»îµn¤J¤¤");
-                sb.Append("¬RÀM¡A¥­ªO¥æ¤W¨Ó");
+                sb.AppendLine("é›€é­‚ç™»å…¥ä¸­");
+                sb.Append("æ˜±éœ–ï¼Œå¹³æ¿äº¤ä¸Šä¾†");
                 handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 1000);
 
-                manager.UpdatePlayerProperties(0, 0, -2); // ¦©°£«HÅA
+                manager.UpdatePlayerProperties(0, 0, -2); // æ‰£é™¤ä¿¡è­½
 
-                // ¥¢±Ñ«á­«¸m¥[¦¨»P¾÷²v
+                // å¤±æ•—å¾Œé‡ç½®åŠ æˆèˆ‡æ©Ÿç‡
                 chanceCounter = 0.0f;
                 incrementCounter = 0;
 
-                return true; // ¦^¶Ç true¡I³qª¾ GameSceneManager ³o±iµP¥¢®Ä¡Aª½±µµ²§ô¦^¦X¡I
+                return true; // å›å‚³ trueï¼é€šçŸ¥ GameSceneManager é€™å¼µç‰Œå¤±æ•ˆï¼Œç›´æ¥çµæŸå›åˆï¼
             }
         }
         return false;

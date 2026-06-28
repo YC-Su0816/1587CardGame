@@ -13,8 +13,8 @@ public class EndGameManager : MonoBehaviour
     public float timeLimit = 10;
     private float delta = 0f;
     private float span = 0.5f;
-    private float currentTime;           // ¤º³¡°O¾Ğ·í«e³Ñ¤U´X¬í
-    private bool isTimerRunning = false; // ­p®É¾¹¶}Ãö
+    private float currentTime;           // å…§éƒ¨è¨˜æ†¶ç•¶å‰å‰©ä¸‹å¹¾ç§’
+    private bool isTimerRunning = false; // è¨ˆæ™‚å™¨é–‹é—œ
     void Start()
     {
         StartTimer(10);
@@ -25,35 +25,35 @@ public class EndGameManager : MonoBehaviour
         }
         if (StaticData.winnerName != "")
         {
-            winner.text = "Ä¹®a¬O " + StaticData.winnerName;
+            winner.text = "è´å®¶æ˜¯ " + StaticData.winnerName;
         }
         else
         {
-            winner.text = "¤@¸s¼oª«¡A³ºµM¥ş¦º¤F";
+            winner.text = "ä¸€ç¾¤å»¢ç‰©ï¼Œç«Ÿç„¶å…¨æ­»äº†";
         }
         if (StaticData.winnerName == PhotonNetwork.LocalPlayer.NickName)
         {
-            isWinning.text = "§r©I¡IÄ¹°Õ¡I";
+            isWinning.text = "å‘€å‘¼ï¼è´å•¦ï¼";
         }
         if (StaticData.winnerName == PhotonNetwork.LocalPlayer.NickName)
         {
-            isWinning.text = "§AªÀ¦º¤F¡AµæÂû";
+            isWinning.text = "ä½ ç¤¾æ­»äº†ï¼Œèœé›";
         }
     }
-    // ±Ò°Ê­p®É¾¹
+    // å•Ÿå‹•è¨ˆæ™‚å™¨
     public void StartTimer(float timeLimit)
     {
         currentTime = timeLimit;
         isTimerRunning = true;
     }
 
-    // Ãö³¬­p®É¾¹
+    // é—œé–‰è¨ˆæ™‚å™¨
     public void StopTimer()
     {
         isTimerRunning = false;
     }
 
-    // ®É¶¡¨ìªº±j¨îÃg»@
+    // æ™‚é–“åˆ°çš„å¼·åˆ¶æ‡²ç½°
     private void TimeUp()
     {
         SceneManager.LoadScene("ReadyScene");
@@ -61,7 +61,7 @@ public class EndGameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // === ¡i·s¼W¡j¡G¨C´V¦©°£®É¶¡ ===
+        // === ã€æ–°å¢ã€‘ï¼šæ¯å¹€æ‰£é™¤æ™‚é–“ ===
         delta += Time.deltaTime;
         int dots = ((int)(delta / span)) % 3;
         StringBuilder sb = new StringBuilder();
@@ -71,15 +71,15 @@ public class EndGameManager : MonoBehaviour
         }
         if (isTimerRunning)
         {
-            currentTime -= Time.deltaTime; // Time.deltaTime ¬O¤W¤@´V¨ì³o¤@´V¸g¹Lªº¬í¼Æ
+            currentTime -= Time.deltaTime; // Time.deltaTime æ˜¯ä¸Šä¸€å¹€åˆ°é€™ä¸€å¹€ç¶“éçš„ç§’æ•¸
 
-            waiting.text = Mathf.CeilToInt(currentTime).ToString() + "¬í«á¦^¨ì©Ğ¶¡µe­±" + sb.ToString();
+            waiting.text = Mathf.CeilToInt(currentTime).ToString() + "ç§’å¾Œå›åˆ°æˆ¿é–“ç•«é¢" + sb.ToString();
 
             if (currentTime <= 0)
             {
                 currentTime = 0;
                 StopTimer();
-                TimeUp(); // Ä²µo¶W®ÉÃg»@¡I
+                TimeUp(); // è§¸ç™¼è¶…æ™‚æ‡²ç½°ï¼
             }
         }
     }

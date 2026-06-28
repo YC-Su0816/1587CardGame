@@ -13,58 +13,58 @@ public class PXXV : PlayerBase
         attackAdd = new int[3]; defendAdd = new int[3]; medAdd = new int[3];
     }
 
-    // ³Q°Ê§Ş¯à¡G¤é¥»¤H (¨C¦^¦X³£·|«ì´_ 3 ÂI¡uÁn±æ¡v)
+    // è¢«å‹•æŠ€èƒ½ï¼šæ—¥æœ¬äºº (æ¯å›åˆéƒ½æœƒæ¢å¾© 3 é»ã€Œè²æœ›ã€)
     public override void newRound()
     {
         
     }
 
-    // ¥D°Ê§Ş¯à¡G¦«²y»P¦©²y
+    // ä¸»å‹•æŠ€èƒ½ï¼šæ‰˜çƒèˆ‡æ‰£çƒ
     public override void useSkill()
     {
         System.Random rand = new System.Random(Guid.NewGuid().GetHashCode());
         StringBuilder sb = new StringBuilder();
 
-        // 50% ¾÷²v§P©w
+        // 50% æ©Ÿç‡åˆ¤å®š
         if (rand.NextDouble() <= 0.5f)
         {
             // ==========================================
-            // ¡i¦«²y¡j(Set) - «ì´_©Ò¦³Äİ©Ê 5 ÂI
+            // ã€æ‰˜çƒã€‘(Set) - æ¢å¾©æ‰€æœ‰å±¬æ€§ 5 é»
             // ==========================================
-            sb.AppendLine("ºë·Çªº¦«²y¡I");
-            sb.Append(handle.nickname + " «ì´_¤F©Ò¦³Äİ©Ê¡I");
+            sb.AppendLine("ç²¾æº–çš„æ‰˜çƒï¼");
+            sb.Append(handle.nickname + " æ¢å¾©äº†æ‰€æœ‰å±¬æ€§ï¼");
             handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 2000);
 
-            // ¥Ø¼Ğ³]¬°¦Û¤v¡A¨« unblockable ¸ô½u
+            // ç›®æ¨™è¨­ç‚ºè‡ªå·±ï¼Œèµ° unblockable è·¯ç·š
             handle.View.RPC("SetFromTo", RpcTarget.All, manager.me, manager.me);
             handle.View.RPC("GetCard", RpcTarget.All, "medicine", "set");
 
-            // ¶Ç¤J¥¿¼Æ (5, 5, 5) ¥Nªí¸É¦å
+            // å‚³å…¥æ­£æ•¸ (5, 5, 5) ä»£è¡¨è£œè¡€
             handle.View.RPC("Played", RpcTarget.All, 5, 5, 5);
         }
         else
         {
             // ==========================================
-            // ¡i¦©²y¡j(Spike) - ³y¦¨ 10 ÂI´¼¤O»P 10 ÂIÅé¤O¶Ë®`
+            // ã€æ‰£çƒã€‘(Spike) - é€ æˆ 10 é»æ™ºåŠ›èˆ‡ 10 é»é«”åŠ›å‚·å®³
             // ==========================================
-            sb.AppendLine("«Â¤O¤Q¨¬ªº¦©²y¡I");
-            sb.Append(handle.nickname + " À»¤¤¤F¹ï¤âªºÀY³¡¡I");
+            sb.AppendLine("å¨åŠ›åè¶³çš„æ‰£çƒï¼");
+            sb.Append(handle.nickname + " æ“Šä¸­äº†å°æ‰‹çš„é ­éƒ¨ï¼");
             handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 2000);
 
-            // ¨¾§b¡G¦pªG¨S¦³¿ï©w¥Ø¼Ğ¡A¹w³]¥´¤U®a
+            // é˜²å‘†ï¼šå¦‚æœæ²’æœ‰é¸å®šç›®æ¨™ï¼Œé è¨­æ‰“ä¸‹å®¶
             if (manager.targetnum == -1)
             {
                 manager.targetnum = (manager.me + 1) % manager.total;
             }
 
-            // ¹ï¥Ø¼Ğµo°Ê§ğÀ»¡A¨« attack ¸ô½u (¹ï¤è¥i¨¾¿m)
+            // å°ç›®æ¨™ç™¼å‹•æ”»æ“Šï¼Œèµ° attack è·¯ç·š (å°æ–¹å¯é˜²ç¦¦)
             handle.View.RPC("SetFromTo", RpcTarget.All, manager.me, manager.targetnum);
             handle.View.RPC("GetCard", RpcTarget.All, "attack", "spike");
 
-            // ¶Ç¤J­t¼Æ (-10, -10, 0) ¥Nªí¶Ë®`
+            // å‚³å…¥è² æ•¸ (-10, -10, 0) ä»£è¡¨å‚·å®³
             handle.View.RPC("Played", RpcTarget.All, -10, -10, 0);
 
-            // ¡iÃöÁäÂê©w¡j¡G¦]¬°¬O attack¡A¥²¶·§â¦Û¤vÂê¦º¡AÅı¨t²Î¶i¤Jµ¥«İ¹ï¤è¨¾¿mªºª¬ºA
+            // ã€é—œéµé–å®šã€‘ï¼šå› ç‚ºæ˜¯ attackï¼Œå¿…é ˆæŠŠè‡ªå·±é–æ­»ï¼Œè®“ç³»çµ±é€²å…¥ç­‰å¾…å°æ–¹é˜²ç¦¦çš„ç‹€æ…‹
             manager.status = 0;
         }
 
@@ -76,10 +76,10 @@ public class PXXV : PlayerBase
     public override void updateMed() { }
     public override void endRound() 
     {
-        // «ì´_ 3 ÂIÁnÅA (w=0, s=0, r=3)
+        // æ¢å¾© 3 é»è²è­½ (w=0, s=0, r=3)
         manager.UpdatePlayerProperties(0, 0, 3);
 
-        // ¼½­Ó¤p´£¥ÜÅı¤j®aª¾¹D¥L®i²{¤F±l±l¦³Â§ªººA«×
-        manager.photonView.RPC("Announcement", RpcTarget.All, handle.nickname + " ®i²{¤F¤é¥»¤Hªº±l±l¦³Â§¡A«ì´_ÁnÅA¡I", 1500);
+        // æ’­å€‹å°æç¤ºè®“å¤§å®¶çŸ¥é“ä»–å±•ç¾äº†å½¬å½¬æœ‰ç¦®çš„æ…‹åº¦
+        manager.photonView.RPC("Announcement", RpcTarget.All, handle.nickname + " å±•ç¾äº†æ—¥æœ¬äººçš„å½¬å½¬æœ‰ç¦®ï¼Œæ¢å¾©è²è­½ï¼", 1500);
     }
 }

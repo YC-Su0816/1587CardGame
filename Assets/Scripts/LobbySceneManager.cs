@@ -69,7 +69,7 @@ public class LobbySceneManager : MonoBehaviourPunCallbacks
         {
             if (roomInfo.PlayerCount >= 1)
             {
-                sb.AppendLine("¡÷" + roomInfo.Name + "¡@¡@¡@¥Ø«e¤H¼Æ¡G"+roomInfo.PlayerCount);
+                sb.AppendLine("â†’" + roomInfo.Name + "ã€€ã€€ã€€ç›®å‰äººæ•¸ï¼š"+roomInfo.PlayerCount);
             }
             
         }

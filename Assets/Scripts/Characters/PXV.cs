@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PXV : PlayerBase
 {
-    // ¡i³Q°Ê§Ş¯à¡j¡G°]¤j®ğ²Ê¡A¨C¦^¦X°òÂ¦©âµP¼Æ¬° 2
+    // ã€è¢«å‹•æŠ€èƒ½ã€‘ï¼šè²¡å¤§æ°£ç²—ï¼Œæ¯å›åˆåŸºç¤æŠ½ç‰Œæ•¸ç‚º 2
     public override int getDrawCardCount()
     {
         return 2;
@@ -29,10 +29,10 @@ public class PXV : PlayerBase
 
     public override void useSkill()
     {
-        // 1. ¨¾§b¡G¦pªG¬O¸s§ğ¡A¤£¯à¨Ï¥Î¦¹§Ş¯à
+        // 1. é˜²å‘†ï¼šå¦‚æœæ˜¯ç¾¤æ”»ï¼Œä¸èƒ½ä½¿ç”¨æ­¤æŠ€èƒ½
         if (manager.multi)
         {
-            manager.hintword.text = "µLªkÂà²¾¸sÅé§ğÀ»¡I";
+            manager.hintword.text = "ç„¡æ³•è½‰ç§»ç¾¤é«”æ”»æ“Šï¼";
             return;
         }
 
@@ -42,7 +42,7 @@ public class PXV : PlayerBase
 
         for (int i = 0; i < manager.total; ++i)
         {
-            // 2. ¨¾¿ù»P¨¾§b¡G½T«Oª±®a¦s¦b¡A¥B§â¡u¦Û¤v¡v±q´À¦º°­¦W³æ¤¤±Æ°£
+            // 2. é˜²éŒ¯èˆ‡é˜²å‘†ï¼šç¢ºä¿ç©å®¶å­˜åœ¨ï¼Œä¸”æŠŠã€Œè‡ªå·±ã€å¾æ›¿æ­»é¬¼åå–®ä¸­æ’é™¤
             if (manager.isPickable[i] && manager.LocalPlayerList[i] != null && manager.LocalPlayerList[i] != PhotonNetwork.LocalPlayer)
             {
                 nameList.Add(manager.LocalPlayerList[i].NickName);
@@ -59,7 +59,7 @@ public class PXV : PlayerBase
     {
         foreach (Photon.Realtime.Player player in manager.LocalPlayerList)
         {
-            // 3. ¨¾¿ù¡G½T«O player ¤£¬O null
+            // 3. é˜²éŒ¯ï¼šç¢ºä¿ player ä¸æ˜¯ null
             if (player != null && player.NickName == pChoice)
             {
                 pickedPlayer = player;
@@ -70,16 +70,16 @@ public class PXV : PlayerBase
         if (manager.status != 2) return;
 
         StringBuilder sb = new StringBuilder();
-        sb.AppendLine("³oÂI¨Æ¥æµ¹¨ä¥L¤H¿ì´N¦n¤F¡C");
-        sb.Append(handle.nickname + " µo°Ê¤FªÀ¥æ½¹½º¡AÂà²¾¤F¥Ø¼Ğ¡I");
+        sb.AppendLine("é€™é»äº‹äº¤çµ¦å…¶ä»–äººè¾¦å°±å¥½äº†ã€‚");
+        sb.Append(handle.nickname + " ç™¼å‹•äº†ç¤¾äº¤è´è¶ï¼Œè½‰ç§»äº†ç›®æ¨™ï¼");
         handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 2000);
 
-        // --- ®Ö¤ßÂà²¾ÅŞ¿è ---
+        // --- æ ¸å¿ƒè½‰ç§»é‚è¼¯ ---
 
-        // ¦Û¤v²æÂ÷¦^À³¶¥¬q¡A¦w¥ş¤U²ø
+        // è‡ªå·±è„«é›¢å›æ‡‰éšæ®µï¼Œå®‰å…¨ä¸‹èŠ
         manager.status = 0;
 
-        // ´M§ä­ì§ğÀ»ªÌ
+        // å°‹æ‰¾åŸæ”»æ“Šè€…
         int attackerIndex = 0;
         for (int i = 0; i < manager.total; i++)
         {
@@ -90,7 +90,7 @@ public class PXV : PlayerBase
             }
         }
 
-        // ´M§ä´À¦º°­
+        // å°‹æ‰¾æ›¿æ­»é¬¼
         int newTargetIndex = 0;
         for (int i = 0; i < manager.total; i++)
         {
@@ -101,7 +101,7 @@ public class PXV : PlayerBase
             }
         }
 
-        // 4. ­×´_ UI ­«Å| Bug¡G²M°£µe­±¤WÂÂªº§ğÀ»¥dµP¡AÁ×§Kµy«á¼s¼½ Played ®É­«½Æ¥Í¦¨
+        // 4. ä¿®å¾© UI é‡ç–Š Bugï¼šæ¸…é™¤ç•«é¢ä¸ŠèˆŠçš„æ”»æ“Šå¡ç‰Œï¼Œé¿å…ç¨å¾Œå»£æ’­ Played æ™‚é‡è¤‡ç”Ÿæˆ
         for (int i = 0; i < manager.DisplayInRally.Count; i++)
         {
             if (manager.DisplayInRally[i] != null)
@@ -113,10 +113,10 @@ public class PXV : PlayerBase
         }
         manager.DisplayInRally.Clear();
 
-        // ¼s¼½§ó·s¥Ø¼Ğ (­ì§ğÀ»ªÌ -> ´À¦º°­)
+        // å»£æ’­æ›´æ–°ç›®æ¨™ (åŸæ”»æ“Šè€… -> æ›¿æ­»é¬¼)
         manager.photonView.RPC("SetFromTo", RpcTarget.All, attackerIndex, newTargetIndex);
 
-        // ¦A¦¸µo®g Played¡AÅı¨t²Î§¹¬ü¥Í¦¨¥dµP¨Ã§âª¬ºA²¾¥æµ¹·s¥Ø¼Ğ
+        // å†æ¬¡ç™¼å°„ Playedï¼Œè®“ç³»çµ±å®Œç¾ç”Ÿæˆå¡ç‰Œä¸¦æŠŠç‹€æ…‹ç§»äº¤çµ¦æ–°ç›®æ¨™
         manager.photonView.RPC("Played", RpcTarget.All, manager.daW, manager.daS, manager.daR);
         PhotonNetwork.SendAllOutgoingCommands();
     }

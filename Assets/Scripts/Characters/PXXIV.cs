@@ -6,7 +6,7 @@ using System.Text;
 public class PXXIV : PlayerBase
 {
     
-    private float strengthDefBoost = 1.3f; // ªì©lÅé¤O¨¾¿m´£¤É 30%
+    private float strengthDefBoost = 1.3f; // åˆå§‹é«”åŠ›é˜²ç¦¦æå‡ 30%
 
     public override void Init()
     {
@@ -21,22 +21,22 @@ public class PXXIV : PlayerBase
 
     }
 
-    // ¥D°Ê§Ş¯à¡G¤@¥N¶Ç©_ (§N«o®É¶¡: 3¦^¦X)
+    // ä¸»å‹•æŠ€èƒ½ï¼šä¸€ä»£å‚³å¥‡ (å†·å»æ™‚é–“: 3å›åˆ)
     public override void useSkill()
     {
-        // ¡i¨¾§b¡j¡G¥u¯à¦b³Q§ğÀ» (½Ğ¦^À³) ªº¶¥¬q¨Ï¥Î
+        // ã€é˜²å‘†ã€‘ï¼šåªèƒ½åœ¨è¢«æ”»æ“Š (è«‹å›æ‡‰) çš„éšæ®µä½¿ç”¨
         if (manager.status != 2)
         {
-            manager.hintword.text = "¦¹§Ş¯à¥u¯à¦b¾D¨ü§ğÀ»®É¨Ï¥Î¡I";
+            manager.hintword.text = "æ­¤æŠ€èƒ½åªèƒ½åœ¨é­å—æ”»æ“Šæ™‚ä½¿ç”¨ï¼";
             return;
         }
 
         StringBuilder sb = new StringBuilder();
-        sb.AppendLine("«OÃÒ¦Û¤v¦³¤j¾Çªº¤â¬q¡I");
-        sb.Append(handle.nickname + " µo°Ê¤F¡i°ê»Ú·ç¤h¤H¤~½×¾Â¡j¡I");
+        sb.AppendLine("ä¿è­‰è‡ªå·±æœ‰å¤§å­¸çš„æ‰‹æ®µï¼");
+        sb.Append(handle.nickname + " ç™¼å‹•äº†ã€åœ‹éš›ç‘å£«äººæ‰è«–å£‡ã€‘ï¼");
         handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 2000);
 
-        // ¦pªGª±®a¤â´İ¤w¸g¥ı©Ô¤F¨¾¿mµP¤W¥h¤~«ö§Ş¯à¡AÀ°¥L§â®i¥Ü°Ï²MªÅ (µP·|³Q®ø¯Ó±¼·í§@¨¾§b¥N»ù)
+        // å¦‚æœç©å®¶æ‰‹æ®˜å·²ç¶“å…ˆæ‹‰äº†é˜²ç¦¦ç‰Œä¸Šå»æ‰æŒ‰æŠ€èƒ½ï¼Œå¹«ä»–æŠŠå±•ç¤ºå€æ¸…ç©º (ç‰Œæœƒè¢«æ¶ˆè€—æ‰ç•¶ä½œé˜²å‘†ä»£åƒ¹)
         if (manager.displaycount > 0)
         {
             for (int i = 0; i < 6; i++)
@@ -53,37 +53,37 @@ public class PXXIV : PlayerBase
             manager.displaycount = 0;
         }
 
-        // 1. ¼s¼½¨q¥X¨¾¿m¥d "ISTF"
+        // 1. å»£æ’­ç§€å‡ºé˜²ç¦¦å¡ "ISTF"
         handle.View.RPC("GetCard", RpcTarget.All, "defense", "ISTF");
 
-        // 2. ª½±µ±j¨î¦^¶Ç 0 ¶Ë®`¡A§¹¬ü§K¬Ì¡I
+        // 2. ç›´æ¥å¼·åˆ¶å›å‚³ 0 å‚·å®³ï¼Œå®Œç¾å…ç–«ï¼
         handle.View.RPC("Responded", RpcTarget.All, -manager.daW, -manager.daS, -manager.daR);
 
-        // 3. ¥»¦aºİ¦w¥ş¤U²ø
+        // 3. æœ¬åœ°ç«¯å®‰å…¨ä¸‹èŠ
         manager.status = 0;
         manager.RefreshCards();
         PhotonNetwork.SendAllOutgoingCommands();
     }
 
-    // ³Q°Ê§Ş¯à A¡G¨¾¿m­¿²v§ó·s
+    // è¢«å‹•æŠ€èƒ½ Aï¼šé˜²ç¦¦å€ç‡æ›´æ–°
     public override void updateDefend()
     {
-        defendRatio[0] = 1.3f; // ´¼¤O¨¾¿m´£¤É 30%
-        defendRatio[1] = strengthDefBoost; // Åé¤O¨¾¿m (·|ÀH¨ü¶Ë»¼´î)
-        defendRatio[2] = 1.3f; // ÁnÅA¨¾¿m´£¤É 30%
+        defendRatio[0] = 1.3f; // æ™ºåŠ›é˜²ç¦¦æå‡ 30%
+        defendRatio[1] = strengthDefBoost; // é«”åŠ›é˜²ç¦¦ (æœƒéš¨å—å‚·éæ¸›)
+        defendRatio[2] = 1.3f; // è²è­½é˜²ç¦¦æå‡ 30%
     }
 
-    // ³Q°Ê§Ş¯à B¡GºÊÅ¥¨ü¶Ë¨Æ¥ó (¦©°£Åé¤O¨¾¿m¥[¦¨)
+    // è¢«å‹•æŠ€èƒ½ Bï¼šç›£è½å—å‚·äº‹ä»¶ (æ‰£é™¤é«”åŠ›é˜²ç¦¦åŠ æˆ)
     public override void onTakeDamage(int w, int s, int r)
     {
-        // s < 0 ¥Nªí¨ü¨ìÅé¤O¶Ë®`¡A¥BÅé¤O¨¾¿m¥[¦¨ÁÙ¨S¦©§¹
+        // s < 0 ä»£è¡¨å—åˆ°é«”åŠ›å‚·å®³ï¼Œä¸”é«”åŠ›é˜²ç¦¦åŠ æˆé‚„æ²’æ‰£å®Œ
         if (s < 0 && strengthDefBoost > 0f)
         {
-            // ¨C¦¸¤U­° 10% (0.1)¡A³Ì§CÂk 0
+            // æ¯æ¬¡ä¸‹é™ 10% (0.1)ï¼Œæœ€ä½æ­¸ 0
             strengthDefBoost = Mathf.Max(0f, strengthDefBoost - 0.1f);
 
-            // ¼s¼½³qª¾¤j®aÁ`¥lªº¨­Åé¶V¨Ó¶V®t¤F
-            manager.photonView.RPC("Announcement", RpcTarget.All, handle.nickname + " Åé¤O¤£¤ä¡AÅé¤O¨¾¿m®ÄªG¤U­°¤F¡I", 1500);
+            // å»£æ’­é€šçŸ¥å¤§å®¶ç¸½å¬çš„èº«é«”è¶Šä¾†è¶Šå·®äº†
+            manager.photonView.RPC("Announcement", RpcTarget.All, handle.nickname + " é«”åŠ›ä¸æ”¯ï¼Œé«”åŠ›é˜²ç¦¦æ•ˆæœä¸‹é™äº†ï¼", 1500);
         }
     }
 

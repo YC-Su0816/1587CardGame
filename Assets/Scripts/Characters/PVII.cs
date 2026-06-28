@@ -36,8 +36,8 @@ public class PVII : PlayerBase
     public override void useSkill()
     {
         StringBuilder sb = new StringBuilder();
-        sb.AppendLine("¾Ç´ú¬O¤°»ò¡H§Ú¤£»İ­n");
-        sb.Append(handle.nickname + " ¨Ï¥Î¤F§Ş¯à¡I");
+        sb.AppendLine("å­¸æ¸¬æ˜¯ä»€éº¼ï¼Ÿæˆ‘ä¸éœ€è¦");
+        sb.Append(handle.nickname + " ä½¿ç”¨äº†æŠ€èƒ½ï¼");
         handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 1000);
         handle.View.RPC("SetFromTo", RpcTarget.All, manager.me, (manager.me + 1) % manager.total);
         handle.View.RPC("GetCard", RpcTarget.All, "multiattack", "sevenskill");
