@@ -82,7 +82,12 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     public Dictionary<string, List<string>> cardPools = new Dictionary<string, List<string>>();
     public Dictionary<string, SpecialCardData> specialCardDict = new Dictionary<string, SpecialCardData>();
 
-
+    [PunRPC]
+    void EndGame(string winner = "")
+    {
+        StaticData.winnerName = winner;
+        SceneManager.LoadScene("GameScene");
+    }
     [PunRPC]
     void PlayerList(Photon.Realtime.Player k)
     {
