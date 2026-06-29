@@ -54,7 +54,15 @@ public class ToolCardController : MonoBehaviour, IPointerClickHandler
                 // 【權限判定】：確認這張特別卡允許在「自己的回合」出牌
                 if (gameManager.specialCardDict.ContainsKey(face) && gameManager.specialCardDict[face].canPlayOnTurn)
                 {
-                    HandleStandardCard(typeToIndex[tooltype], displayfrom);
+                    if(face == "femboy1" || face == "femboy2")
+                    {
+                        HandleFemboyCard(face, displayfrom);
+                    }
+                    else
+                    {
+                        HandleStandardCard(typeToIndex[tooltype], displayfrom);
+                    }
+                    
                 }
                 else
                 {
@@ -100,7 +108,25 @@ public class ToolCardController : MonoBehaviour, IPointerClickHandler
             gameManager.displaycount = 1;
         }
     }
+    private void HandleFemboyCard(string cardFace, Transform targetDisplay)
+    {
+        List<GameObject> currentDisplay = gameManager.CardsInDisplay[5];
 
+        int existingIndex = currentDisplay.FindIndex(card => card.GetComponent<ToolDisplayController>().face == cardFace);
+
+        if (existingIndex >= 0)
+        {
+            currentDisplay[existingIndex].GetComponent<ToolDisplayController>().kill();
+            currentDisplay.RemoveAt(existingIndex);
+            gameManager.displaycount--;
+        }
+        else
+        {
+            AddCardToDisplay(5, targetDisplay);
+            gameManager.displaycount++;
+        }
+
+    }
     private void HandleToggleCard(int targetIndex, Transform targetDisplay)
     {
         List<GameObject> currentDisplay = gameManager.CardsInDisplay[targetIndex];

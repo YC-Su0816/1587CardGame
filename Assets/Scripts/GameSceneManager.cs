@@ -13,6 +13,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem.XR;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using static Unity.VisualScripting.Dependencies.Sqlite.SQLite3;
@@ -146,8 +147,6 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     [PunRPC]
     async Task StartReflection(int reflectorIndex, int targetIndex, int w, int s, int r, bool isMultiAttack, bool allowDefense, bool allowSpecial)
     {
-        // 【關鍵修復】：只有在「第一次」反彈時，才記錄原始攻擊者與群攻下家！
-        // 如果已經在反彈狀態中（連續反彈），絕對不覆寫這兩個記憶變數！
         if (!reflect)
         {
             reflectMemoPlayer = LocalPlayerList[targetIndex];
@@ -279,8 +278,6 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         {
             photonView.RPC("Announcement", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName + " 睡死了...", 1500);
             UpdatePlayerProperties(-1, 0, -1);
-            photonView.RPC("UpdateEffect", RpcTarget.All, me);
-
             status = 0;
             player.endRound();
             photonView.RPC("Go", LocalPlayerList[(me + 1) % total]);
@@ -290,7 +287,6 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         {
             photonView.RPC("Announcement", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName + " 斷片，遺忘了些什麼", 1500);
             DiscardACard();
-            photonView.RPC("UpdateEffect", RpcTarget.All, me);
         }
         cd = Mathf.Max(0, cd - 1);
         displaytime = false;
@@ -404,50 +400,6 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 canPlaySpecial = false;
             }
         }
-        else if (DisplayType[0] == "unblockable")
-        {
-            // 【不可防禦路線】：直接顯示文字、強制扣血、結束回合！
-            await Task.Delay(2000);
-            //StringBuilder sb = new StringBuilder();
-            //sb.AppendLine(FromAndTo[0].NickName + " 對 " + FromAndTo[1].NickName);
-            //sb.AppendLine("發動了無法防禦的技能！");
-            //HintPanel.SetActive(true);
-            //await Task.Delay(2000);
-            //HintPanel.SetActive(false);
-
-            if (FromAndTo[1] == PhotonNetwork.LocalPlayer)
-            {
-                status = 2;
-                canPlayDefense = true;
-                canPlaySpecial = false;
-            }
-            //if (wisdomDamage < 0) sb.AppendLine("造成 " + (-wisdomDamage).ToString() + " 點智力損害");
-            //if (strengthDamage < 0) sb.AppendLine("造成 " + (-strengthDamage).ToString() + " 點體力消耗");
-            //if (reputationDamage < 0) sb.AppendLine("誹謗 " + (-reputationDamage).ToString() + " 點聲譽");
-
-            //hint.text = sb.ToString();
-            //HintPanel.SetActive(true);
-
-            //// 受害者直接強行扣血
-            //if (FromAndTo[1] == PhotonNetwork.LocalPlayer)
-            //{
-            //    UpdatePlayerProperties(wisdomDamage, strengthDamage, reputationDamage);
-            //}
-
-            //await Task.Delay(3000);
-
-            // 發動者直接結束回合並交棒
-            //if (FromAndTo[0] == PhotonNetwork.LocalPlayer)
-            //{
-            //    status = 0;
-            //    player.endRound();
-            //    photonView.RPC("Cleaning", RpcTarget.All);
-            //    PhotonNetwork.SendAllOutgoingCommands();
-            //    photonView.RPC("Go", LocalPlayerList[(me + 1) % total]);
-            //    PhotonNetwork.SendAllOutgoingCommands();
-            //}
-
-        }
         else if (DisplayType[0] == "medicine")
         {
             await Task.Delay(2000);
@@ -458,52 +410,6 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 canPlayDefense = false;
                 canPlaySpecial = false;
             }
-            //StringBuilder sb = new StringBuilder();
-            //sb.AppendLine(FromAndTo[0].NickName + " 對 " + FromAndTo[1].NickName);
-
-            //if (wisdomDamage <= 0)
-            //{
-            //    sb.AppendLine("造成 " + (-wisdomDamage).ToString() + " 點智力損害");
-            //}
-            //else
-            //{
-            //    sb.AppendLine("回復 " + wisdomDamage.ToString() + " 點智力");
-            //}
-
-            //if (strengthDamage <= 0)
-            //{
-            //    sb.AppendLine("造成 " + (-strengthDamage).ToString() + " 點體力消耗");
-            //}
-            //else
-            //{
-            //    sb.AppendLine("回復 " + strengthDamage.ToString() + " 點體力");
-            //}
-
-            //if (reputationDamage <= 0)
-            //{
-            //    sb.Append("誹謗 " + (-reputationDamage).ToString() + " 點聲譽");
-            //}
-            //else
-            //{
-            //    sb.Append("挽回 " + reputationDamage.ToString() + " 點聲譽");
-            //}
-            //hint.text = sb.ToString();
-            //HintPanel.SetActive(true);
-            //if (FromAndTo[1] == PhotonNetwork.LocalPlayer)
-            //{
-            //    UpdatePlayerProperties(wisdomDamage, strengthDamage, reputationDamage);
-            //}
-
-            //if (FromAndTo[0] == PhotonNetwork.LocalPlayer)
-            //{
-            //    await Task.Delay(3000);
-            //    status = 0;
-            //    player.endRound();
-            //    photonView.RPC("Cleaning", RpcTarget.All);
-            //    PhotonNetwork.SendAllOutgoingCommands();
-            //    photonView.RPC("Go", LocalPlayerList[(me + 1) % total]);
-            //    PhotonNetwork.SendAllOutgoingCommands();
-            //}
         }
         else if(DisplayType[0] == "special")
         {
@@ -525,6 +431,11 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     canPlayDefense = false;
                     canPlaySpecial = true;
                 }
+                else if (DisplayFace[0] == "femboy1" || DisplayFace[0] == "femboy2")
+                {
+                    canPlayDefense = true;
+                    canPlaySpecial = true;
+                }
             }
         }
             
@@ -538,9 +449,9 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         float x = displayfrom.GetComponent<RectTransform>().sizeDelta.x / 2;
         float y = displayfrom.GetComponent<RectTransform>().sizeDelta.y;
         float inter = y / (k + 1);
-        daW = 0;
-        daS = 0;
-        daR = 0;
+        daW = wisdomDamage;
+        daS = strengthDamage;
+        daR = reputationDamage;
         temp = k;
         displaytime = true;
         for (int i = 0; i < k; i++)
@@ -564,7 +475,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             {
                 photonView.RPC("Announcement", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName + " 不受群體攻擊影響！", 1500);
                 PhotonNetwork.SendAllOutgoingCommands();
-                photonView.RPC("Responded", RpcTarget.All, 0, 0, 0); // 自動安全下莊
+                photonView.RPC("Responded", RpcTarget.All, -daW, -daS, -daR); // 自動安全下莊
                 return;
             }
 
@@ -573,21 +484,21 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             {
                 photonView.RPC("Announcement", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName + " 躲過了攻擊！", 1500);
                 PhotonNetwork.SendAllOutgoingCommands();
-                photonView.RPC("Responded", RpcTarget.All, 0, 0, 0);
+                photonView.RPC("Responded", RpcTarget.All, -daW, -daS, -daR);
                 return;
             }
             status = 2;
             canPlayDefense = true;
             canPlaySpecial = false;
-            daW = wisdomDamage;
-            daS = strengthDamage;
-            daR = reputationDamage;
+
         }
     }
 
     [PunRPC]
     async Task Responded(int w, int s, int r)
     {
+        Debug.Log("w是" + w +" / s是"+ s +" / r是" + r);
+        int deW = w, deS = s, deR = r;
         int k = DisplayType.Count;
         if (character == "8")
         {
@@ -649,7 +560,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     tdc.num = 1;
                 tdc.tooltype = DisplayType[i];
                 tdc.face = DisplayFace[i];
-                tdc.init(w, s, r);
+                tdc.init(deW, deS, deR);
             }
         }
         await Task.Delay(2000);
@@ -663,18 +574,11 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         }
         string defCharacter = PlayerPanels[defIdx].GetComponent<PlayerPanelController>().character;
 
-        // 2. 【確定性隨機】：利用雙方ID與傷害值當作種子，確保全網算出一樣的機率，解決平行時空！
-        
-
-        // ==========================================
-        // 情況 B：正常傷害結算 (包含被 2號 反擊，或一般反彈命中)
-        // ==========================================
-        
-
         bool wasReflect = reflect; // 記下這次是否為反彈
         reflect = false; // 結算前關閉狀態，避免干擾後續群攻鏈
-        if (k > temp && DisplayInRally[temp].GetComponent<ToolDisplayController>().face == "all_in_vain")
+        if (k > temp && DisplayInRally[temp].GetComponent<ToolDisplayController>().face == "all_in_vain" && DisplayInRally[0].GetComponent<ToolDisplayController>().face != "femboy1" && DisplayInRally[0].GetComponent<ToolDisplayController>().face != "femboy2")
         {
+            
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("算了，就這樣吧...");
             sb.AppendLine("卷不贏XXX...");
@@ -691,12 +595,13 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         else
         {
             int toW, toS, toR;
-            if (daW > 0) toW = daW + Mathf.Min(0, w);
-            else toW = Mathf.Min(0, daW + w);
-            if (daS > 0) toS = daS + +Mathf.Min(0, s);
-            else toS = Mathf.Min(0, daS + s);
-            if (daR > 0) toR = daR + +Mathf.Min(0, r);
-            else toR = Mathf.Min(0, daR + r);
+            if (daW > 0) toW = daW + Mathf.Min(0, deW);
+            else toW = Mathf.Min(0, daW + deW);
+            if (daS > 0) toS = daS + +Mathf.Min(0, deS);
+            else toS = Mathf.Min(0, daS + deS);
+            if (daR > 0) toR = daR + +Mathf.Min(0, deR);
+            else toR = Mathf.Min(0, daR + deR);
+            Debug.Log(w);
             // 統一顯示受傷文字
             StringBuilder sb = new StringBuilder();
             if (DisplayType[0] == "attack" || DisplayType[0] == "multiattack" || DisplayType[0] == "medicine")
@@ -715,14 +620,12 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
 
                 hint.text = sb.ToString();
                 HintPanel.SetActive(true);
-
-                // 【真正的防禦者】扣血
-                
-
+              
                 await Task.Delay(3000);
                 if (PhotonNetwork.LocalPlayer == FromAndTo[1])
                 {
                     UpdatePlayerProperties(toW, toS, toR);
+
                     if (toW < 0 || toS < 0 || toR < 0)
                     {
                         player.p.onTakeDamage(toW, toS, toR);
@@ -794,11 +697,53 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     await Task.Delay(3000);
                     HintPanel.SetActive(false);
                 }
+                else if (DisplayFace[0] == "femboy1" || DisplayFace[0] == "femboy2")
+                {
+                    if(daW < 0)
+                    {
+                        if(toW == 0 && toS == 0 && toR == 0)
+                        {
+                            sb.AppendLine("我們如此國色天香");
+                            sb.AppendLine("你居然不動如山！");
+                            sb.Append(FromAndTo[1].NickName + " 並不喜歡男娘");
+                        }
+                        else
+                        {
+                            sb.AppendLine(FromAndTo[1].NickName + "看到兩位男娘");
+                            sb.AppendLine("高興壞了！大腦過載");
+                            sb.AppendLine("暈過去了");
+                            sb.Append("傷害自己算吧");
+                            if (PhotonNetwork.LocalPlayer == FromAndTo[1])
+                            {
+                                UpdatePlayerProperties(toW, toS, toR);
+                                if (toW < 0 || toS < 0 || toR < 0)
+                                {
+                                    player.p.onTakeDamage(toW, toS, toR);
+                                }
+                            }
+                            if (PhotonNetwork.LocalPlayer == FromAndTo[0])
+                            {
+                                photonView.RPC("PutEffect", RpcTarget.All, defIdx, 2, "dizzy");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        sb.AppendLine("似乎還有未湊齊的碎片");
+                        sb.AppendLine(FromAndTo[0].NickName + " 再想想吧");
+                        sb.Append("沒事的，" + FromAndTo[0].NickName);
+                    }
+                    hint.text = sb.ToString();
+                    HintPanel.SetActive(true);
+                    await Task.Delay(3000);
+                    HintPanel.SetActive(false);
+                    
+                }
                 else
                 {
                     sb.AppendLine("不知道要填什麼");
                     sb.AppendLine("再說吧");
-                    sb.Append(FromAndTo[1].NickName + "Error! not...");
+                    sb.Append(FromAndTo[1].NickName + "發現bug了");
 
                     hint.text = sb.ToString();
                     HintPanel.SetActive(true);
@@ -1022,33 +967,29 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             }
         }
 
-        for(int x = 0; x < 2; ++x)
+        for(int x = 0; x < 1; ++x)
         {
             PickACard(0.67f, "test_attack");
             PickACard(1.67f, "test_multiattack");
             PickACard(2.67f, "test_defense");
             PickACard(3.67f, "test_medicine");
             PickACard(4.67f, "test_strengthen");
-            PickACard(5.67f, "test_special");
+            PickACard(5.67f, "test_special");    
         }
         PickACard(5.67f, "sleep_special");
-        for (int x = 0; x < 3; ++x)
+        PickACard(5.67f, "all_in_vain");
+        PickACard(5.67f, "femboy1");
+        PickACard(5.67f, "femboy2");
+        PickACard(5.67f, "femboy1");
+        PickACard(5.67f, "femboy2");
+        PickACard(5.67f, "femboy1");
+        PickACard(5.67f, "femboy2");
+        for (int x = 0; x < 4; ++x)
         {
             float rnd = (float)(6*rand.NextDouble());
             PickACard(rnd);
         }
-        //for (int xxxxx = 1; xxxxx <= 5; xxxxx++)
-        //{
-        //    PickACard(0.5f, xxxxx.ToString());
-        //}
-        //PickACard(2.5f, "2");
-        //for (float r = 1f; r <= 5f; r++)
-        //{
-        //    for (int xxxxx = 0; xxxxx < 2; xxxxx++)
-        //    {
-        //        PickACard(0.5f + r, "1");
-        //    }
-        //}
+
         RefreshCards();
         if (PhotonNetwork.IsMasterClient)
         {
@@ -1120,9 +1061,10 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         status = 0; 
         int[] Damages = new int[3];
         bool m = false;
-
-        string playedType = "none"; 
-        string playedFace = "none";
+        List<string> playedType = new List<string>();
+        List<string> playedFace = new List<string>();
+        // string playedType = "none"; 
+        // string playedFace = "none";
         int playedCount = 0;        
 
         if (displaycount > 0)
@@ -1192,8 +1134,10 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     }
                     foreach (GameObject obj in CardsInDisplay[i])
                     {
-                        if(playedCount == 0) playedType = obj.GetComponent<ToolDisplayController>().tooltype;
-                        if (playedType == "special") playedFace = obj.GetComponent<ToolDisplayController>().face;
+                        // if(playedCount == 0) playedType = obj.GetComponent<ToolDisplayController>().tooltype;
+                        string getType = obj.GetComponent<ToolDisplayController>().tooltype;
+                        playedType.Add(getType);
+                        if (getType == "special") playedFace.Add(obj.GetComponent<ToolDisplayController>().face);
                         else
                         {
                             int[] readInValue = getValue(obj.GetComponent<ToolDisplayController>().tooltype, obj.GetComponent<ToolDisplayController>().face);
@@ -1220,28 +1164,25 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
 
             bool isStandardAction = true;
 
-            if (playedType == "special")
+            if (playedType[0] == "special")
             {
                 isStandardAction = false;
                 photonView.RPC("SetFromTo", RpcTarget.All, me, targetnum);
                 PhotonNetwork.SendAllOutgoingCommands();
-                photonView.RPC("Played", RpcTarget.All, 0, 0, 0);
+                if(playedFace.Count >= 2 && playedFace.Contains("femboy1") && playedFace.Contains("femboy2"))
+                {
+                    photonView.RPC("Played", RpcTarget.All, -20, -20, -20);
+                }
+                else
+                {
+                    photonView.RPC("Played", RpcTarget.All, 0, 0, 0);
+                }
                 PhotonNetwork.SendAllOutgoingCommands();
-                //For special effect
-                if (playedFace == "magic_mirror")
-                {
-                    // 在這裡寫魔鏡的效果
-                    Debug.Log("發動了魔鏡！");
-                }
-                else if (playedFace == "time_stop")
-                {
-                    // 在這裡寫時間停止的效果
-                }
             }
             
             if (isStandardAction)
             {
-                if (playedType == "medicine")
+                if (playedType[0] == "medicine")
                 {
                     player.p.updateMed();
 
@@ -1377,13 +1318,15 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     public void RespondCard()
     {
         status = 0;
-        int deW = 0, deS = 0, deR = 0, toW, toR, toS;
         int[] Defends = new int[3];
+        for(int i = 0; i < 3; ++i)
+        {
+            Defends[i] = 0;
+        }
         bool isReflecting = false;
         List<string> playedSpecialFaces = new List<string>();
         if (displaycount > 0)
         {
-            // 第一步：先掃描檢查展示區有沒有包含反彈卡 (face == "2")
             for (int i = 0; i < typeNum; i++)
             {
                 foreach (GameObject obj in CardsInDisplay[i])
@@ -1394,8 +1337,6 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                         if (playedSpecialFaces[0] == "test_reflect")
                             isReflecting = true;
                     }
-                        
-                    
                 }
             }
 
@@ -1442,17 +1383,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 }
             }
         }
-        if (playedSpecialFaces.Count > 0)
-        {
-            foreach (string spFace in playedSpecialFaces)
-            {
-                if (spFace == "all_in_vain")
-                {
-                    photonView.RPC("Responded", RpcTarget.All, -daW, -daS, -daR);
-                    PhotonNetwork.SendAllOutgoingCommands();
-                }
-            }
-        }
+        
         // 第三步：分流處理狀態機
         if (isReflecting)
         {
@@ -1466,17 +1397,31 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         }
         else
         {
-            player.p.updateDefend();
-            for (int i = 0; i < 3; ++i)
+            if (playedSpecialFaces.Count > 0)
             {
-                if (Defends[i] < 0) continue;
-                Defends[i] = Calculator(Defends[i], player.p.defendRatio[i]);
-                Defends[i] += player.p.defendAdd[i];
+                foreach (string spFace in playedSpecialFaces)
+                {
+                    if (spFace == "all_in_vain")
+                    {
+                        Debug.Log("w是" + -daW +" / s是"+ -daS +" / r是" + -daR);
+                        Debug.Log("送出之後");
+                        photonView.RPC("Responded", RpcTarget.All, (int)-daW, (int)-daS, (int)-daR);
+                        PhotonNetwork.SendAllOutgoingCommands();
+                    }
+                }
             }
-            
-
-            photonView.RPC("Responded", RpcTarget.All, Defends[0], Defends[1], Defends[2]);
-            PhotonNetwork.SendAllOutgoingCommands();
+            else
+            {
+                player.p.updateDefend();
+                for (int i = 0; i < 3; ++i)
+                {
+                    if (Defends[i] < 0) continue;
+                    Defends[i] = Calculator(Defends[i], player.p.defendRatio[i]);
+                    Defends[i] += player.p.defendAdd[i];
+                }
+                photonView.RPC("Responded", RpcTarget.All, Defends[0], Defends[1], Defends[2]);
+                PhotonNetwork.SendAllOutgoingCommands();
+            }
         }
 
         RefreshCards();

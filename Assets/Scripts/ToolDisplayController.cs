@@ -12,6 +12,7 @@ public class ToolDisplayController : MonoBehaviour
     public string face, toolname, discription, tooltype;
     public string tooleff;
     public GameObject manager;
+    public GameSceneManager gsm;
     GameObject obj;
     Image image;
     TMP_Text N, D, E;
@@ -23,10 +24,7 @@ public class ToolDisplayController : MonoBehaviour
     public void init(int w, int s, int r)
     {
         manager = GameObject.Find("GameSceneManager");
-        //if (manager.GetComponent<GameSceneManager>().displaytime)
-        //{
-        //    forDisplay = true;
-        //}
+        gsm = manager.GetComponent<GameSceneManager>();
         obj = gameObject;
         TextAsset det = Resources.Load<TextAsset>("text/Tool/" + tooltype + "/" + face);
         
@@ -167,9 +165,44 @@ public class ToolDisplayController : MonoBehaviour
                     {
                         inf[i] = inf[i].Trim();
                     }
-                    toolname = inf[0];
-                    discription = inf[1];
-                    tooleff = inf[2];
+                    if(forDisplay && (face == "femboy1" || face == "femboy2"))
+                    {
+                        if(w < 0)
+                        {
+                            if(face == gsm.DisplayFace[0])
+                            {
+                                toolname = "兄弟同心";
+                                discription = inf[1];
+                                if (w < 0) tooleff += "傷智" + (-w) + " ";
+                                else if (w > 0) tooleff += "治智" + w + " ";
+
+                                if (s < 0) tooleff += "傷體" + (-s) + " ";
+                                else if (s > 0) tooleff += "治體" + s + " ";
+
+                                if (r < 0) tooleff += "傷譽" + (-r) + " ";
+                                else if (r > 0) tooleff += "治譽" + r + " ";
+
+                            }
+                            else
+                            {
+                                toolname = "誰跟你兄弟，是姐妹";
+                                discription = inf[1];
+                                tooleff = "造成傷害會沉睡，啾咪";
+                            }
+                        }
+                        else
+                        {
+                            toolname = inf[0];
+                            discription = inf[1];
+                            tooleff = "碎片未湊齊，所以沒效果";
+                        }
+                    }
+                    else
+                    {
+                        toolname = inf[0];
+                        discription = inf[1];
+                        tooleff = inf[2];
+                    }
                 }
                 else
                 {
