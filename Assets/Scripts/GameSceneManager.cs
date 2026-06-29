@@ -520,6 +520,11 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     canPlayDefense = false;
                     canPlaySpecial = true;
                 }
+                else if (DisplayFace[0] == "sleep_special")
+                {
+                    canPlayDefense = false;
+                    canPlaySpecial = true;
+                }
             }
         }
             
@@ -754,6 +759,24 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                         int diffR = Mathf.Min(targetR, maxR) - myR;
 
                         UpdatePlayerProperties(diffW, diffS, diffR);
+                    }
+
+                    await Task.Delay(3000);
+                    HintPanel.SetActive(false);
+                }
+                else if (DisplayFace[0] == "sleep_special")
+                {
+                    sb = new StringBuilder();
+                    sb.AppendLine("歌筵畔，先安簟枕...");
+                    sb.AppendLine("容我醉時眠...");
+                    sb.Append(FromAndTo[0].NickName + " 讓 " + FromAndTo[1].NickName + " 陷入了沉睡");
+
+                    hint.text = sb.ToString();
+                    HintPanel.SetActive(true);
+
+                    if (PhotonNetwork.LocalPlayer == FromAndTo[0])
+                    {
+                        photonView.RPC("PutEffect", RpcTarget.All, defIdx, 2, "sleep");
                     }
 
                     await Task.Delay(3000);
@@ -1008,7 +1031,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             PickACard(4.67f, "test_strengthen");
             PickACard(5.67f, "test_special");
         }
-        PickACard(5.67f, "mate");
+        PickACard(5.67f, "sleep_special");
         for (int x = 0; x < 3; ++x)
         {
             float rnd = (float)(6*rand.NextDouble());
