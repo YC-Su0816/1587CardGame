@@ -31,6 +31,7 @@ public class PlayerPanelController : MonoBehaviourPunCallbacks
         { "disappear", ("神隱", "不可選中，回復狀態。", true, false) }, // 常駐，不可除
         { "sleep",    ("沉睡", "不可選中，略為降低狀態。", false, true) },  // 非常駐，可被藥消除
         { "dizzy",      ("失神", "每回合少卡片。", false, true) },
+        { "malice",      ("怨念", "時刻給予關注，否則...後果自負。", true, true) },
         { "21water",     ("柔水", "降攻、增防。", true, false) },
         { "21knife",     ("鋼刀", "增攻、破防。", true, false) }
     };

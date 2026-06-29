@@ -264,13 +264,11 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             else
             {
                 photonView.RPC("Announcement", RpcTarget.All, "不行，聯絡不上"+PhotonNetwork.LocalPlayer.NickName + "...", 1500);
-
                 UpdatePlayerProperties(3, 3, 3);
-
                 status = 0;
                 player.endRound();
-
                 Task.Delay(1500).ContinueWith(t => photonView.RPC("Go", LocalPlayerList[(me + 1) % total]));
+                if (PlayerPanels != null) photonView.RPC("UpdateEffect", RpcTarget.All, me);
                 return;
             }
         }
@@ -280,21 +278,17 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             UpdatePlayerProperties(-1, 0, -1);
             status = 0;
             player.endRound();
-            photonView.RPC("Go", LocalPlayerList[(me + 1) % total]);
+            Task.Delay(1500).ContinueWith(t => photonView.RPC("Go", LocalPlayerList[(me + 1) % total]));
+            if (PlayerPanels != null) photonView.RPC("UpdateEffect", RpcTarget.All, me);
             return;
         }
-        if (myPanel.isExist("dizzy")) // 假設有暈眩或結冰
-        {
-            photonView.RPC("Announcement", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName + " 斷片，遺忘了些什麼", 1500);
-            DiscardACard();
-        }
+        
         cd = Mathf.Max(0, cd - 1);
         displaytime = false;
         photonView.RPC("SetFromTo", RpcTarget.All, me, -1);
         PhotonNetwork.SendAllOutgoingCommands();
         status = 1;
         targetnum = -1;
-        if (PlayerPanels != null) photonView.RPC("UpdateEffect", RpcTarget.All, me);
         player.newRound();
         Debug.Log("It's " + PhotonNetwork.LocalPlayer.NickName);
     }
@@ -589,8 +583,6 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             HintPanel.SetActive(true);
             await Task.Delay(3000);
             HintPanel.SetActive(false);
-
-            
         }
         else
         {
@@ -601,7 +593,22 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             else toS = Mathf.Min(0, daS + deS);
             if (daR > 0) toR = daR + +Mathf.Min(0, deR);
             else toR = Mathf.Min(0, daR + deR);
-            Debug.Log(w);
+            if(FromAndTo[0] == FromAndTo[1] && (toW < 0 || toS < 0 || toR < 0))
+            {
+                PlayerPanelController ppc = PlayerPanels[me].GetComponent<PlayerPanelController>();
+                if (ppc.isExist("malice"))
+                {
+                    photonView.RPC("RemoveEffect", RpcTarget.All, me, "malice");
+                    PhotonNetwork.SendAllOutgoingCommands();
+                    await Task.Delay(100);
+                    photonView.RPC("PutEffect", RpcTarget.All, defIdx, 5, "malice");
+                    PhotonNetwork.SendAllOutgoingCommands();
+                }
+            }
+            else
+            {
+                await Task.Delay(100);
+            }
             // 統一顯示受傷文字
             StringBuilder sb = new StringBuilder();
             if (DisplayType[0] == "attack" || DisplayType[0] == "multiattack" || DisplayType[0] == "medicine")
@@ -682,6 +689,25 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                         photonView.RPC("PutEffect", RpcTarget.All, defIdx, 2, "sleep");
                     }
 
+                    await Task.Delay(3000);
+                    HintPanel.SetActive(false);
+                }
+                else if (DisplayFace[0] == "nameless_doll")
+                {
+                    sb = new StringBuilder();
+                    sb.AppendLine("人家好孤單喔...");
+                    sb.AppendLine("可以抱抱我嗎...");
+                    sb.AppendLine(FromAndTo[0].NickName + " 讓 " + FromAndTo[1].NickName + " 遭怨念注視");     
+                    sb.AppendLine("遭怨念注視");
+                    sb.Append("(第五人格沒有授權)");
+
+                    hint.text = sb.ToString();
+                    HintPanel.SetActive(true);
+
+                    if (PhotonNetwork.LocalPlayer == FromAndTo[0])
+                    {
+                        photonView.RPC("PutEffect", RpcTarget.All, defIdx, 5, "malice");
+                    }
                     await Task.Delay(3000);
                     HintPanel.SetActive(false);
                 }
@@ -818,17 +844,22 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                                 sb.AppendLine("配不上稱為研究");
                                 sb.Append(LocalPlayerList[me].NickName + "再次行動");
                                 photonView.RPC("Announcement", RpcTarget.All, sb.ToString(), 2500);
+                                await Task.Delay(2500);
                                 photonView.RPC("Go", LocalPlayerList[me]);
                             }
                             else
                             {
                                 player.endRound();
+                                endRoundEffectHandler(PlayerPanels, me, 2000);
+                                if (PlayerPanels != null) photonView.RPC("UpdateEffect", RpcTarget.All, me);
                                 photonView.RPC("Go", LocalPlayerList[(me + 1) % total]);
                             }
                         }
                         else
                         {
                             player.endRound();
+                            endRoundEffectHandler(PlayerPanels, me, 2000);
+                            if (PlayerPanels != null) photonView.RPC("UpdateEffect", RpcTarget.All, me);
                             photonView.RPC("Go", LocalPlayerList[(me + 1) % total]);
                         }
                     }
@@ -861,17 +892,22 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                             sb.AppendLine("配不上稱為研究");
                             sb.Append(LocalPlayerList[me].NickName + "再次行動");
                             photonView.RPC("Announcement", RpcTarget.All, sb.ToString(), 2500);
+                            endRoundEffectHandler(PlayerPanels, me, 2000);
                             photonView.RPC("Go", LocalPlayerList[me]);
                         }
                         else
                         {
                             player.endRound();
+                            endRoundEffectHandler(PlayerPanels, me, 2000);
+                            if (PlayerPanels != null) photonView.RPC("UpdateEffect", RpcTarget.All, me);
                             photonView.RPC("Go", LocalPlayerList[(me + 1) % total]);
                         }
                     }
                     else
                     {
                         player.endRound();
+                        endRoundEffectHandler(PlayerPanels, me, 2000);
+                        if (PlayerPanels != null) photonView.RPC("UpdateEffect", RpcTarget.All, me);
                         photonView.RPC("Go", LocalPlayerList[(me + 1) % total]);
                     }
                 }
@@ -885,6 +921,8 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                         // 繞完一圈回到自己，結束
                         status = 0;
                         player.endRound();
+                        endRoundEffectHandler(PlayerPanels, me, 2000);
+                        if (PlayerPanels != null) photonView.RPC("UpdateEffect", RpcTarget.All, me);
                         photonView.RPC("Go", LocalPlayerList[(me + 1) % total]);
                     }
                     else
@@ -981,9 +1019,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         PickACard(5.67f, "femboy1");
         PickACard(5.67f, "femboy2");
         PickACard(5.67f, "femboy1");
-        PickACard(5.67f, "femboy2");
-        PickACard(5.67f, "femboy1");
-        PickACard(5.67f, "femboy2");
+        PickACard(5.67f, "nameless_doll");
         for (int x = 0; x < 4; ++x)
         {
             float rnd = (float)(6*rand.NextDouble());
@@ -1171,6 +1207,14 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 PhotonNetwork.SendAllOutgoingCommands();
                 if(playedFace.Count >= 2 && playedFace.Contains("femboy1") && playedFace.Contains("femboy2"))
                 {
+                    player.p.updateAttack();
+                
+                    for (int i = 0; i < 3; ++i)
+                    {
+                        Damages[i] = -20;
+                        Damages[i] = Calculator(Damages[i], player.p.attackRatio[i]);
+                        if (Damages[i] != 0) Damages[i] += player.p.attackAdd[i];
+                    }
                     photonView.RPC("Played", RpcTarget.All, -20, -20, -20);
                 }
                 else
@@ -1682,6 +1726,35 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         ++skillUseCounter;
         player.useSkill();
     }
+
+    public void endRoundEffectHandler(GameObject[] panelList, int playeridx, int dt)
+    {
+        PlayerPanelController myPanel = panelList[playeridx].GetComponent<PlayerPanelController>();
+        if (myPanel.isExist("dizzy"))
+        {
+            photonView.RPC("Announcement", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName + " 斷片，遺忘了些什麼", dt);
+            Task.Delay(dt + 100).ContinueWith(t => DiscardACard());
+        }
+        if (myPanel.isExist("malice"))
+        {
+            foreach(var eff in myPanel.effectlist)
+            {
+                if(eff.id == "malice" && eff.lastRound == 1)
+                {
+                    StringBuilder sb = new StringBuilder();
+                    sb.AppendLine("無名布偶怒了，引爆怨念");
+                    sb.AppendLine(LocalPlayerList[me].NickName + "被惡意纏身");
+                    sb.AppendLine("受到15點智慧傷害");
+                    sb.AppendLine("受到15點體力傷害");
+                    sb.Append("受到15點聲譽傷害");
+                    UpdatePlayerProperties(-15, -15, -15);
+                    photonView.RPC("Announcement", RpcTarget.All, sb.ToString(), dt);
+                    Task.Delay(dt + 100);
+                    break;
+                }
+            }
+        }
+    }
     void Update()
     {
         switch (status)
@@ -1750,11 +1823,6 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                         break;
                 }
                 break;
-            //case 3: // 【新增】：動畫與網路結算專用的無敵鎖定狀態
-            //    hintword.text = "動畫結算中...";
-            //    skillButton.enabled = false;
-            //    break;
-        }
-
         }
     }
+}
