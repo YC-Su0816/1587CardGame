@@ -10,6 +10,7 @@ public class EffectDiscription : MonoBehaviour
     public Image img;
     Vector2 max, min;
     public TMP_Text nam, desciption, cd;
+    public string face;
     void Start()
     {
         obj = gameObject;
@@ -43,9 +44,10 @@ public class EffectDiscription : MonoBehaviour
 
         }
     }
-    public void setLook(string face)
+    public void setLook(string f)
     {
-        img.sprite = Resources.Load<Sprite>("Tool/effect/" + face);
+        face = f;
+        img.sprite = Resources.Load<Sprite>("image/Tool/effect/" + f);
     }
     public void setWord(string inam, string des)
     {

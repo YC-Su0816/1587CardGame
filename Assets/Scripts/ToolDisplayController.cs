@@ -197,6 +197,18 @@ public class ToolDisplayController : MonoBehaviour
                             tooleff = "碎片未湊齊，所以沒效果";
                         }
                     }
+                    else if(face == "self_defense"){
+                        toolname = inf[0];
+                        discription = inf[1];
+                        if (w < 0) tooleff += "傷智" + (-w) + " ";
+                        else if (w > 0) tooleff += "治智" + w + " ";
+
+                        if (s < 0) tooleff += "傷體" + (-s) + " ";
+                        else if (s > 0) tooleff += "治體" + s + " ";
+
+                        if (r < 0) tooleff += "傷譽" + (-r) + " ";
+                        else if (r > 0) tooleff += "治譽" + r + " ";
+                    }
                     else
                     {
                         toolname = inf[0];

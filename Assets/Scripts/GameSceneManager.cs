@@ -593,16 +593,19 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             else toS = Mathf.Min(0, daS + deS);
             if (daR > 0) toR = daR + +Mathf.Min(0, deR);
             else toR = Mathf.Min(0, daR + deR);
-            if(FromAndTo[0] == FromAndTo[1] && (toW < 0 || toS < 0 || toR < 0))
+            if(FromAndTo[0] == FromAndTo[1] && (DisplayType[0] == "attack" || DisplayType[0] == "multiattack") && (toW < 0 || toS < 0 || toR < 0))
             {
-                PlayerPanelController ppc = PlayerPanels[me].GetComponent<PlayerPanelController>();
-                if (ppc.isExist("malice"))
+                if(FromAndTo[1].NickName == PhotonNetwork.LocalPlayer.NickName)
                 {
-                    photonView.RPC("RemoveEffect", RpcTarget.All, me, "malice");
-                    PhotonNetwork.SendAllOutgoingCommands();
-                    await Task.Delay(100);
-                    photonView.RPC("PutEffect", RpcTarget.All, defIdx, 5, "malice");
-                    PhotonNetwork.SendAllOutgoingCommands();
+                    PlayerPanelController ppc = PlayerPanels[me].GetComponent<PlayerPanelController>();
+                    if (ppc.isExist("malice"))
+                    {
+                        photonView.RPC("RemoveEffect", RpcTarget.All, me, "malice");
+                        PhotonNetwork.SendAllOutgoingCommands();
+                        await Task.Delay(100);
+                        photonView.RPC("PutEffect", RpcTarget.All, me, 5, "malice");
+                        PhotonNetwork.SendAllOutgoingCommands();
+                    }
                 }
             }
             else
@@ -697,7 +700,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     sb = new StringBuilder();
                     sb.AppendLine("人家好孤單喔...");
                     sb.AppendLine("可以抱抱我嗎...");
-                    sb.AppendLine(FromAndTo[0].NickName + " 讓 " + FromAndTo[1].NickName + " 遭怨念注視");     
+                    sb.AppendLine(FromAndTo[0].NickName + " 讓 " + FromAndTo[1].NickName);     
                     sb.AppendLine("遭怨念注視");
                     sb.Append("(第五人格沒有授權)");
 
@@ -788,7 +791,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     photonView.RPC("Cleaning", RpcTarget.All);
                     await Task.Delay(1600);
                     PhotonNetwork.SendAllOutgoingCommands();
-                    photonView.RPC("GetCard", RpcTarget.All, "unblockable", "self_defense");
+                    photonView.RPC("GetCard", RpcTarget.All, "special", "self_defense");
                     photonView.RPC("StartReflection", RpcTarget.All, targetnum, me, Calculator(daW, 0.27f), Calculator(daS, 0.27f), Calculator(daR, 0.27f), multi, false, false);
                     PhotonNetwork.SendAllOutgoingCommands();
                     return;
@@ -1311,6 +1314,9 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             photonView.RPC("Announcement", RpcTarget.All, sb.ToString(), 2500);
             PhotonNetwork.SendAllOutgoingCommands();
             await Task.Delay(2600);
+            player.endRound();
+            endRoundEffectHandler(PlayerPanels, me, 2000);
+            if (PlayerPanels != null) photonView.RPC("UpdateEffect", RpcTarget.All, me);
             photonView.RPC("Go", LocalPlayerList[(me + 1) % total]);
         }
         displaycount = 0;

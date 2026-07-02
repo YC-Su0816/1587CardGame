@@ -31,7 +31,7 @@ public class PlayerPanelController : MonoBehaviourPunCallbacks
         { "disappear", ("神隱", "不可選中，回復狀態。", true, false) }, // 常駐，不可除
         { "sleep",    ("沉睡", "不可選中，略為降低狀態。", false, true) },  // 非常駐，可被藥消除
         { "dizzy",      ("失神", "每回合少卡片。", false, true) },
-        { "malice",      ("怨念", "時刻給予關注，否則...後果自負。", true, true) },
+        { "malice",      ("怨念", "時刻給予關注，否則...後果自負。", false, true) },
         { "21water",     ("柔水", "降攻、增防。", true, false) },
         { "21knife",     ("鋼刀", "增攻、破防。", true, false) }
     };
@@ -128,7 +128,6 @@ public class PlayerPanelController : MonoBehaviourPunCallbacks
 
         // 生成 UI 小圖示
         GameObject effectObj = Instantiate(ef, gameObject.GetComponent<Transform>());
-
         // 填寫資料結構
         Eff t = new Eff
         {
@@ -144,9 +143,7 @@ public class PlayerPanelController : MonoBehaviourPunCallbacks
 
         // --- 解決需求 3：將資料塞給小圖示的 Controller ---
         EffectController controller = effectObj.GetComponent<EffectController>();
-        controller.setName(dName);
-        controller.describe = dDesc; // 把資料庫的描述塞過去！
-        controller.setRound(t.isPermanent ? "常駐" : t.lastRound.ToString());
+        controller.init(dName, (t.isPermanent ? "常駐" : t.lastRound.ToString()), dDesc, effId);
 
         // 設定小圖示圖片
         effectObj.GetComponent<UnityEngine.UI.Image>().sprite = Resources.Load<Sprite>("image/Tool/effect/" + effId);
