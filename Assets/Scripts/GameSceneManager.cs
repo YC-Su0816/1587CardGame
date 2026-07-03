@@ -614,6 +614,15 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             }
             // 統一顯示受傷文字
             StringBuilder sb = new StringBuilder();
+            if (PhotonNetwork.LocalPlayer == FromAndTo[1])
+            {
+                UpdatePlayerProperties(toW, toS, toR);
+
+                if (toW < 0 || toS < 0 || toR < 0)
+                {
+                    player.p.onTakeDamage(toW, toS, toR);
+                }
+            }
             if (DisplayType[0] == "attack" || DisplayType[0] == "multiattack" || DisplayType[0] == "medicine")
             {
                 if (wasReflect) sb.AppendLine(FromAndTo[0].NickName + " 反彈給 " + FromAndTo[1].NickName);
@@ -632,15 +641,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 HintPanel.SetActive(true);
               
                 await Task.Delay(3000);
-                if (PhotonNetwork.LocalPlayer == FromAndTo[1])
-                {
-                    UpdatePlayerProperties(toW, toS, toR);
-
-                    if (toW < 0 || toS < 0 || toR < 0)
-                    {
-                        player.p.onTakeDamage(toW, toS, toR);
-                    }
-                }
+                
                 HintPanel.SetActive(false);
             }
             else

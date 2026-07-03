@@ -110,22 +110,34 @@ public class ToolCardController : MonoBehaviour, IPointerClickHandler
     }
     private void HandleFemboyCard(string cardFace, Transform targetDisplay)
     {
-        List<GameObject> currentDisplay = gameManager.CardsInDisplay[5];
+        List<GameObject>[] CID = gameManager.CardsInDisplay;
+        List<GameObject> currentDisplay = CID[5];
+        int existingIndexThis = currentDisplay.FindIndex(card => card.GetComponent<ToolDisplayController>().num == num);
+        int existingIndexSelf = currentDisplay.FindIndex(card => card.GetComponent<ToolDisplayController>().face == cardFace);
+        int existingIndexCo = currentDisplay.FindIndex(card => card.GetComponent<ToolDisplayController>().face == ((cardFace == "femboy1")? "femboy2" : "femboy1"));
 
-        int existingIndex = currentDisplay.FindIndex(card => card.GetComponent<ToolDisplayController>().face == cardFace);
-
-        if (existingIndex >= 0)
+        if (existingIndexSelf >= 0)
         {
-            currentDisplay[existingIndex].GetComponent<ToolDisplayController>().kill();
-            currentDisplay.RemoveAt(existingIndex);
-            gameManager.displaycount--;
+            currentDisplay[existingIndexSelf].GetComponent<ToolDisplayController>().kill();
+            currentDisplay.RemoveAt(existingIndexSelf);
+            if(existingIndexThis < 0)
+            {
+                AddCardToDisplay(5, targetDisplay);
+            }
+            else
+            {
+                gameManager.displaycount--;
+            }
+        }
+        else if(existingIndexCo < 0)
+        {
+            HandleStandardCard(5, targetDisplay);
         }
         else
         {
             AddCardToDisplay(5, targetDisplay);
             gameManager.displaycount++;
         }
-
     }
     private void HandleToggleCard(int targetIndex, Transform targetDisplay)
     {

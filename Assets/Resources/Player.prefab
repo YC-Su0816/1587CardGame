@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8738106112751898531}
   - component: {fileID: 5002293111441199834}
   - component: {fileID: 511978363668966604}
+  - component: {fileID: 6603658212751531281}
   m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
@@ -75,6 +76,20 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &6603658212751531281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 412524139773631559}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 183ec801b0a54524d9220b711b6b82d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterDescController
+  prefab: {fileID: 8693868820709445186, guid: 80b39640f34d2684cabc31c3097903f6, type: 3}
+  face: 
 --- !u!1 &954897737154146497
 GameObject:
   m_ObjectHideFlags: 0

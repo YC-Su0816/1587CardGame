@@ -17,7 +17,7 @@ public class PXXI : PlayerBase
         attackAdd = new int[3];
         defendAdd = new int[3];
         medAdd = new int[3];
-        newRound();
+        
     }
 
     public override void newRound()
