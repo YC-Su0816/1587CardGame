@@ -741,7 +741,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                         {
                             sb.AppendLine(FromAndTo[1].NickName + "看到兩位男娘");
                             sb.AppendLine("高興壞了！大腦過載");
-                            sb.AppendLine("暈過去了");
+                            sb.AppendLine("忽不悟其所舍");
                             sb.Append("傷害自己算吧");
                             if (PhotonNetwork.LocalPlayer == FromAndTo[1])
                             {

@@ -187,7 +187,7 @@ public class ToolDisplayController : MonoBehaviour
                             {
                                 toolname = "誰跟你兄弟，是姐妹";
                                 discription = inf[1];
-                                tooleff = "造成傷害會沉睡，啾咪";
+                                tooleff = "造成傷害會失神，啾咪";
                             }
                         }
                         else
