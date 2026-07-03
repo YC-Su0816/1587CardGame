@@ -65,39 +65,6 @@ public class PV : PlayerBase
         flag = true;
         PhotonNetwork.SendAllOutgoingCommands();
 
-        //StringBuilder sb = new StringBuilder();
-        //sb.AppendLine("見到神...為何不跪？");
-        //sb.Append(handle.nickname + " 使用了技能！");
-        //handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 1500);
-
-        //if (manager.targetnum == -1) manager.targetnum = (manager.me + 1) % manager.total;
-
-        //int[] mine = manager.handle.getProperties(); // 取代原本的 CustomProperties 寫法
-        //int[] yours = new int[3];
-        //yours[0] = (int)manager.LocalPlayerList[manager.targetnum].CustomProperties["Wisdom"];
-        //yours[1] = (int)manager.LocalPlayerList[manager.targetnum].CustomProperties["Strength"];
-        //yours[2] = (int)manager.LocalPlayerList[manager.targetnum].CustomProperties["Reputation"];
-
-        //int[] Damages = new int[3];
-        //for (int i = 0; i < 3; ++i)
-        //{
-        //    // 算出對手要扣多少血才能達到平均值 (用負數表示傷害)
-        //    Damages[i] = -Mathf.Max(0, yours[i] - (mine[i] + yours[i]) / 2);
-        //}
-
-        //handle.View.RPC("SetFromTo", RpcTarget.All, manager.me, manager.targetnum);
-
-        //// 【關鍵改動】：使用 unblockable 類型！並移除錯誤的 Responded 呼叫
-        //handle.View.RPC("GetCard", RpcTarget.All, "unblockable", "king");
-        //handle.View.RPC("Played", RpcTarget.All, Damages[0], Damages[1], Damages[2]);
-
-        //// 攻擊者本地端直接獲得平均後的血量
-        //manager.UpdatePlayerProperties(Mathf.Max(0, (mine[0] + yours[0]) / 2 - mine[0]),
-        //                               Mathf.Max(0, (mine[1] + yours[1]) / 2 - mine[1]),
-        //                               Mathf.Max(0, (mine[2] + yours[2]) / 2 - mine[2]));
-
-        //flag = true;
-        //PhotonNetwork.SendAllOutgoingCommands();
     }
     public override void updateAttack()
     {

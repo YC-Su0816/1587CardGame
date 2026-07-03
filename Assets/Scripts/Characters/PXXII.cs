@@ -23,7 +23,7 @@ public class PXXII : PlayerBase
 
         // 目標選自己，發射不可防禦的補血卡
         handle.View.RPC("SetFromTo", RpcTarget.All, manager.me, manager.me);
-        handle.View.RPC("GetCard", RpcTarget.All, "unblockable", "XXIISkill");
+        handle.View.RPC("GetCard", RpcTarget.All, "medicine", "XXIISkill");
         handle.View.RPC("Played", RpcTarget.All, 10, 10, 0); // 恢復10點智力與體力
         PhotonNetwork.SendAllOutgoingCommands();
     }

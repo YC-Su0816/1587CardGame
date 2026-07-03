@@ -85,7 +85,6 @@ public class PXX : PlayerBase
 
         handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 2500);
 
-        // 呼叫 unblockable 卡牌展演
         handle.View.RPC("SetFromTo", RpcTarget.All, manager.me, manager.me);
         handle.View.RPC("GetCard", RpcTarget.All, "medicine", "XXSkill");
 

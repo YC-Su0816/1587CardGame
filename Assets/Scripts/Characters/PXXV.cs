@@ -35,7 +35,6 @@ public class PXXV : PlayerBase
             sb.Append(handle.nickname + " 恢復了所有屬性！");
             handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 2000);
 
-            // 目標設為自己，走 unblockable 路線
             handle.View.RPC("SetFromTo", RpcTarget.All, manager.me, manager.me);
             handle.View.RPC("GetCard", RpcTarget.All, "medicine", "set");
 
