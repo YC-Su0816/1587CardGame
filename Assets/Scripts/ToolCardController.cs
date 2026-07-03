@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Data.SqlTypes;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -9,6 +11,8 @@ public class ToolCardController : MonoBehaviour, IPointerClickHandler
     public int num;
     public string face, tooltype;
     public GameObject discription;
+    public Transform canva;
+    public GameObject previewPrefeb;
 
     // 將原本散落的 Find 和 GetComponent 集中快取，減少效能浪費
     private GameSceneManager gameManager;
@@ -28,7 +32,7 @@ public class ToolCardController : MonoBehaviour, IPointerClickHandler
     void Start()
     {
         // 只在初始化時找一次並存成參考 (Reference)
-        GameObject canva = GameObject.Find("Canvas");
+        canva = GameObject.Find("Canvas").GetComponent<Transform>();;
         gameManager = GameObject.Find("GameSceneManager").GetComponent<GameSceneManager>();
 
         // 善用 transform.Find 可以直接找子物件，不需動用全域尋找
@@ -69,6 +73,7 @@ public class ToolCardController : MonoBehaviour, IPointerClickHandler
                     Debug.Log("這張特殊牌不能在主動回合打出！");
                 }
             }
+            gameManager.RefreshDisplay();
         }
         else if (sta == 2) // 2: 回應階段
         {
@@ -86,9 +91,118 @@ public class ToolCardController : MonoBehaviour, IPointerClickHandler
                     Debug.Log("這張特殊牌不能當作防禦/回應打出！");
                 }
             }
+            gameManager.RefreshDisplay();
         }
+        else
+        {
+            GameObject detail = Instantiate(previewPrefeb, canva);
+            ToolPreviewHandler TPH = detail.GetComponent<ToolPreviewHandler>();
+            TPH.img.sprite = Resources.Load<Sprite>("image/Tool/" + tooltype + "/" + face);
+            TextAsset det = Resources.Load<TextAsset>("text/Tool/" + tooltype + "/" + face);
+            string toolname = "", discription = "", tooleff = "", toolType = "";
+            int w, s, r;
+            string[] inf;
+            if (det != null)
+            {
+                inf = det.text.Split("\n");
+                for (int i = 0; i < inf.Length; i++)
+                {
+                    inf[i] = inf[i].Trim();
+                }
+                if(tooltype == "special")
+                {
+                    toolname = inf[0];
+                    discription = inf[1];
+                    tooleff = inf[2];
+                    toolType = "特殊";
+                }
+                else
+                {
+                    int.TryParse(inf[0], out w);
+                    int.TryParse(inf[1], out s);
+                    int.TryParse(inf[2], out r);
+                    toolname = inf[4];
+                    discription = inf[5];
+                    switch (tooltype)
+                    {
+                        case "attack":
+                            if (w < 0) tooleff += "傷智" + (-w) + " ";
+                            else if (w > 0) tooleff += "治智" + w + " ";
 
-        gameManager.RefreshDisplay();
+                            if (s < 0) tooleff += "傷體" + (-s) + " ";
+                            else if (s > 0) tooleff += "治體" + s + " ";
+
+                            if (r < 0) tooleff += "傷譽" + (-r) + " ";
+                            else if (r > 0) tooleff += "治譽" + r + " ";
+
+                            tooleff = tooleff.Trim();
+                            if (string.IsNullOrEmpty(tooleff)) tooleff = "無效果";
+                            toolType = "攻擊";
+                            break;
+                        case "medicine":
+                            if (w < 0) tooleff += "傷智" + (-w) + " ";
+                            else if (w > 0) tooleff += "治智" + w + " ";
+
+                            if (s < 0) tooleff += "傷體" + (-s) + " ";
+                            else if (s > 0) tooleff += "治體" + s + " ";
+
+                            if (r < 0) tooleff += "傷譽" + (-r) + " ";
+                            else if (r > 0) tooleff += "治譽" + r + " ";
+
+                            tooleff = tooleff.Trim();
+                            if (string.IsNullOrEmpty(tooleff)) tooleff = "無效果";
+                            toolType = "治療";
+                            break;
+                        case "multiattack":
+                            if (w < 0) tooleff += "傷智" + (-w) + " ";
+                            else if (w > 0) tooleff += "治智" + w + " ";
+
+                            if (s < 0) tooleff += "傷體" + (-s) + " ";
+                            else if (s > 0) tooleff += "治體" + s + " ";
+
+                            if (r < 0) tooleff += "傷譽" + (-r) + " ";
+                            else if (r > 0) tooleff += "治譽" + r + " ";
+
+                            tooleff = tooleff.Trim();
+                            if (string.IsNullOrEmpty(tooleff)) tooleff = "無效果";
+                            toolType = "群攻";
+                            break;
+                        case "defense":
+                            
+                            if (w < 0) tooleff += "耗智" + (-w) + " ";
+                            else if (w > 0) tooleff += "智防" + w + " ";
+
+                            if (s < 0) tooleff += "耗體" + (-s) + " ";
+                            else if (s > 0) tooleff += "體防" + s + " ";
+
+                            if (r < 0) tooleff += "耗譽" + (-r) + " ";
+                            else if (r > 0) tooleff += "譽防" + r + " ";
+                            tooleff = tooleff.Trim();
+                            if (string.IsNullOrEmpty(tooleff)) tooleff = "無效果";
+                            toolType = "防禦";
+                            break;
+                        case "strengthen":
+
+                            if (w < 0) tooleff += "增智傷" + (-w) + " ";
+                            else if (w > 0) tooleff += "減智傷" + w + " ";
+
+                            if (s < 0) tooleff += "增體傷" + (-s) + " ";
+                            else if (s > 0) tooleff += "減體傷" + s + " ";
+
+                            if (r < 0) tooleff += "增譽傷" + (-r) + " ";
+                            else if (r > 0) tooleff += "減譽傷" + r + " ";
+
+                            if (string.IsNullOrEmpty(tooleff)) tooleff = "無效果";
+                            toolType = "增傷";
+                            break;
+                    }
+                }
+            }
+            TPH.cardName.text = name;
+            TPH.type.text = toolType;
+            TPH.desc.text = discription;
+            TPH.eff.text = tooleff;
+        }
     }
 
     // 處理一般會「清空全場」的卡牌 (攻擊、補血、效果等)
