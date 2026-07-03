@@ -42,6 +42,8 @@ public class PickingSceneManager : MonoBehaviourPunCallbacks
         {
             obj[j].GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("image/CCard/" + words[j]);
             obj[j].GetComponent<CharacterCard>().card = words[j];
+
+            obj[j].GetComponent<CharacterCard>().SetupSize();
         }
     }
     [PunRPC]
@@ -92,7 +94,10 @@ public class PickingSceneManager : MonoBehaviourPunCallbacks
             b.gameObject.SetActive(false);
         }*/
         GameObject pick = GameObject.Find(picking);
-        pick.GetComponent<Transform>().localScale = size;
+
+        pick.transform.localScale = pick.GetComponent<CharacterCard>().normalScale;
+
+        //pick.GetComponent<Transform>().localScale = size;
         button.interactable = false;
         wait.gameObject.SetActive(true);
         TextAsset det = Resources.Load<TextAsset>("text/CCard/" + pick.GetComponent<CharacterCard>().card);
