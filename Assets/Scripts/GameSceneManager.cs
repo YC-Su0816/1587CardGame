@@ -1008,7 +1008,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 position[i * 10 + j] = new Vector3(20 + (cs + 20) * j, 2 * cs + 40 - (cs + 20) * i, 0);
             }
         }
-        if(PhotonNetwork.LocalPlayer.NickName == "ILoveAndy")
+        if(PhotonNetwork.LocalPlayer.NickName == "我愛蘇昱全" || PhotonNetwork.LocalPlayer.NickName == "ILoveAndy")
         {
             for(int x = 0; x < 15; ++x)
             {
