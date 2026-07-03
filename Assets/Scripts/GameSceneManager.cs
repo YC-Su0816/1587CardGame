@@ -87,7 +87,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     void EndGame(string winner = "")
     {
         StaticData.winnerName = winner;
-        SceneManager.LoadScene("GameScene");
+        SceneManager.LoadScene("EndGameScene");
     }
     [PunRPC]
     void PlayerList(Photon.Realtime.Player k)
@@ -267,7 +267,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 UpdatePlayerProperties(3, 3, 3);
                 status = 0;
                 player.endRound();
-                Task.Delay(1500).ContinueWith(t => photonView.RPC("Go", LocalPlayerList[(me + 1) % total]));
+                Task.Delay(1500).ContinueWith(t => isGameEnded((me + 1) % total));
                 if (PlayerPanels != null) photonView.RPC("UpdateEffect", RpcTarget.All, me);
                 return;
             }
@@ -278,7 +278,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             UpdatePlayerProperties(-1, 0, -1);
             status = 0;
             player.endRound();
-            Task.Delay(1500).ContinueWith(t => photonView.RPC("Go", LocalPlayerList[(me + 1) % total]));
+            Task.Delay(1500).ContinueWith(t => isGameEnded((me + 1) % total));
             if (PlayerPanels != null) photonView.RPC("UpdateEffect", RpcTarget.All, me);
             return;
         }
@@ -856,7 +856,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                                 player.endRound();
                                 endRoundEffectHandler(PlayerPanels, me, 2000);
                                 if (PlayerPanels != null) photonView.RPC("UpdateEffect", RpcTarget.All, me);
-                                photonView.RPC("Go", LocalPlayerList[(me + 1) % total]);
+                                isGameEnded((me + 1) % total);;
                             }
                         }
                         else
@@ -864,7 +864,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                             player.endRound();
                             endRoundEffectHandler(PlayerPanels, me, 2000);
                             if (PlayerPanels != null) photonView.RPC("UpdateEffect", RpcTarget.All, me);
-                            photonView.RPC("Go", LocalPlayerList[(me + 1) % total]);
+                            isGameEnded((me + 1) % total);;
                         }
                     }
                     else
@@ -904,7 +904,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                             player.endRound();
                             endRoundEffectHandler(PlayerPanels, me, 2000);
                             if (PlayerPanels != null) photonView.RPC("UpdateEffect", RpcTarget.All, me);
-                            photonView.RPC("Go", LocalPlayerList[(me + 1) % total]);
+                            isGameEnded((me + 1) % total);;
                         }
                     }
                     else
@@ -912,7 +912,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                         player.endRound();
                         endRoundEffectHandler(PlayerPanels, me, 2000);
                         if (PlayerPanels != null) photonView.RPC("UpdateEffect", RpcTarget.All, me);
-                        photonView.RPC("Go", LocalPlayerList[(me + 1) % total]);
+                        isGameEnded((me + 1) % total);;
                     }
                 }
                 else
@@ -927,7 +927,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                         player.endRound();
                         endRoundEffectHandler(PlayerPanels, me, 2000);
                         if (PlayerPanels != null) photonView.RPC("UpdateEffect", RpcTarget.All, me);
-                        photonView.RPC("Go", LocalPlayerList[(me + 1) % total]);
+                        isGameEnded((me + 1) % total);;
                     }
                     else
                     {
@@ -1148,7 +1148,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 displaycount = 0;
                 toolcardtype = "none";
                 cardpicking = -1;
-                photonView.RPC("Go", LocalPlayerList[(me + 1) % total]);
+                isGameEnded((me + 1) % total);;
                 return;
             }
 
@@ -1318,7 +1318,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             player.endRound();
             endRoundEffectHandler(PlayerPanels, me, 2000);
             if (PlayerPanels != null) photonView.RPC("UpdateEffect", RpcTarget.All, me);
-            photonView.RPC("Go", LocalPlayerList[(me + 1) % total]);
+            isGameEnded((me + 1) % total);;
         }
         displaycount = 0;
     }
@@ -1762,74 +1762,118 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             }
         }
     }
+    void isGameEnded(int nextIdx)
+    {
+        string win = "";
+        if(isAlive.Length > 1)
+        {
+            for(int i = 0; i < isAlive.Length; ++i)
+            {
+                if (isAlive[i])
+                {
+                    if(win != "")
+                    {
+                        photonView.RPC("Go", LocalPlayerList[nextIdx]);
+                        return;
+                    }
+                    else
+                    {
+                        win = LocalPlayerList[i].NickName;
+                    }
+                }
+            }
+            photonView.RPC("EndGame", RpcTarget.All, win);
+        }
+        else
+        {
+            if (isAlive[0])
+            {
+                photonView.RPC("Go", LocalPlayerList[nextIdx]);
+                return;
+            }
+            else
+            {
+                photonView.RPC("EndGame", RpcTarget.All, win);
+            }
+        }
+    }
     void Update()
     {
-        switch (status)
+        if (isAlive[me])
         {
-            case 0:
-                hintword.text = "還不是你的回合";
-                skillButton.enabled = false;
-                break;
-            case 1:
-                hintword.text = "請出牌";
-                switch (character)
-                {
-                    case "2":
-                        if (skillUseCounter < 2 && cd == 0)
-                        {
-                            skillButton.enabled = true;
-                        }
-                        else
-                        {
+                switch (status)
+            {
+                case 0:
+                    hintword.text = "還不是你的回合";
+                    skillButton.enabled = false;
+                    break;
+                case 1:
+                    hintword.text = "請出牌";
+                    switch (character)
+                    {
+                        case "2":
+                            if (skillUseCounter < 2 && cd == 0)
+                            {
+                                skillButton.enabled = true;
+                            }
+                            else
+                            {
+                                skillButton.enabled = false;
+                            }
+                            break;
+                        case "15": // 劭宇：只能在被攻擊時使用
+                        case "24": // 宥璿：只能在被攻擊時使用
+                        case "30": // 昱全：沒有主動技能
                             skillButton.enabled = false;
-                        }
-                        break;
-                    case "15": // 劭宇：只能在被攻擊時使用
-                    case "24": // 宥璿：只能在被攻擊時使用
-                    case "30": // 昱全：沒有主動技能
-                        skillButton.enabled = false;
-                        break;
-                    default:
-                        if (cd == 0)
-                        {
-                            skillButton.enabled = true;
-                        }
-                        else
-                        {
+                            break;
+                        default:
+                            if (cd == 0)
+                            {
+                                skillButton.enabled = true;
+                            }
+                            else
+                            {
+                                skillButton.enabled = false;
+                            }
+                            break;
+                    }
+                    break;
+                case 2:
+                    hintword.text = "請回應";
+                    switch (character)
+                    {
+                        case "15": // 劭宇的社交蝴蝶
+                            if (cd == 0 && !multi)
+                            {
+                                skillButton.enabled = true;
+                            }
+                            else
+                            {
+                                skillButton.enabled = false;
+                            }
+                            break;
+                        case "24": // 宥璿的一代傳奇
+                            if (cd == 0 && canPlayDefense)
+                            {
+                                skillButton.enabled = true;
+                            }
+                            else
+                            {
+                                skillButton.enabled = false;
+                            }
+                            break;
+                        default: // 其他所有人在這階段都不能按技能
                             skillButton.enabled = false;
-                        }
-                        break;
-                }
-                break;
-            case 2:
-                hintword.text = "請回應";
-                switch (character)
-                {
-                    case "15": // 劭宇的社交蝴蝶
-                        if (cd == 0 && !multi)
-                        {
-                            skillButton.enabled = true;
-                        }
-                        else
-                        {
-                            skillButton.enabled = false;
-                        }
-                        break;
-                    case "24": // 宥璿的一代傳奇
-                        if (cd == 0 && canPlayDefense)
-                        {
-                            skillButton.enabled = true;
-                        }
-                        else
-                        {
-                            skillButton.enabled = false;
-                        }
-                        break;
-                    default: // 其他所有人在這階段都不能按技能
-                        skillButton.enabled = false;
-                        break;
-                }
-                break;
+                            break;
+                    }
+                    break;
+            }
         }
+        else
+        {
+            hintword.text = "您(社)死了";
+            skillButton.enabled = false;
+        }
+        
     }
 }
