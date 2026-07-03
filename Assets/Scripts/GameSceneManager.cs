@@ -1008,27 +1008,37 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 position[i * 10 + j] = new Vector3(20 + (cs + 20) * j, 2 * cs + 40 - (cs + 20) * i, 0);
             }
         }
-
-        for(int x = 0; x < 1; ++x)
+        if(PhotonNetwork.LocalPlayer.NickName == "ILoveAndy")
         {
-            PickACard(0.67f, "test_attack");
-            PickACard(1.67f, "test_multiattack");
-            PickACard(2.67f, "test_defense");
-            PickACard(3.67f, "test_medicine");
-            PickACard(4.67f, "test_strengthen");
-            PickACard(5.67f, "test_special");    
+            for(int x = 0; x < 15; ++x)
+            {
+                PickACard(3.67f, "Su_sticker");
+            }
         }
-        PickACard(5.67f, "sleep_special");
-        PickACard(5.67f, "all_in_vain");
-        PickACard(5.67f, "femboy1");
-        PickACard(5.67f, "femboy2");
-        PickACard(5.67f, "femboy1");
-        PickACard(5.67f, "nameless_doll");
-        for (int x = 0; x < 4; ++x)
+        else
         {
-            float rnd = (float)(6*rand.NextDouble());
-            PickACard(rnd);
+            for(int x = 0; x < 1; ++x)
+            {
+                PickACard(0.67f, "test_attack");
+                PickACard(1.67f, "test_multiattack");
+                PickACard(2.67f, "test_defense");
+                PickACard(3.67f, "test_medicine");
+                PickACard(4.67f, "test_strengthen");
+                PickACard(5.67f, "test_special");    
+            }
+            PickACard(5.67f, "sleep_special");
+            PickACard(5.67f, "all_in_vain");
+            PickACard(5.67f, "femboy1");
+            PickACard(5.67f, "femboy2");
+            PickACard(5.67f, "femboy1");
+            PickACard(5.67f, "nameless_doll");
+            for (int x = 0; x < 4; ++x)
+            {
+                float rnd = (float)(6*rand.NextDouble());
+                PickACard(rnd);
+            }
         }
+        
 
         RefreshCards();
         if (PhotonNetwork.IsMasterClient)
