@@ -704,17 +704,95 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 }
                 else if (DisplayFace[0] == "carbon")
                 {
+                    float roll = UnityEngine.Random.value;
+
                     sb = new StringBuilder();
                     sb.AppendLine("古之學者必有師...");
                     sb.AppendLine("師者，所以傳道、受業、解惑也...");
-                    sb.Append(FromAndTo[0].NickName + " 召喚了 陳建廷");
 
-                    hint.text = sb.ToString();
-                    HintPanel.SetActive(true);
-
-                    if (PhotonNetwork.LocalPlayer == FromAndTo[0])
+                    if (roll <= 1f / 7f)
                     {
-                        photonView.RPC("PutEffect", RpcTarget.All, defIdx, -1, "chenchienting");
+                        sb.Append(FromAndTo[0].NickName + " 召喚了 陳建廷");
+
+                        hint.text = sb.ToString();
+                        HintPanel.SetActive(true);
+
+                        if (PhotonNetwork.LocalPlayer == FromAndTo[0])
+                        {
+                            photonView.RPC("PutEffect", RpcTarget.All, defIdx, -1, "chenchienting");
+                        }
+                    }
+                    else if (roll <= 2f / 7f)
+                    {
+                        sb.Append(FromAndTo[0].NickName + " 召喚了 吳明麟");
+
+                        hint.text = sb.ToString();
+                        HintPanel.SetActive(true);
+
+                        if (PhotonNetwork.LocalPlayer == FromAndTo[0])
+                        {
+                            photonView.RPC("PutEffect", RpcTarget.All, defIdx, -1, "wuminglin");
+                        }
+                    }
+                    else if (roll <= 3f / 7f)
+                    {
+                        sb.Append(FromAndTo[0].NickName + " 召喚了 林敏靜");
+
+                        hint.text = sb.ToString();
+                        HintPanel.SetActive(true);
+
+                        if (PhotonNetwork.LocalPlayer == FromAndTo[0])
+                        {
+                            photonView.RPC("PutEffect", RpcTarget.All, defIdx, -1, "linminching");
+                        }
+                    }
+                    else if (roll <= 4f / 7f)
+                    {
+                        sb.Append(FromAndTo[0].NickName + " 召喚了 陳鵬旭");
+
+                        hint.text = sb.ToString();
+                        HintPanel.SetActive(true);
+
+                        if (PhotonNetwork.LocalPlayer == FromAndTo[0])
+                        {
+                            photonView.RPC("PutEffect", RpcTarget.All, defIdx, -1, "chenpenghsu");
+                        }
+                    }
+                    else if (roll <= 5f / 7f)
+                    {
+                        sb.Append(FromAndTo[0].NickName + " 召喚了 陳智勝");
+
+                        hint.text = sb.ToString();
+                        HintPanel.SetActive(true);
+
+                        if (PhotonNetwork.LocalPlayer == FromAndTo[0])
+                        {
+                            photonView.RPC("PutEffect", RpcTarget.All, defIdx, -1, "chenchihsheng");
+                        }
+                    }
+                    else if (roll <= 6f / 7f)
+                    {
+                        sb.Append(FromAndTo[0].NickName + " 召喚了 羅尹廷");
+
+                        hint.text = sb.ToString();
+                        HintPanel.SetActive(true);
+
+                        if (PhotonNetwork.LocalPlayer == FromAndTo[0])
+                        {
+                            photonView.RPC("PutEffect", RpcTarget.All, defIdx, -1, "loyinting");
+                        }
+                    }
+                    else
+                    {
+                        sb.Append(FromAndTo[0].NickName + " 召喚了 王靖華");
+
+                        hint.text = sb.ToString();
+                        HintPanel.SetActive(true);
+
+                        if (PhotonNetwork.LocalPlayer == FromAndTo[0])
+                        {
+                            photonView.RPC("PutEffect", RpcTarget.All, defIdx, -1, "wangchinghua");
+                        }
                     }
 
                     await Task.Delay(3000);
@@ -1391,6 +1469,30 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         {
             photonView.RPC("Announcement", RpcTarget.All, "陳建廷 使用技能！", 1500);
         }
+        else if (teacherName == "wuminglin")
+        {
+            photonView.RPC("Announcement", RpcTarget.All, "吳明麟 使用技能！", 1500);
+        }
+        else if (teacherName == "linminching")
+        {
+            photonView.RPC("Announcement", RpcTarget.All, "林敏靜 使用技能！", 1500);
+        }
+        else if (teacherName == "chenpenghsu")
+        {
+            photonView.RPC("Announcement", RpcTarget.All, "陳鵬旭 使用技能！", 1500);
+        }
+        else if (teacherName == "chenchihsheng")
+        {
+            photonView.RPC("Announcement", RpcTarget.All, "陳智勝 使用技能！", 1500);
+        }
+        else if (teacherName == "loyinting")
+        {
+            photonView.RPC("Announcement", RpcTarget.All, "羅尹廷 使用技能！", 1500);
+        }
+        else if (teacherName == "wangchinghua")
+        {
+            photonView.RPC("Announcement", RpcTarget.All, "王靖華 使用技能！", 1500);
+        }
         photonView.RPC("SetFromTo", RpcTarget.All, me, targetIdx);
         photonView.RPC("GetCard", RpcTarget.All, virtualType, virtualFace);
 
@@ -1399,7 +1501,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             photonView.RPC("Multi", RpcTarget.All, daW, daS, daR);
             PhotonNetwork.SendAllOutgoingCommands();
         }
-        else 
+        else
         {
             photonView.RPC("Played", RpcTarget.All, daW, daS, daR);
             PhotonNetwork.SendAllOutgoingCommands();
@@ -1857,18 +1959,78 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 }
             }
         }
-        // if (myPanel.isExist("wuminglin"))
-        // {
-        //     if (playeridx == me)
-        //     {
-        //         isResolvingVirtualCard = true;
-        //         PlayVirtualCard("multiattack", "nietzsche");
-        //         while (isResolvingVirtualCard) 
-        //         {
-        //             await Task.Delay(100);
-        //         }
-        //     }
-        // }
+        if (myPanel.isExist("wuminglin"))
+        {
+            if (playeridx == me)
+            {
+                isResolvingVirtualCard = true;
+                PlayVirtualCard("multiattack", "nietzsche", "wuminglin");
+                while (isResolvingVirtualCard) 
+                {
+                    await Task.Delay(100);
+                }
+            }
+        }
+        if (myPanel.isExist("linminching"))
+        {
+            if (playeridx == me)
+            {
+                isResolvingVirtualCard = true;
+                PlayVirtualCard("attack", "what", "linminching");
+                while (isResolvingVirtualCard) 
+                {
+                    await Task.Delay(100);
+                }
+            }
+        }
+        if (myPanel.isExist("chenpenghsu"))
+        {
+            if (playeridx == me)
+            {
+                isResolvingVirtualCard = true;
+                PlayVirtualCard("attack", "what", "chenpenghsu");
+                while (isResolvingVirtualCard) 
+                {
+                    await Task.Delay(100);
+                }
+            }
+        }
+        if (myPanel.isExist("chenchihsheng"))
+        {
+            if (playeridx == me)
+            {
+                isResolvingVirtualCard = true;
+                PlayVirtualCard("attack", "what", "chenchihsheng");
+                while (isResolvingVirtualCard) 
+                {
+                    await Task.Delay(100);
+                }
+            }
+        }
+        if (myPanel.isExist("loyinting"))
+        {
+            if (playeridx == me)
+            {
+                isResolvingVirtualCard = true;
+                PlayVirtualCard("attack", "what", "loyinting");
+                while (isResolvingVirtualCard) 
+                {
+                    await Task.Delay(100);
+                }
+            }
+        }
+        if (myPanel.isExist("wangchinghua"))
+        {
+            if (playeridx == me)
+            {
+                isResolvingVirtualCard = true;
+                PlayVirtualCard("attack", "what", "wangchinghua");
+                while (isResolvingVirtualCard) 
+                {
+                    await Task.Delay(100);
+                }
+            }
+        }
     }
     void isGameEnded(int nextIdx)
     {
