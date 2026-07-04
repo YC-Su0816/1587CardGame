@@ -69,6 +69,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     public int maxW, maxS, maxR;
     public bool Wdead, Sdead, Rdead, multi, reflect, over, canPlayDefense, canPlaySpecial;
     int multicount;
+    public bool isResolvingVirtualCard = false;
 
     // Data structure for "Special"
     public class SpecialCardData
@@ -430,6 +431,11 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     canPlayDefense = true;
                     canPlaySpecial = true;
                 }
+                else if (DisplayFace[0] == "carbon")
+                {
+                    canPlayDefense = false;
+                    canPlaySpecial = true;
+                }
             }
         }
             
@@ -696,6 +702,24 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     await Task.Delay(3000);
                     HintPanel.SetActive(false);
                 }
+                else if (DisplayFace[0] == "carbon")
+                {
+                    sb = new StringBuilder();
+                    sb.AppendLine("古之學者必有師...");
+                    sb.AppendLine("師者，所以傳道、受業、解惑也...");
+                    sb.Append(FromAndTo[0].NickName + " 召喚了 陳建廷");
+
+                    hint.text = sb.ToString();
+                    HintPanel.SetActive(true);
+
+                    if (PhotonNetwork.LocalPlayer == FromAndTo[0])
+                    {
+                        photonView.RPC("PutEffect", RpcTarget.All, defIdx, -1, "chenchienting");
+                    }
+
+                    await Task.Delay(3000);
+                    HintPanel.SetActive(false);
+                }
                 else if (DisplayFace[0] == "nameless_doll")
                 {
                     sb = new StringBuilder();
@@ -826,6 +850,13 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         // === 殘局處理與回合交棒 ===
         if (PhotonNetwork.LocalPlayer == FromAndTo[0]) // 原則上由發起攻擊的人負責清空與交棒
         {
+            if (isResolvingVirtualCard)
+            {
+                photonView.RPC("Cleaning", RpcTarget.All);
+                status = 0;
+                isResolvingVirtualCard = false;
+                return; // don't 交棒！！！
+            }
             if (wasReflect)
             {
                 // 反彈殘局：交棒邏輯由反彈起點 (reflectMemoPlayer) 接管
@@ -854,17 +885,17 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                             else
                             {
                                 player.endRound();
-                                endRoundEffectHandler(PlayerPanels, me, 2000);
+                                await endRoundEffectHandler(PlayerPanels, me, 2000);
                                 if (PlayerPanels != null) photonView.RPC("UpdateEffect", RpcTarget.All, me);
-                                isGameEnded((me + 1) % total);;
+                                isGameEnded((me + 1) % total);
                             }
                         }
                         else
                         {
                             player.endRound();
-                            endRoundEffectHandler(PlayerPanels, me, 2000);
+                            await endRoundEffectHandler(PlayerPanels, me, 2000);
                             if (PlayerPanels != null) photonView.RPC("UpdateEffect", RpcTarget.All, me);
-                            isGameEnded((me + 1) % total);;
+                            isGameEnded((me + 1) % total);
                         }
                     }
                     else
@@ -896,23 +927,23 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                             sb.AppendLine("配不上稱為研究");
                             sb.Append(LocalPlayerList[me].NickName + "再次行動");
                             photonView.RPC("Announcement", RpcTarget.All, sb.ToString(), 2500);
-                            endRoundEffectHandler(PlayerPanels, me, 2000);
+                            await endRoundEffectHandler(PlayerPanels, me, 2000);
                             photonView.RPC("Go", LocalPlayerList[me]);
                         }
                         else
                         {
                             player.endRound();
-                            endRoundEffectHandler(PlayerPanels, me, 2000);
+                            await endRoundEffectHandler(PlayerPanels, me, 2000);
                             if (PlayerPanels != null) photonView.RPC("UpdateEffect", RpcTarget.All, me);
-                            isGameEnded((me + 1) % total);;
+                            isGameEnded((me + 1) % total);
                         }
                     }
                     else
                     {
                         player.endRound();
-                        endRoundEffectHandler(PlayerPanels, me, 2000);
+                        await endRoundEffectHandler(PlayerPanels, me, 2000);
                         if (PlayerPanels != null) photonView.RPC("UpdateEffect", RpcTarget.All, me);
-                        isGameEnded((me + 1) % total);;
+                        isGameEnded((me + 1) % total);
                     }
                 }
                 else
@@ -925,9 +956,9 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                         // 繞完一圈回到自己，結束
                         status = 0;
                         player.endRound();
-                        endRoundEffectHandler(PlayerPanels, me, 2000);
+                        await endRoundEffectHandler(PlayerPanels, me, 2000);
                         if (PlayerPanels != null) photonView.RPC("UpdateEffect", RpcTarget.All, me);
-                        isGameEnded((me + 1) % total);;
+                        isGameEnded((me + 1) % total);
                     }
                     else
                     {
@@ -1032,6 +1063,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             PickACard(5.67f, "femboy2");
             PickACard(5.67f, "femboy1");
             PickACard(5.67f, "nameless_doll");
+            PickACard(5.67f, "carbon");
             for (int x = 0; x < 4; ++x)
             {
                 float rnd = (float)(6*rand.NextDouble());
@@ -1158,7 +1190,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 displaycount = 0;
                 toolcardtype = "none";
                 cardpicking = -1;
-                isGameEnded((me + 1) % total);;
+                isGameEnded((me + 1) % total);
                 return;
             }
 
@@ -1326,11 +1358,52 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             PhotonNetwork.SendAllOutgoingCommands();
             await Task.Delay(2600);
             player.endRound();
-            endRoundEffectHandler(PlayerPanels, me, 2000);
+            await endRoundEffectHandler(PlayerPanels, me, 2000);
             if (PlayerPanels != null) photonView.RPC("UpdateEffect", RpcTarget.All, me);
-            isGameEnded((me + 1) % total);;
+            isGameEnded((me + 1) % total);
         }
         displaycount = 0;
+    }
+    public void PlayVirtualCard(string virtualType, string virtualFace, string teacherName)
+    {
+        int[] cardValues = getValue(virtualType, virtualFace);
+        daW = cardValues[0];
+        daS = cardValues[1];
+        daR = cardValues[2];
+
+        int targetIdx = me;
+        
+        if (virtualType == "attack" || virtualType == "special")
+        {
+            targetIdx = (me + 1) % total;
+            while (PlayerPanels[targetIdx].GetComponent<PlayerPanelController>().isExist("disappear") || PlayerPanels[targetIdx].GetComponent<PlayerPanelController>().isExist("sleep") || !isAlive[targetIdx])
+            {
+                targetIdx = (targetIdx + 1) % total;
+                if (targetIdx == me) break;
+            }
+        }
+        else if (virtualType == "multiattack")
+        {
+            targetIdx = (me + 1) % total;
+        }
+
+        if (teacherName == "chenchienting")
+        {
+            photonView.RPC("Announcement", RpcTarget.All, "陳建廷 使用技能！", 1500);
+        }
+        photonView.RPC("SetFromTo", RpcTarget.All, me, targetIdx);
+        photonView.RPC("GetCard", RpcTarget.All, virtualType, virtualFace);
+
+        if (virtualType == "multiattack")
+        {
+            photonView.RPC("Multi", RpcTarget.All, daW, daS, daR);
+            PhotonNetwork.SendAllOutgoingCommands();
+        }
+        else 
+        {
+            photonView.RPC("Played", RpcTarget.All, daW, daS, daR);
+            PhotonNetwork.SendAllOutgoingCommands();
+        }
     }
     int Calculator(int originNum, double ratio)
     {
@@ -1744,13 +1817,14 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         player.useSkill();
     }
 
-    public void endRoundEffectHandler(GameObject[] panelList, int playeridx, int dt)
+    public async Task endRoundEffectHandler(GameObject[] panelList, int playeridx, int dt)
     {
         PlayerPanelController myPanel = panelList[playeridx].GetComponent<PlayerPanelController>();
         if (myPanel.isExist("dizzy"))
         {
             photonView.RPC("Announcement", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName + " 斷片，遺忘了些什麼", dt);
-            Task.Delay(dt + 100).ContinueWith(t => DiscardACard());
+            await Task.Delay(dt + 100);
+            DiscardACard();
         }
         if (myPanel.isExist("malice"))
         {
@@ -1766,11 +1840,35 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     sb.Append("受到15點聲譽傷害");
                     UpdatePlayerProperties(-15, -15, -15);
                     photonView.RPC("Announcement", RpcTarget.All, sb.ToString(), dt);
-                    Task.Delay(dt + 100);
+                    await Task.Delay(dt + 100);
                     break;
                 }
             }
         }
+        if (myPanel.isExist("chenchienting"))
+        {
+            if (playeridx == me)
+            {
+                isResolvingVirtualCard = true;
+                PlayVirtualCard("medicine", "lunch_break_chat", "chenchienting");
+                while (isResolvingVirtualCard)
+                {
+                    await Task.Delay(100);
+                }
+            }
+        }
+        // if (myPanel.isExist("wuminglin"))
+        // {
+        //     if (playeridx == me)
+        //     {
+        //         isResolvingVirtualCard = true;
+        //         PlayVirtualCard("multiattack", "nietzsche");
+        //         while (isResolvingVirtualCard) 
+        //         {
+        //             await Task.Delay(100);
+        //         }
+        //     }
+        // }
     }
     void isGameEnded(int nextIdx)
     {

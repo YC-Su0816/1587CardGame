@@ -7,3 +7,4 @@ femboy1,true,false,true
 femboy2,true,false,true
 nan_bro,true,false,false
 nameless_doll,true,false,false
+carbon,true,false,false
