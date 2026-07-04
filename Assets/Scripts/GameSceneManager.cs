@@ -192,7 +192,6 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         }
 
         await Task.Delay(1500);
-        HintPanel.SetActive(false);
     }
     [PunRPC]
     void imDead(int n)
@@ -243,7 +242,6 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         DisplayInRally.Clear();
         DisplayType.Clear();
         DisplayFace.Clear();
-        HintPanel.SetActive(false);
         displaytime = false;
     }
     [PunRPC]
@@ -585,10 +583,8 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             sb.AppendLine("遁隱虛空，跳出三界");
             sb.Append(FromAndTo[1].NickName + "使所有失效");
             
-            hint.text = sb.ToString();
-            HintPanel.SetActive(true);
+            EnqueueLocalAnnouncement(sb.ToString(), 3000);
             await Task.Delay(3000);
-            HintPanel.SetActive(false);
         }
         else
         {
@@ -620,15 +616,6 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             }
             // 統一顯示受傷文字
             StringBuilder sb = new StringBuilder();
-            if (PhotonNetwork.LocalPlayer == FromAndTo[1])
-            {
-                UpdatePlayerProperties(toW, toS, toR);
-
-                if (toW < 0 || toS < 0 || toR < 0)
-                {
-                    player.p.onTakeDamage(toW, toS, toR);
-                }
-            }
             if (DisplayType[0] == "attack" || DisplayType[0] == "multiattack" || DisplayType[0] == "medicine")
             {
                 if (wasReflect) sb.AppendLine(FromAndTo[0].NickName + " 反彈給 " + FromAndTo[1].NickName);
@@ -643,12 +630,22 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 if (toR <= 0) sb.Append("誹謗 " + (-toR).ToString() + " 點聲譽");
                 else sb.Append("挽回 " + toR.ToString() + " 點聲譽");
 
-                hint.text = sb.ToString();
-                HintPanel.SetActive(true);
-              
+                EnqueueLocalAnnouncement(sb.ToString(), 3000);
+            }
+
+            if (PhotonNetwork.LocalPlayer == FromAndTo[1])
+            {
+                UpdatePlayerProperties(toW, toS, toR);
+
+                if (toW < 0 || toS < 0 || toR < 0)
+                {
+                    player.p.onTakeDamage(toW, toS, toR);
+                }
+            }
+
+            if (DisplayType[0] == "attack" || DisplayType[0] == "multiattack" || DisplayType[0] == "medicine")
+            {
                 await Task.Delay(3000);
-                
-                HintPanel.SetActive(false);
             }
             else
             {
@@ -659,8 +656,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     sb.AppendLine("指潛淵而為期");
                     sb.Append(FromAndTo[0].NickName + " 與 " + FromAndTo[1].NickName + " 締結了契約");
 
-                    hint.text = sb.ToString();
-                    HintPanel.SetActive(true);
+                    EnqueueLocalAnnouncement(sb.ToString(), 3000);
 
                     if (PhotonNetwork.LocalPlayer == FromAndTo[0])
                     {
@@ -682,7 +678,6 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     }
 
                     await Task.Delay(3000);
-                    HintPanel.SetActive(false);
                 }
                 else if (DisplayFace[0] == "sleep_special")
                 {
@@ -691,8 +686,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     sb.AppendLine("容我醉時眠...");
                     sb.Append(FromAndTo[0].NickName + " 讓 " + FromAndTo[1].NickName + " 陷入了沉睡");
 
-                    hint.text = sb.ToString();
-                    HintPanel.SetActive(true);
+                    EnqueueLocalAnnouncement(sb.ToString(), 3000);
 
                     if (PhotonNetwork.LocalPlayer == FromAndTo[0])
                     {
@@ -700,103 +694,29 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     }
 
                     await Task.Delay(3000);
-                    HintPanel.SetActive(false);
                 }
                 else if (DisplayFace[0] == "carbon")
                 {
-                    float roll = UnityEngine.Random.value;
-
-                    sb = new StringBuilder();
-                    sb.AppendLine("古之學者必有師...");
-                    sb.AppendLine("師者，所以傳道、受業、解惑也...");
-
-                    if (roll <= 1f / 7f)
+                    if (PhotonNetwork.LocalPlayer == FromAndTo[0])
                     {
-                        sb.Append(FromAndTo[0].NickName + " 召喚了 陳建廷");
+                        float roll = UnityEngine.Random.value;
+                        string teacherId;
+                        string teacherName;
 
-                        hint.text = sb.ToString();
-                        HintPanel.SetActive(true);
+                        if (roll <= 1f / 7f) { teacherId = "chenchienting"; teacherName = "陳建廷"; }
+                        else if (roll <= 2f / 7f) { teacherId = "wuminglin"; teacherName = "吳明麟"; }
+                        else if (roll <= 3f / 7f) { teacherId = "linminching"; teacherName = "林敏靜"; }
+                        else if (roll <= 4f / 7f) { teacherId = "chenpenghsu"; teacherName = "陳鵬旭"; }
+                        else if (roll <= 5f / 7f) { teacherId = "chenchihsheng"; teacherName = "陳智勝"; }
+                        else if (roll <= 6f / 7f) { teacherId = "loyinting"; teacherName = "羅尹廷"; }
+                        else { teacherId = "wangchinghua"; teacherName = "王靖華"; }
 
-                        if (PhotonNetwork.LocalPlayer == FromAndTo[0])
-                        {
-                            photonView.RPC("PutEffect", RpcTarget.All, defIdx, -1, "chenchienting");
-                        }
+                        photonView.RPC("PutEffect", RpcTarget.All, defIdx, -1, teacherId);
+
+                        string msg = "古之學者必有師...\n師者，所以傳道、受業、解惑也...\n" + FromAndTo[0].NickName + " 召喚了 " + teacherName;
+                        photonView.RPC("Announcement", RpcTarget.All, msg, 3000);
                     }
-                    else if (roll <= 2f / 7f)
-                    {
-                        sb.Append(FromAndTo[0].NickName + " 召喚了 吳明麟");
-
-                        hint.text = sb.ToString();
-                        HintPanel.SetActive(true);
-
-                        if (PhotonNetwork.LocalPlayer == FromAndTo[0])
-                        {
-                            photonView.RPC("PutEffect", RpcTarget.All, defIdx, -1, "wuminglin");
-                        }
-                    }
-                    else if (roll <= 3f / 7f)
-                    {
-                        sb.Append(FromAndTo[0].NickName + " 召喚了 林敏靜");
-
-                        hint.text = sb.ToString();
-                        HintPanel.SetActive(true);
-
-                        if (PhotonNetwork.LocalPlayer == FromAndTo[0])
-                        {
-                            photonView.RPC("PutEffect", RpcTarget.All, defIdx, -1, "linminching");
-                        }
-                    }
-                    else if (roll <= 4f / 7f)
-                    {
-                        sb.Append(FromAndTo[0].NickName + " 召喚了 陳鵬旭");
-
-                        hint.text = sb.ToString();
-                        HintPanel.SetActive(true);
-
-                        if (PhotonNetwork.LocalPlayer == FromAndTo[0])
-                        {
-                            photonView.RPC("PutEffect", RpcTarget.All, defIdx, -1, "chenpenghsu");
-                        }
-                    }
-                    else if (roll <= 5f / 7f)
-                    {
-                        sb.Append(FromAndTo[0].NickName + " 召喚了 陳智勝");
-
-                        hint.text = sb.ToString();
-                        HintPanel.SetActive(true);
-
-                        if (PhotonNetwork.LocalPlayer == FromAndTo[0])
-                        {
-                            photonView.RPC("PutEffect", RpcTarget.All, defIdx, -1, "chenchihsheng");
-                        }
-                    }
-                    else if (roll <= 6f / 7f)
-                    {
-                        sb.Append(FromAndTo[0].NickName + " 召喚了 羅尹廷");
-
-                        hint.text = sb.ToString();
-                        HintPanel.SetActive(true);
-
-                        if (PhotonNetwork.LocalPlayer == FromAndTo[0])
-                        {
-                            photonView.RPC("PutEffect", RpcTarget.All, defIdx, -1, "loyinting");
-                        }
-                    }
-                    else
-                    {
-                        sb.Append(FromAndTo[0].NickName + " 召喚了 王靖華");
-
-                        hint.text = sb.ToString();
-                        HintPanel.SetActive(true);
-
-                        if (PhotonNetwork.LocalPlayer == FromAndTo[0])
-                        {
-                            photonView.RPC("PutEffect", RpcTarget.All, defIdx, -1, "wangchinghua");
-                        }
-                    }
-
                     await Task.Delay(3000);
-                    HintPanel.SetActive(false);
                 }
                 else if (DisplayFace[0] == "nameless_doll")
                 {
@@ -807,15 +727,13 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     sb.AppendLine("遭怨念注視");
                     sb.Append("(第五人格沒有授權)");
 
-                    hint.text = sb.ToString();
-                    HintPanel.SetActive(true);
+                    EnqueueLocalAnnouncement(sb.ToString(), 3000);
 
                     if (PhotonNetwork.LocalPlayer == FromAndTo[0])
                     {
                         photonView.RPC("PutEffect", RpcTarget.All, defIdx, 5, "malice");
                     }
                     await Task.Delay(3000);
-                    HintPanel.SetActive(false);
                 }
                 else if (DisplayFace[0] == "king")
                 {
@@ -824,10 +742,8 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     sb.AppendLine("又進過幾次台大");
                     sb.Append(FromAndTo[1].NickName + "展現王的風範");
 
-                    hint.text = sb.ToString();
-                    HintPanel.SetActive(true);
+                    EnqueueLocalAnnouncement(sb.ToString(), 3000);
                     await Task.Delay(3000);
-                    HintPanel.SetActive(false);
                 }
                 else if (DisplayFace[0] == "femboy1" || DisplayFace[0] == "femboy2")
                 {
@@ -865,11 +781,8 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                         sb.AppendLine(FromAndTo[0].NickName + " 再想想吧");
                         sb.Append("沒事的，" + FromAndTo[0].NickName);
                     }
-                    hint.text = sb.ToString();
-                    HintPanel.SetActive(true);
+                    EnqueueLocalAnnouncement(sb.ToString(), 3000);
                     await Task.Delay(3000);
-                    HintPanel.SetActive(false);
-                    
                 }
                 else
                 {
@@ -877,10 +790,8 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     sb.AppendLine("再說吧");
                     sb.Append(FromAndTo[1].NickName + "發現bug了");
 
-                    hint.text = sb.ToString();
-                    HintPanel.SetActive(true);
+                    EnqueueLocalAnnouncement(sb.ToString(), 3000);
                     await Task.Delay(3000);
-                    HintPanel.SetActive(false);
                 }
             }
 
@@ -906,10 +817,8 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     if (syncRand.NextDouble() <= 0.25f) is13Reflecting = true;
                     if (is13Reflecting)
                     {
-                        hint.text = "對上眼了！";
-                        HintPanel.SetActive(true);
+                        EnqueueLocalAnnouncement("對上眼了！", 2000);
                         await Task.Delay(2000);
-                        HintPanel.SetActive(false);
                         if (PhotonNetwork.LocalPlayer == FromAndTo[1])
                         {
                             photonView.RPC("Cleaning", RpcTarget.All);
@@ -1053,13 +962,41 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         DisplayType.Clear();
         multi = false;
     }
-    [PunRPC]
-    async Task Announcement(string content, int time)
+    private class AnnounceMsg 
     {
-        hint.text = content;
+        public string content;
+        public int time;
+    }
+    private Queue<AnnounceMsg> announceQueue = new Queue<AnnounceMsg>();
+    private bool isAnnouncing = false;
+
+    public void EnqueueLocalAnnouncement(string content, int time)
+    {
+        announceQueue.Enqueue(new AnnounceMsg { content = content, time = time });
+        if (!isAnnouncing)
+        { 
+            _ = ProcessAnnouncementQueue(); // _: do not wait for it
+        }
+    }
+
+    private async Task ProcessAnnouncementQueue()
+    {
+        isAnnouncing = true;
         HintPanel.SetActive(true);
-        await Task.Delay(time);
-        HintPanel.SetActive(false);   
+        while (announceQueue.Count > 0)
+        {
+            var msg = announceQueue.Dequeue();
+            hint.text = msg.content;
+            await Task.Delay(msg.time);
+        }
+        HintPanel.SetActive(false);
+        isAnnouncing = false;
+    }
+
+    [PunRPC]
+    void Announcement(string content, int time)
+    {
+        EnqueueLocalAnnouncement(content, time);
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -1126,22 +1063,26 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         }
         else
         {
-            for(int x = 0; x < 1; ++x)
+            // for(int x = 0; x < 1; ++x)
+            // {
+            //     PickACard(0.67f, "test_attack");
+            //     PickACard(1.67f, "test_multiattack");
+            //     PickACard(2.67f, "test_defense");
+            //     PickACard(3.67f, "test_medicine");
+            //     PickACard(4.67f, "test_strengthen");
+            //     PickACard(5.67f, "test_special");    
+            // }
+            // PickACard(5.67f, "sleep_special");
+            // PickACard(5.67f, "all_in_vain");
+            // PickACard(5.67f, "femboy1");
+            // PickACard(5.67f, "femboy2");
+            // PickACard(5.67f, "femboy1");
+            // PickACard(5.67f, "nameless_doll");
+            // PickACard(5.67f, "carbon");
+            for (int i = 0; i < 12; i++)
             {
-                PickACard(0.67f, "test_attack");
-                PickACard(1.67f, "test_multiattack");
-                PickACard(2.67f, "test_defense");
-                PickACard(3.67f, "test_medicine");
-                PickACard(4.67f, "test_strengthen");
-                PickACard(5.67f, "test_special");    
+                PickACard(5.67f, "carbon");
             }
-            PickACard(5.67f, "sleep_special");
-            PickACard(5.67f, "all_in_vain");
-            PickACard(5.67f, "femboy1");
-            PickACard(5.67f, "femboy2");
-            PickACard(5.67f, "femboy1");
-            PickACard(5.67f, "nameless_doll");
-            PickACard(5.67f, "carbon");
             for (int x = 0; x < 4; ++x)
             {
                 float rnd = (float)(6*rand.NextDouble());
@@ -1668,6 +1609,67 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     public void UpdatePlayerProperties(int w, int s, int r)
     {
         
+        if (r < 0) // teacher leaving
+        {
+            PlayerPanelController myPanel = PlayerPanels[me].GetComponent<PlayerPanelController>();
+            if (myPanel.isExist("chenchienting")) 
+            {
+                if (UnityEngine.Random.value > 0.1f)
+                {
+                    photonView.RPC("RemoveEffect", RpcTarget.All, me, "chenchienting");
+                    photonView.RPC("Announcement", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName + " 聲譽嚴重受損，朽木不可雕也！\n陳建廷失望地離開了...", 2000);
+                }
+            }
+            if (myPanel.isExist("wuminglin")) 
+            {
+                if (UnityEngine.Random.value > 0.1f)
+                {
+                    photonView.RPC("RemoveEffect", RpcTarget.All, me, "wuminglin");
+                    photonView.RPC("Announcement", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName + " 聲譽嚴重受損，朽木不可雕也！\n吳明麟失望地離開了...", 2000);
+                }
+            }
+            if (myPanel.isExist("linminching")) 
+            {
+                if (UnityEngine.Random.value > 0.1f)
+                {
+                    photonView.RPC("RemoveEffect", RpcTarget.All, me, "linminching");
+                    photonView.RPC("Announcement", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName + " 聲譽嚴重受損，朽木不可雕也！\n林敏靜失望地離開了...", 2000);
+                }
+            }
+            if (myPanel.isExist("chenpenghsu")) 
+            {
+                if (UnityEngine.Random.value > 0.1f)
+                {
+                    photonView.RPC("RemoveEffect", RpcTarget.All, me, "chenpenghsu");
+                    photonView.RPC("Announcement", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName + " 聲譽嚴重受損，朽木不可雕也！\n陳鵬旭失望地離開了...", 2000);
+                }
+            }
+            if (myPanel.isExist("chenchihsheng")) 
+            {
+                if (UnityEngine.Random.value > 0.1f)
+                {
+                    photonView.RPC("RemoveEffect", RpcTarget.All, me, "chenchihsheng");
+                    photonView.RPC("Announcement", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName + " 聲譽嚴重受損，朽木不可雕也！\n陳智勝失望地離開了...", 2000);
+                }
+            }
+            if (myPanel.isExist("loyinting")) 
+            {
+                if (UnityEngine.Random.value > 0.1f)
+                {
+                    photonView.RPC("RemoveEffect", RpcTarget.All, me, "loyinting");
+                    photonView.RPC("Announcement", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName + " 聲譽嚴重受損，朽木不可雕也！\n羅尹廷失望地離開了...", 2000);
+                }
+            }
+            if (myPanel.isExist("wangchinghua")) 
+            {
+                if (UnityEngine.Random.value > 0.1f)
+                {
+                    photonView.RPC("RemoveEffect", RpcTarget.All, me, "wangchinghua");
+                    photonView.RPC("Announcement", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName + " 聲譽嚴重受損，朽木不可雕也！\n王靖華失望地離開了...", 2000);
+                }
+            }
+        }
+
         int W = (int)PhotonNetwork.LocalPlayer.CustomProperties["Wisdom"] + w;
         int S = (int)PhotonNetwork.LocalPlayer.CustomProperties["Strength"] + s;
         int R = (int)PhotonNetwork.LocalPlayer.CustomProperties["Reputation"] + r;
@@ -1940,8 +1942,8 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     sb.AppendLine("受到15點智慧傷害");
                     sb.AppendLine("受到15點體力傷害");
                     sb.Append("受到15點聲譽傷害");
-                    UpdatePlayerProperties(-15, -15, -15);
                     photonView.RPC("Announcement", RpcTarget.All, sb.ToString(), dt);
+                    UpdatePlayerProperties(-15, -15, -15);
                     await Task.Delay(dt + 100);
                     break;
                 }
