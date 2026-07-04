@@ -121,8 +121,8 @@ public class ToolCardController : MonoBehaviour, IPointerClickHandler
                     int.TryParse(inf[0], out w);
                     int.TryParse(inf[1], out s);
                     int.TryParse(inf[2], out r);
-                    toolname = inf[4];
-                    discription = inf[5];
+                    toolname = inf[3];
+                    discription = inf[4];
                     switch (tooltype)
                     {
                         case "attack":
@@ -198,7 +198,7 @@ public class ToolCardController : MonoBehaviour, IPointerClickHandler
                     }
                 }
             }
-            TPH.cardName.text = name;
+            TPH.cardName.text = toolname;
             TPH.type.text = toolType;
             TPH.desc.text = discription;
             TPH.eff.text = tooleff;

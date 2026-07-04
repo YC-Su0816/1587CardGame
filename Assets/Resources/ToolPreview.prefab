@@ -634,7 +634,6 @@ GameObject:
   - component: {fileID: 7684107370017361786}
   - component: {fileID: 7094575565071269414}
   - component: {fileID: 3861850695688975913}
-  - component: {fileID: 7594360521093368236}
   - component: {fileID: 4840316114994355555}
   m_Layer: 5
   m_Name: ToolPreview
@@ -705,27 +704,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &7594360521093368236
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8221780009396134696}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7872960f671db374eab1f366401398f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  num: 0
-  forDisplay: 0
-  face: 
-  toolname: 
-  discription: 
-  tooltype: 
-  tooleff: 
-  manager: {fileID: 0}
-  gsm: {fileID: 0}
 --- !u!114 &4840316114994355555
 MonoBehaviour:
   m_ObjectHideFlags: 0

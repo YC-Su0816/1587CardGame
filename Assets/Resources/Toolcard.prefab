@@ -92,6 +92,5 @@ MonoBehaviour:
   face: 
   tooltype: 
   discription: {fileID: 9190850366145218572, guid: d57b5e2f569ffbf42a45a1057dd55773, type: 3}
-  manager: {fileID: 0}
-  displayfrom: {fileID: 0}
-  displayto: {fileID: 0}
+  canva: {fileID: 0}
+  previewPrefeb: {fileID: 8221780009396134696, guid: adca3d69f7882b2468e6828193786aec, type: 3}
