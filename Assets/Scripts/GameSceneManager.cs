@@ -904,7 +904,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                             player.endRound();
                             endRoundEffectHandler(PlayerPanels, me, 2000);
                             if (PlayerPanels != null) photonView.RPC("UpdateEffect", RpcTarget.All, me);
-                            isGameEnded((me + 1) % total);;
+                            isGameEnded((me + 1) % total);
                         }
                     }
                     else
@@ -1153,7 +1153,21 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                         CardsInDisplay[i].Clear();
                     }
                 }
-                PickACard(0.5f, "1");
+                int amount = player.p.getDrawCardCount();
+                for (int i = 0; i < amount; i++)
+                {
+                    int count = 0;
+                    foreach (var Cards in CardsInType)
+                    {
+                        if (Cards == null) continue;
+                        count += Cards.Count;
+                    }
+                    if (count < 20)
+                    {
+                        float rnd = (float)(6 * rand.NextDouble());
+                        PickACard(rnd);
+                    }
+                }
                 RefreshCards();
                 displaycount = 0;
                 toolcardtype = "none";
@@ -1492,10 +1506,13 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     }
     public void UpdatePlayerProperties(int w, int s, int r)
     {
-        
-        int W = (int)PhotonNetwork.LocalPlayer.CustomProperties["Wisdom"] + w;
-        int S = (int)PhotonNetwork.LocalPlayer.CustomProperties["Strength"] + s;
-        int R = (int)PhotonNetwork.LocalPlayer.CustomProperties["Reputation"] + r;
+        int W = 0, S = 0, R = 0;
+        if(!Wdead)
+            W = (int)PhotonNetwork.LocalPlayer.CustomProperties["Wisdom"] + w;
+        if(!Sdead)
+            S = (int)PhotonNetwork.LocalPlayer.CustomProperties["Strength"] + s;
+        if(!Rdead)
+            R = (int)PhotonNetwork.LocalPlayer.CustomProperties["Reputation"] + r;
 
         // 限制血量不要超過上限或低於 0
         W = Mathf.Clamp(W, 0, maxW);
@@ -1621,39 +1638,84 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         card.GetComponent<ToolCardController>().face = finalFace;
     }
 
+    // public void DiscardACard(string type = "not_specified")
+    // {
+    //     int cardcount = 0;
+    //     if(type == "not_specified")
+    //     {
+    //         for (int i = 0; i < typeNum; i++)
+    //         {
+    //             if (CardsInType[i].Count > 0)
+    //             {
+    //                 foreach (GameObject obj in CardsInType[i])
+    //                 {
+    //                     cardcount++;
+    //                 }
+    //             }
+    //         }
+    //         int pos = (int)(rand.NextDouble() * cardcount);
+    //         cardcount = 0;
+    //         for (int i = 0; i < typeNum; i++)
+    //         {
+    //             int j = 0;
+    //             if (CardsInType[i].Count > 0)
+    //             {
+    //                 foreach (GameObject obj in CardsInType[i])
+    //                 {
+    //                     if (cardcount == pos)
+    //                     {
+    //                         break;
+    //                     }
+    //                     cardcount++;
+    //                     j++;
+    //                 }
+    //                 CardsInType[i][j].GetComponent<ToolCardController>().kill();
+    //                 CardsInType[i].RemoveAt(j);
+    //                 RefreshCards();
+    //                 return;
+    //             }
+    //         }
+            
+    //     }
+    // }
     public void DiscardACard(string type = "not_specified")
     {
-        int cardcount = 0;
-        if(type != "not_specified")
+        if (type == "not_specified")
         {
+            // 1. 先計算出總共有幾張手牌
+            int totalCards = 0;
             for (int i = 0; i < typeNum; i++)
             {
-                if (CardsInDisplay[i].Count > 0)
-                {
-                    foreach (GameObject obj in CardsInDisplay[i])
-                    {
-                        cardcount++;
-                    }
-                }
+                totalCards += CardsInType[i].Count;
             }
-            int pos = (int)(rand.NextDouble() * cardcount);
-            cardcount = 0;
+
+            // 如果已經沒有手牌了，就直接結束，防止隨機數報錯
+            if (totalCards == 0) return; 
+
+            // 2. 隨機選一個要丟掉的位置 (rand.Next 產生的範圍包含下限，不包含上限)
+            int pos = rand.Next(0, totalCards); 
+            
+            // 3. 找出那張牌並徹底移除
+            int currentCount = 0;
             for (int i = 0; i < typeNum; i++)
             {
-                int j = 0;
-                if (CardsInDisplay[i].Count > 0)
+                for (int j = 0; j < CardsInType[i].Count; j++)
                 {
-                    foreach (GameObject obj in CardsInDisplay[i])
+                    if (currentCount == pos)
                     {
-                        if (cardcount == pos)
-                        {
-                            break;
-                        }
-                        cardcount++;
-                        j++;
+                        // 找到了！先觸發卡牌本身的刪除特效/摧毀實體
+                        CardsInType[i][j].GetComponent<ToolCardController>().kill();
+                        
+                        // 再從陣列名單中移除
+                        CardsInType[i].RemoveAt(j);
+                        
+                        // 重新排列剩餘的手牌
+                        RefreshCards();
+                        
+                        // 【關鍵】事情做完了，立刻結束整個函式，不要再往下找了！
+                        return; 
                     }
-                    CardsInType[i][j].GetComponent<ToolCardController>().kill();
-                    CardsInType[i].Remove(CardsInType[i][j]);
+                    currentCount++;
                 }
             }
         }
@@ -1744,14 +1806,49 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         player.useSkill();
     }
 
-    public void endRoundEffectHandler(GameObject[] panelList, int playeridx, int dt)
+    // public void endRoundEffectHandler(GameObject[] panelList, int playeridx, int dt)
+    // {
+    //     PlayerPanelController myPanel = panelList[playeridx].GetComponent<PlayerPanelController>();
+    //     if (myPanel.isExist("dizzy"))
+    //     {
+    //         photonView.RPC("Announcement", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName + " 斷片，遺忘了些什麼", dt);
+    //         Task.Delay(dt + 100).ContinueWith(t => DiscardACard());
+    //     }
+    //     if (myPanel.isExist("malice"))
+    //     {
+    //         foreach(var eff in myPanel.effectlist)
+    //         {
+    //             if(eff.id == "malice" && eff.lastRound == 1)
+    //             {
+    //                 StringBuilder sb = new StringBuilder();
+    //                 sb.AppendLine("無名布偶怒了，引爆怨念");
+    //                 sb.AppendLine(LocalPlayerList[me].NickName + "被惡意纏身");
+    //                 sb.AppendLine("受到15點智慧傷害");
+    //                 sb.AppendLine("受到15點體力傷害");
+    //                 sb.Append("受到15點聲譽傷害");
+    //                 UpdatePlayerProperties(-15, -15, -15);
+    //                 photonView.RPC("Announcement", RpcTarget.All, sb.ToString(), dt);
+    //                 Task.Delay(dt + 100);
+    //                 break;
+    //             }
+    //         }
+    //     }
+    // }
+    // 1. 這裡加上 async 關鍵字
+    public async void endRoundEffectHandler(GameObject[] panelList, int playeridx, int dt)
     {
         PlayerPanelController myPanel = panelList[playeridx].GetComponent<PlayerPanelController>();
         if (myPanel.isExist("dizzy"))
         {
             photonView.RPC("Announcement", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName + " 斷片，遺忘了些什麼", dt);
-            Task.Delay(dt + 100).ContinueWith(t => DiscardACard());
+            
+            // 2. 改用 await 等待，這樣等待完就會安全回到主執行緒
+            await Task.Delay(dt + 100);
+            
+            // 3. 現在呼叫它，就能完美執行卡牌消除與 UI 更新了！
+            DiscardACard(); 
         }
+        
         if (myPanel.isExist("malice"))
         {
             foreach(var eff in myPanel.effectlist)
@@ -1766,7 +1863,9 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     sb.Append("受到15點聲譽傷害");
                     UpdatePlayerProperties(-15, -15, -15);
                     photonView.RPC("Announcement", RpcTarget.All, sb.ToString(), dt);
-                    Task.Delay(dt + 100);
+                    
+                    // 順便修復這裡：你原本寫 Task.Delay(dt + 100) 其實沒有作用，必須加上 await
+                    await Task.Delay(dt + 100); 
                     break;
                 }
             }
@@ -1784,7 +1883,6 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     if(win != "")
                     {
                         photonView.RPC("Go", LocalPlayerList[nextIdx]);
-                        return;
                     }
                     else
                     {
@@ -1799,7 +1897,6 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             if (isAlive[0])
             {
                 photonView.RPC("Go", LocalPlayerList[nextIdx]);
-                return;
             }
             else
             {

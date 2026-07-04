@@ -5,5 +5,5 @@ mate,true,false,false
 sleep_special,true,false,false
 femboy1,true,false,true
 femboy2,true,false,true
-nan_bro,true,false,false
+nah_bro,true,false,false
 nameless_doll,true,false,false

@@ -35,7 +35,7 @@ public class EndGameManager : MonoBehaviour
         {
             isWinning.text = "呀呼！贏啦！";
         }
-        if (StaticData.winnerName == PhotonNetwork.LocalPlayer.NickName)
+        else
         {
             isWinning.text = "你社死了，菜雞";
         }
