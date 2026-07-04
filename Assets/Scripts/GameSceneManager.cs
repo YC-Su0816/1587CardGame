@@ -1948,8 +1948,9 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             }
         }
         if (myPanel.isExist("chenchienting"))
-        {
-            if (playeridx == me)
+        {   
+            float roll = UnityEngine.Random.value;
+            if (roll <= 0.5f && playeridx == me)
             {
                 isResolvingVirtualCard = true;
                 PlayVirtualCard("medicine", "lunch_break_chat", "chenchienting");
@@ -1961,7 +1962,8 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         }
         if (myPanel.isExist("wuminglin"))
         {
-            if (playeridx == me)
+            float roll = UnityEngine.Random.value;
+            if (roll <= 0.5f && playeridx == me)
             {
                 isResolvingVirtualCard = true;
                 PlayVirtualCard("multiattack", "nietzsche", "wuminglin");
@@ -1973,7 +1975,8 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         }
         if (myPanel.isExist("linminching"))
         {
-            if (playeridx == me)
+            float roll = UnityEngine.Random.value;
+            if (roll <= 0.5f && playeridx == me)
             {
                 isResolvingVirtualCard = true;
                 PlayVirtualCard("attack", "what", "linminching");
@@ -1985,7 +1988,8 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         }
         if (myPanel.isExist("chenpenghsu"))
         {
-            if (playeridx == me)
+            float roll = UnityEngine.Random.value;
+            if (roll <= 0.5f && playeridx == me)
             {
                 isResolvingVirtualCard = true;
                 PlayVirtualCard("attack", "what", "chenpenghsu");
@@ -1997,7 +2001,8 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         }
         if (myPanel.isExist("chenchihsheng"))
         {
-            if (playeridx == me)
+            float roll = UnityEngine.Random.value;
+            if (roll <= 0.5f && playeridx == me)
             {
                 isResolvingVirtualCard = true;
                 PlayVirtualCard("attack", "what", "chenchihsheng");
@@ -2009,7 +2014,8 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         }
         if (myPanel.isExist("loyinting"))
         {
-            if (playeridx == me)
+            float roll = UnityEngine.Random.value;
+            if (roll <= 0.5f && playeridx == me)
             {
                 isResolvingVirtualCard = true;
                 PlayVirtualCard("attack", "what", "loyinting");
@@ -2021,7 +2027,8 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         }
         if (myPanel.isExist("wangchinghua"))
         {
-            if (playeridx == me)
+            float roll = UnityEngine.Random.value;
+            if (roll <= 0.5f && playeridx == me)
             {
                 isResolvingVirtualCard = true;
                 PlayVirtualCard("attack", "what", "wangchinghua");
