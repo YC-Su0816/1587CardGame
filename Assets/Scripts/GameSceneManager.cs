@@ -1614,7 +1614,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             PlayerPanelController myPanel = PlayerPanels[me].GetComponent<PlayerPanelController>();
             if (myPanel.isExist("chenchienting")) 
             {
-                if (UnityEngine.Random.value > 0.1f)
+                if (UnityEngine.Random.value <= 0.25f)
                 {
                     photonView.RPC("RemoveEffect", RpcTarget.All, me, "chenchienting");
                     photonView.RPC("Announcement", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName + " 聲譽嚴重受損，朽木不可雕也！\n陳建廷失望地離開了...", 2000);
@@ -1622,7 +1622,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             }
             if (myPanel.isExist("wuminglin")) 
             {
-                if (UnityEngine.Random.value > 0.1f)
+                if (UnityEngine.Random.value <= 0.25f)
                 {
                     photonView.RPC("RemoveEffect", RpcTarget.All, me, "wuminglin");
                     photonView.RPC("Announcement", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName + " 聲譽嚴重受損，朽木不可雕也！\n吳明麟失望地離開了...", 2000);
@@ -1630,7 +1630,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             }
             if (myPanel.isExist("linminching")) 
             {
-                if (UnityEngine.Random.value > 0.1f)
+                if (UnityEngine.Random.value <= 0.25f)
                 {
                     photonView.RPC("RemoveEffect", RpcTarget.All, me, "linminching");
                     photonView.RPC("Announcement", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName + " 聲譽嚴重受損，朽木不可雕也！\n林敏靜失望地離開了...", 2000);
@@ -1638,7 +1638,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             }
             if (myPanel.isExist("chenpenghsu")) 
             {
-                if (UnityEngine.Random.value > 0.1f)
+                if (UnityEngine.Random.value <= 0.25f)
                 {
                     photonView.RPC("RemoveEffect", RpcTarget.All, me, "chenpenghsu");
                     photonView.RPC("Announcement", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName + " 聲譽嚴重受損，朽木不可雕也！\n陳鵬旭失望地離開了...", 2000);
@@ -1646,7 +1646,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             }
             if (myPanel.isExist("chenchihsheng")) 
             {
-                if (UnityEngine.Random.value > 0.1f)
+                if (UnityEngine.Random.value <= 0.25f)
                 {
                     photonView.RPC("RemoveEffect", RpcTarget.All, me, "chenchihsheng");
                     photonView.RPC("Announcement", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName + " 聲譽嚴重受損，朽木不可雕也！\n陳智勝失望地離開了...", 2000);
@@ -1654,7 +1654,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             }
             if (myPanel.isExist("loyinting")) 
             {
-                if (UnityEngine.Random.value > 0.1f)
+                if (UnityEngine.Random.value <= 0.25f)
                 {
                     photonView.RPC("RemoveEffect", RpcTarget.All, me, "loyinting");
                     photonView.RPC("Announcement", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName + " 聲譽嚴重受損，朽木不可雕也！\n羅尹廷失望地離開了...", 2000);
@@ -1662,7 +1662,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             }
             if (myPanel.isExist("wangchinghua")) 
             {
-                if (UnityEngine.Random.value > 0.1f)
+                if (UnityEngine.Random.value <= 0.25f)
                 {
                     photonView.RPC("RemoveEffect", RpcTarget.All, me, "wangchinghua");
                     photonView.RPC("Announcement", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName + " 聲譽嚴重受損，朽木不可雕也！\n王靖華失望地離開了...", 2000);
