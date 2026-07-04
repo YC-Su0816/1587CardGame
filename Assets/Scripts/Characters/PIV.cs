@@ -92,7 +92,7 @@ public class PIV : PlayerBase
                 StringBuilder sb = new StringBuilder();
                 sb.AppendLine("雀魂登入中");
                 sb.Append("昱霖，平板交上來");
-                handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 1000);
+                handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 2000);
 
                 manager.UpdatePlayerProperties(0, 0, -2); // 扣除信譽
 
