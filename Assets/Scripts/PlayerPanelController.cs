@@ -29,11 +29,18 @@ public class PlayerPanelController : MonoBehaviourPunCallbacks
     {
         // 格式: { "效果代號", ("顯示名稱", "詳細敘述文字", 是否常駐, 能否被藥物消除) }
         { "disappear", ("神隱", "不可選中，回復狀態。", true, false) }, // 常駐，不可除
-        { "sleep",    ("沉睡", "不可選中，略為降低狀態。", false, true) },  // 非常駐，可被藥消除
-        { "dizzy",      ("失神", "每回合少卡片。", false, true) },
-        { "malice",      ("怨念", "時刻給予關注，否則...後果自負。", false, true) },
-        { "21water",     ("柔水", "降攻、增防。", true, false) },
-        { "21knife",     ("鋼刀", "增攻、破防。", true, false) }
+        { "sleep", ("沉睡", "不可選中，略為降低狀態。", false, true) },  // 非常駐，可被藥消除
+        { "dizzy", ("失神", "每回合少卡片。", false, true) },
+        { "malice", ("怨念", "時刻給予關注，否則...後果自負。", false, true) },
+        { "21water", ("柔水", "降攻、增防。", true, false) },
+        { "21knife", ("鋼刀", "增攻、破防。", true, false) },
+        { "chenchienting", ("陳建廷", "建章常繞勒沙理，廷殿時聞酸鹼音。", true, false) },
+        { "wuminglin", ("吳明麟", "明師化雨澤天地，麟閣流芳縱往今。", true, false) },
+        { "linminching", ("林敏靜", "敏心能辨他邦字，靜格易通百國言。", true, false) },
+        { "chenpenghsu", ("陳鵬旭", "鵬摶千里展新翅，旭照萬疆破險題。", true, false) },
+        { "chenchihsheng", ("陳智勝", "智術略窺量子貌，勝才能頌電磁詩。", true, false) },
+        { "loyinting", ("羅尹廷", "尹昭萬物存佳譽，廷滿百昌博藇名。", true, false) },
+        { "wangchinghua", ("王靖華", "靖志自懷千古事，華才能授四時情。", true, false) }
     };
 
     public List<Eff> effectlist;
