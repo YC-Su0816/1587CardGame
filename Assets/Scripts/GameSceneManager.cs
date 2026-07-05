@@ -434,6 +434,11 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     canPlayDefense = false;
                     canPlaySpecial = true;
                 }
+                else if (DisplayFace[0] == "confiscate_smartphone_ipad")
+                {
+                    canPlayDefense = false;
+                    canPlaySpecial = true;
+                }
             }
         }
             
@@ -716,6 +721,44 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                         string msg = "古之學者必有師...\n師者，所以傳道、受業、解惑也...\n" + FromAndTo[0].NickName + " 召喚了 " + teacherName;
                         photonView.RPC("Announcement", RpcTarget.All, msg, 3000);
                     }
+                    await Task.Delay(3000);
+                }
+                else if (DisplayFace[0] == "confiscate_smartphone_ipad")
+                {
+                    if (PhotonNetwork.LocalPlayer == FromAndTo[1])
+                    {
+                        List<int> availableCategories = new List<int>();
+                        for (int i = 0; i < typeNum; i++)
+                        {
+                            if (CardsInType[i].Count > 0) availableCategories.Add(i);
+                        }
+
+                        if (availableCategories.Count == 0)
+                        {
+                            string emptyMsg = "陳建廷 試圖沒收" + FromAndTo[1].NickName + " 的卡牌\n但 " + FromAndTo[1].NickName + " 已經沒有卡牌了，笑死！";
+                            photonView.RPC("Announcement", RpcTarget.All, emptyMsg, 3000);
+                        }
+                        else
+                        {
+                            int rndCatIndex = UnityEngine.Random.Range(0, availableCategories.Count);
+                            int chosenCat = availableCategories[rndCatIndex];
+                            
+                            string[] typeNames = { "攻擊", "群攻", "防禦", "治療", "增傷", "特殊" };
+                            string chosenTypeName = typeNames[chosenCat];
+                            int discardCount = CardsInType[chosenCat].Count;
+
+                            foreach (GameObject card in CardsInType[chosenCat])
+                            {
+                                card.GetComponent<ToolCardController>().kill();
+                            }
+                            CardsInType[chosenCat].Clear();
+                            RefreshCards();
+
+                            string announceMsg = "陳建廷 沒收了 " + FromAndTo[1].NickName + " 所有的" + chosenTypeName + "卡，共 " + discardCount + " 張";
+                            photonView.RPC("Announcement", RpcTarget.All, announceMsg, 3000);
+                        }
+                    }
+
                     await Task.Delay(3000);
                 }
                 else if (DisplayFace[0] == "nameless_doll")
@@ -1420,6 +1463,28 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             targetIdx = (me + 1) % total;
         }
 
+        if (virtualFace == "confiscate_smartphone_ipad")
+        {
+            List<int> validTargets = new List<int>();
+            for (int i = 0; i < total; i++)
+            {
+                if (i == me) continue;
+                if (!isAlive[i]) continue;
+                PlayerPanelController ppc = PlayerPanels[i].GetComponent<PlayerPanelController>();
+                if (ppc.isExist("disappear") || ppc.isExist("sleep")) continue;
+                validTargets.Add(i);
+            }
+
+            if (validTargets.Count > 0)
+            {
+                targetIdx = validTargets[UnityEngine.Random.Range(0, validTargets.Count)];
+            }
+            else
+            {
+                targetIdx = me;
+            }
+        }
+
         if (teacherName == "chenchienting")
         {
             photonView.RPC("Announcement", RpcTarget.All, "陳建廷 使用技能！", 1500);
@@ -2019,7 +2084,50 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             if (roll <= 0.5f && playeridx == me)
             {
                 isResolvingVirtualCard = true;
-                PlayVirtualCard("medicine", "lunch_break_chat", "chenchienting");
+                roll = UnityEngine.Random.value;
+                if (roll <= 0.4f)
+                {
+                    PlayVirtualCard("medicine", "lunch_break_chat", "chenchienting");
+                }
+                else if (roll <= 0.8f)
+                {
+                    PlayVirtualCard("special", "confiscate_smartphone_ipad", "chenchienting");
+                }
+                else
+                {
+                    // PlayVirtualCard("special", "go_biking_together", "chenchienting");
+                    StringBuilder sb1 = new StringBuilder("今天天氣真好...\n明麟，我們去騎車吧！\n");
+                    StringBuilder sb2 = new StringBuilder("任你選一個方向\n任你上一條通道\n");
+                    StringBuilder sb3 = new StringBuilder("順著這帶草味的和風\n放輪遠去\n");
+                    StringBuilder sb4 = new StringBuilder("保管你這半天的逍遙\n是你性靈的補劑\n");
+                    StringBuilder sb5 = new StringBuilder("陳建廷 與 吳明麟 離開了戰場");
+
+                    photonView.RPC("Announcement", RpcTarget.All, sb1.ToString(), 2500);
+                    photonView.RPC("Announcement", RpcTarget.All, sb2.ToString(), 2500);
+                    photonView.RPC("Announcement", RpcTarget.All, sb3.ToString(), 2500);
+                    photonView.RPC("Announcement", RpcTarget.All, sb4.ToString(), 2500);
+                    photonView.RPC("Announcement", RpcTarget.All, sb5.ToString(), 2500);
+
+                    await Task.Delay(10000);
+
+                    for (int i = 0; i < total; i++)
+                    {
+                        if (!isAlive[i]) continue;
+
+                        PlayerPanelController ppc = PlayerPanels[i].GetComponent<PlayerPanelController>();
+                        if (ppc.isExist("chenchienting"))
+                        {
+                            photonView.RPC("RemoveEffect", RpcTarget.All, i, "chenchienting");
+                        }
+                        if (ppc.isExist("wuminglin"))
+                        {
+                            photonView.RPC("RemoveEffect", RpcTarget.All, i, "wuminglin");
+                        }
+                    }
+
+                    await Task.Delay(2500);
+                    isResolvingVirtualCard = false;
+                }
                 while (isResolvingVirtualCard)
                 {
                     await Task.Delay(100);
@@ -2032,7 +2140,46 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             if (roll <= 0.5f && playeridx == me)
             {
                 isResolvingVirtualCard = true;
-                PlayVirtualCard("multiattack", "nietzsche", "wuminglin");
+                roll = UnityEngine.Random.value;
+                if (roll <= 0.8f)
+                {
+                    PlayVirtualCard("multiattack", "nietzsche", "wuminglin");
+                }
+                else
+                {
+                    // PlayVirtualCard("special", "go_biking_together", "wuminglin");
+                    StringBuilder sb1 = new StringBuilder("今天天氣真好...\n建廷，我們去騎車吧！\n");
+                    StringBuilder sb2 = new StringBuilder("任你選一個方向\n任你上一條通道\n");
+                    StringBuilder sb3 = new StringBuilder("順著這帶草味的和風\n放輪遠去\n");
+                    StringBuilder sb4 = new StringBuilder("保管你這半天的逍遙\n是你性靈的補劑\n");
+                    StringBuilder sb5 = new StringBuilder("吳明麟 與 陳建廷 離開了戰場");
+
+                    photonView.RPC("Announcement", RpcTarget.All, sb1.ToString(), 2500);
+                    photonView.RPC("Announcement", RpcTarget.All, sb2.ToString(), 2500);
+                    photonView.RPC("Announcement", RpcTarget.All, sb3.ToString(), 2500);
+                    photonView.RPC("Announcement", RpcTarget.All, sb4.ToString(), 2500);
+                    photonView.RPC("Announcement", RpcTarget.All, sb5.ToString(), 2500);
+
+                    await Task.Delay(10000);
+
+                    for (int i = 0; i < total; i++)
+                    {
+                        if (!isAlive[i]) continue;
+
+                        PlayerPanelController ppc = PlayerPanels[i].GetComponent<PlayerPanelController>();
+                        if (ppc.isExist("chenchienting"))
+                        {
+                            photonView.RPC("RemoveEffect", RpcTarget.All, i, "chenchienting");
+                        }
+                        if (ppc.isExist("wuminglin"))
+                        {
+                            photonView.RPC("RemoveEffect", RpcTarget.All, i, "wuminglin");
+                        }
+                    }
+
+                    await Task.Delay(2500);
+                    isResolvingVirtualCard = false;
+                }
                 while (isResolvingVirtualCard) 
                 {
                     await Task.Delay(100);
@@ -2117,6 +2264,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     if(win != "")
                     {
                         photonView.RPC("Go", LocalPlayerList[nextIdx]);
+                        return;
                     }
                     else
                     {
