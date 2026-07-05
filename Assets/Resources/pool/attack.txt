@@ -12,7 +12,6 @@ brain_overload
 charger
 conan
 falling_cat
-frog_prince
 inner_alien
 lava_crocodile
 Rome_soldier
