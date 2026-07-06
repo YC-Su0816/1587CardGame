@@ -763,6 +763,9 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
 
                             string announceMsg = "陳建廷 沒收了 " + FromAndTo[1].NickName + " 所有的" + chosenTypeName + "卡，共 " + discardCount + " 張";
                             photonView.RPC("Announcement", RpcTarget.All, announceMsg, 3000);
+                        }
+                    }
+                }
                 else if (DisplayFace[0] == "zhenverse_broom")
                 {
                     sb = new StringBuilder();
