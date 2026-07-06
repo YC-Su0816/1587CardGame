@@ -34,9 +34,11 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     public bool displaytime = false, playing, responding; 
     public int cardpicking, targetnum, displaycount;
     public int status; //0: 沒事 1: 出牌 2: 回牌
+
+    public bool PD; //false: 棄牌 true: 出牌
     public string toolcardtype;
     public Vector3[] position = new Vector3[20];
-    public TMP_Text hintword, to, from, hint;
+    public TMP_Text hintword, to, from, hint, PDtext;
     public PlayerHandle player;
     public GameObject playerprfeb;
     public GameObject effectprfeb;
@@ -48,7 +50,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     public Transform cardpanel;
     public Transform displayfrom;
     public Transform displayto;
-    public Button skillButton;
+    public Button skillButton, PDSwitch;
     public Photon.Realtime.Player[] LocalPlayerList;
     public Photon.Realtime.Player[] FromAndTo = new Photon.Realtime.Player[2];
     public bool[] isAlive;
@@ -289,6 +291,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         photonView.RPC("SetFromTo", RpcTarget.All, me, -1);
         PhotonNetwork.SendAllOutgoingCommands();
         status = 1;
+        PD = true;
         targetnum = -1;
         player.newRound();
         Debug.Log("It's " + PhotonNetwork.LocalPlayer.NickName);
@@ -391,6 +394,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     }
                 }
                 status = 2;
+                PD = true;
                 canPlayDefense = true;
                 canPlaySpecial = false;
             }
@@ -498,6 +502,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 return;
             }
             status = 2;
+            PD = true;
             canPlayDefense = true;
             canPlaySpecial = false;
 
@@ -1108,6 +1113,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         
         skillUseCounter = 0;
         status = 0;
+        PD = true;
         displaycount = 0;
         targetnum = -1;
         toolcardtype = "none";
@@ -1237,21 +1243,233 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
 
         if (displaycount > 0)
         {
-            List<string> attemptTypes = new List<string>();
-            for (int i = 0; i < typeNum; i++)
+            if (PD)
             {
-                if (CardsInDisplay[i].Count > 0)
+                List<string> attemptTypes = new List<string>();
+                for (int i = 0; i < typeNum; i++)
                 {
-                    if (i == 1) m = true;
-                    foreach (GameObject obj in CardsInDisplay[i])
+                    if (CardsInDisplay[i].Count > 0)
                     {
-                        attemptTypes.Add(obj.GetComponent<ToolDisplayController>().tooltype);
+                        if (i == 1) m = true;
+                        foreach (GameObject obj in CardsInDisplay[i])
+                        {
+                            attemptTypes.Add(obj.GetComponent<ToolDisplayController>().tooltype);
+                        }
                     }
                 }
-            }
 
-            if (player.p.checkActionFailure(attemptTypes))
+                if (player.p.checkActionFailure(attemptTypes))
+                {
+                    for (int i = 0; i < typeNum; i++)
+                    {
+                        if (CardsInDisplay[i].Count > 0)
+                        {
+                            foreach (GameObject obj in CardsInDisplay[i])
+                            {
+                                int j = 0;
+                                foreach (GameObject o in CardsInType[i])
+                                {
+                                    if (o.GetComponent<ToolCardController>().num == obj.GetComponent<ToolDisplayController>().num) break;
+                                    else j++;
+                                }
+                                CardsInType[i][j].GetComponent<ToolCardController>().kill();
+                                CardsInType[i].Remove(CardsInType[i][j]);
+                                obj.GetComponent<ToolDisplayController>().kill();
+                            }
+                            CardsInDisplay[i].Clear();
+                        }
+                    }
+                    int amount = player.p.getDrawCardCount();
+                    for (int i = 0; i < amount; i++)
+                    {
+                        int count = 0;
+                        foreach (var Cards in CardsInType)
+                        {
+                            if (Cards == null) continue;
+                            count += Cards.Count;
+                        }
+                        if (count < 20)
+                        {
+                            float rnd = (float)(6 * rand.NextDouble());
+                            PickACard(rnd);
+                        }
+                    }
+                    RefreshCards();
+                    displaycount = 0;
+                    toolcardtype = "none";
+                    cardpicking = -1;
+                    isGameEnded((me + 1) % total);
+                    return;
+                }
+
+                for (int i = 0; i < typeNum; i++)
+                {
+                    if (CardsInDisplay[i].Count > 0)
+                    {
+                        if (i == 1) m = true;
+                        if (targetnum == -1)
+                        {
+                            if (i == 0 || i == typeNum - 1)
+                            {
+                                int r = 1;
+                                for (r = 1; r <= total; ++r)
+                                {
+                                    PlayerPanelController ppc = PlayerPanels[(me + r) % total].GetComponent<PlayerPanelController>();
+                                    if (ppc.isExist("disappear") || ppc.isExist("hide")) continue;
+                                    else break;
+                                }
+                                targetnum = (me + r) % total;
+                            }
+                            else targetnum = me;
+                        }
+                        foreach (GameObject obj in CardsInDisplay[i])
+                        {
+                            // if(playedCount == 0) playedType = obj.GetComponent<ToolDisplayController>().tooltype;
+                            string getType = obj.GetComponent<ToolDisplayController>().tooltype;
+                            playedType.Add(getType);
+                            if (getType == "special") playedFace.Add(obj.GetComponent<ToolDisplayController>().face);
+                            else
+                            {
+                                int[] readInValue = getValue(obj.GetComponent<ToolDisplayController>().tooltype, obj.GetComponent<ToolDisplayController>().face);
+                                for (int dummy = 0; dummy < 3; dummy++)
+                                    Damages[dummy] += readInValue[dummy];
+                            }
+
+                            playedCount++;
+
+                            photonView.RPC("GetCard", RpcTarget.All, obj.GetComponent<ToolDisplayController>().tooltype, obj.GetComponent<ToolDisplayController>().face);
+                            int j = 0;
+                            foreach (GameObject o in CardsInType[i])
+                            {
+                                if (o.GetComponent<ToolCardController>().num == obj.GetComponent<ToolDisplayController>().num) break;
+                                else j++;
+                            }
+                            CardsInType[i][j].GetComponent<ToolCardController>().kill();
+                            CardsInType[i].Remove(CardsInType[i][j]);
+                            obj.GetComponent<ToolDisplayController>().kill();
+                        }
+                        CardsInDisplay[i].Clear();
+                    }
+                }
+
+                bool isStandardAction = true;
+
+                if (playedType[0] == "special")
+                {
+                    isStandardAction = false;
+                    photonView.RPC("SetFromTo", RpcTarget.All, me, targetnum);
+                    PhotonNetwork.SendAllOutgoingCommands();
+                    if(playedFace.Count >= 2 && playedFace.Contains("femboy1") && playedFace.Contains("femboy2"))
+                    {
+                        player.p.updateAttack();
+                    
+                        for (int i = 0; i < 3; ++i)
+                        {
+                            Damages[i] = -20;
+                            Damages[i] = Calculator(Damages[i], player.p.attackRatio[i]);
+                            if (Damages[i] != 0) Damages[i] += player.p.attackAdd[i];
+                        }
+                        photonView.RPC("Played", RpcTarget.All, -20, -20, -20);
+                    }
+                    else
+                    {
+                        photonView.RPC("Played", RpcTarget.All, 0, 0, 0);
+                    }
+                    PhotonNetwork.SendAllOutgoingCommands();
+                }
+                
+                if (isStandardAction)
+                {
+                    if (playedType[0] == "medicine")
+                    {
+                        player.p.updateMed();
+
+                        for (int i = 0; i < 3; ++i)
+                        {
+                            Damages[i] = Calculator(Damages[i], player.p.medRatio[i]);
+                            if (Damages[i] != 0) Damages[i] += player.p.medAdd[i];
+                        }
+                    }
+                    else
+                    {
+                        player.p.updateAttack();
+                    
+                        for (int i = 0; i < 3; ++i)
+                        {
+                            Damages[i] = Calculator(Damages[i], player.p.attackRatio[i]);
+                            if (Damages[i] != 0) Damages[i] += player.p.attackAdd[i];
+                        }
+                    }
+
+                    daW = Damages[0]; daS = Damages[1]; daR = Damages[2];
+                    player.p.overrideFinalDamage(ref daW, ref daS, ref daR);
+
+                    if (m)
+                    {
+                        photonView.RPC("SetFromTo", RpcTarget.All, me, (me + 1) % total);
+                        PhotonNetwork.SendAllOutgoingCommands();
+                        photonView.RPC("Multi", RpcTarget.All, daW, daS, daR);
+                        PhotonNetwork.SendAllOutgoingCommands();
+                    }
+                    else
+                    {
+                        photonView.RPC("SetFromTo", RpcTarget.All, me, targetnum);
+                        PhotonNetwork.SendAllOutgoingCommands();
+                        photonView.RPC("Played", RpcTarget.All, daW, daS, daR);
+                        PhotonNetwork.SendAllOutgoingCommands();
+                    }
+                }
+
+                int drawAmount = player.p.getDrawCardCount();
+                for (int i = 0; i < drawAmount; i++)
+                {
+                    int count = 0;
+                    foreach (var Cards in CardsInType)
+                    {
+                        if (Cards == null) continue;
+                        count += Cards.Count;
+                    }
+                    if (count < 20)
+                    {
+                        float rnd = (float)(6 * rand.NextDouble());
+                        PickACard(rnd);
+                    }
+                }
+                RefreshCards();
+                toolcardtype = "none";
+                cardpicking = -1;
+            }
+            else
             {
+                List<string> attemptTypes = new List<string>();
+                attemptTypes.Add("Discarding");
+                StringBuilder sb = new StringBuilder();
+                if (player.p.checkActionFailure(attemptTypes))
+                {
+                    for (int i = 0; i < typeNum; i++)
+                    {
+                        if (CardsInDisplay[i].Count > 0)
+                        {
+                            foreach (GameObject obj in CardsInDisplay[i])
+                            {
+                                obj.GetComponent<ToolDisplayController>().kill();
+                            }
+                            CardsInDisplay[i].Clear();
+                        }
+                    }
+                    
+                    sb.AppendLine(FromAndTo[0].NickName + " 連牌都棄不掉");
+                    sb.Append("可憐阿");
+                    EnqueueLocalAnnouncement(sb.ToString(), 2000);
+                    await Task.Delay(2000);
+                    RefreshCards();
+                    displaycount = 0;
+                    toolcardtype = "none";
+                    cardpicking = -1;
+                    isGameEnded((me + 1) % total);
+                    return;
+                }
+                int discardCount = 0;
                 for (int i = 0; i < typeNum; i++)
                 {
                     if (CardsInDisplay[i].Count > 0)
@@ -1267,25 +1485,18 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                             CardsInType[i][j].GetComponent<ToolCardController>().kill();
                             CardsInType[i].Remove(CardsInType[i][j]);
                             obj.GetComponent<ToolDisplayController>().kill();
+                            discardCount++;
                         }
+                        
                         CardsInDisplay[i].Clear();
                     }
                 }
-                int amount = player.p.getDrawCardCount();
-                for (int i = 0; i < amount; i++)
-                {
-                    int count = 0;
-                    foreach (var Cards in CardsInType)
-                    {
-                        if (Cards == null) continue;
-                        count += Cards.Count;
-                    }
-                    if (count < 20)
-                    {
-                        float rnd = (float)(6 * rand.NextDouble());
-                        PickACard(rnd);
-                    }
-                }
+
+                sb.AppendLine(FromAndTo[0].NickName + " 選擇棄牌");
+                sb.AppendLine("如老師當掉他般");
+                sb.AppendLine("棄掉了 " + discardCount + " 張牌");
+                EnqueueLocalAnnouncement(sb.ToString(), 2000);
+                await Task.Delay(2000);
                 RefreshCards();
                 displaycount = 0;
                 toolcardtype = "none";
@@ -1293,143 +1504,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 isGameEnded((me + 1) % total);
                 return;
             }
-
-            for (int i = 0; i < typeNum; i++)
-            {
-                if (CardsInDisplay[i].Count > 0)
-                {
-                    if (i == 1) m = true;
-                    if (targetnum == -1)
-                    {
-                        if (i == 0 || i == typeNum - 1)
-                        {
-                            int r = 1;
-                            for (r = 1; r <= total; ++r)
-                            {
-                                PlayerPanelController ppc = PlayerPanels[(me + r) % total].GetComponent<PlayerPanelController>();
-                                if (ppc.isExist("disappear") || ppc.isExist("hide")) continue;
-                                else break;
-                            }
-                            targetnum = (me + r) % total;
-                        }
-                        else targetnum = me;
-                    }
-                    foreach (GameObject obj in CardsInDisplay[i])
-                    {
-                        // if(playedCount == 0) playedType = obj.GetComponent<ToolDisplayController>().tooltype;
-                        string getType = obj.GetComponent<ToolDisplayController>().tooltype;
-                        playedType.Add(getType);
-                        if (getType == "special") playedFace.Add(obj.GetComponent<ToolDisplayController>().face);
-                        else
-                        {
-                            int[] readInValue = getValue(obj.GetComponent<ToolDisplayController>().tooltype, obj.GetComponent<ToolDisplayController>().face);
-                            for (int dummy = 0; dummy < 3; dummy++)
-                                Damages[dummy] += readInValue[dummy];
-                        }
-
-                        playedCount++;
-
-                        photonView.RPC("GetCard", RpcTarget.All, obj.GetComponent<ToolDisplayController>().tooltype, obj.GetComponent<ToolDisplayController>().face);
-                        int j = 0;
-                        foreach (GameObject o in CardsInType[i])
-                        {
-                            if (o.GetComponent<ToolCardController>().num == obj.GetComponent<ToolDisplayController>().num) break;
-                            else j++;
-                        }
-                        CardsInType[i][j].GetComponent<ToolCardController>().kill();
-                        CardsInType[i].Remove(CardsInType[i][j]);
-                        obj.GetComponent<ToolDisplayController>().kill();
-                    }
-                    CardsInDisplay[i].Clear();
-                }
-            }
-
-            bool isStandardAction = true;
-
-            if (playedType[0] == "special")
-            {
-                isStandardAction = false;
-                photonView.RPC("SetFromTo", RpcTarget.All, me, targetnum);
-                PhotonNetwork.SendAllOutgoingCommands();
-                if(playedFace.Count >= 2 && playedFace.Contains("femboy1") && playedFace.Contains("femboy2"))
-                {
-                    player.p.updateAttack();
-                
-                    for (int i = 0; i < 3; ++i)
-                    {
-                        Damages[i] = -20;
-                        Damages[i] = Calculator(Damages[i], player.p.attackRatio[i]);
-                        if (Damages[i] != 0) Damages[i] += player.p.attackAdd[i];
-                    }
-                    photonView.RPC("Played", RpcTarget.All, -20, -20, -20);
-                }
-                else
-                {
-                    photonView.RPC("Played", RpcTarget.All, 0, 0, 0);
-                }
-                PhotonNetwork.SendAllOutgoingCommands();
-            }
             
-            if (isStandardAction)
-            {
-                if (playedType[0] == "medicine")
-                {
-                    player.p.updateMed();
-
-                    for (int i = 0; i < 3; ++i)
-                    {
-                        Damages[i] = Calculator(Damages[i], player.p.medRatio[i]);
-                        if (Damages[i] != 0) Damages[i] += player.p.medAdd[i];
-                    }
-                }
-                else
-                {
-                    player.p.updateAttack();
-                
-                    for (int i = 0; i < 3; ++i)
-                    {
-                        Damages[i] = Calculator(Damages[i], player.p.attackRatio[i]);
-                        if (Damages[i] != 0) Damages[i] += player.p.attackAdd[i];
-                    }
-                }
-
-                daW = Damages[0]; daS = Damages[1]; daR = Damages[2];
-                player.p.overrideFinalDamage(ref daW, ref daS, ref daR);
-
-                if (m)
-                {
-                    photonView.RPC("SetFromTo", RpcTarget.All, me, (me + 1) % total);
-                    PhotonNetwork.SendAllOutgoingCommands();
-                    photonView.RPC("Multi", RpcTarget.All, daW, daS, daR);
-                    PhotonNetwork.SendAllOutgoingCommands();
-                }
-                else
-                {
-                    photonView.RPC("SetFromTo", RpcTarget.All, me, targetnum);
-                    PhotonNetwork.SendAllOutgoingCommands();
-                    photonView.RPC("Played", RpcTarget.All, daW, daS, daR);
-                    PhotonNetwork.SendAllOutgoingCommands();
-                }
-            }
-
-            int drawAmount = player.p.getDrawCardCount();
-            for (int i = 0; i < drawAmount; i++)
-            {
-                int count = 0;
-                foreach (var Cards in CardsInType)
-                {
-                    if (Cards == null) continue;
-                    count += Cards.Count;
-                }
-                if (count < 20)
-                {
-                    float rnd = (float)(6 * rand.NextDouble());
-                    PickACard(rnd);
-                }
-            }
-            RefreshCards();
-            toolcardtype = "none";
-            cardpicking = -1;
         }
         else // 跳過不出牌
         {
@@ -1945,7 +2020,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             
     //     }
     // }
-    public void DiscardACard(string type = "not_specified")
+    public void DiscardACard(string type = "not_specified", int n = -1)
     {
         if (type == "not_specified")
         {
@@ -2380,18 +2455,24 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             }
         }
     }
+    public void switchPlayDiscard()
+    {
+        PD = !PD;
+    }
     void Update()
     {
         if (isAlive[me])
         {
-                switch (status)
+            switch (status)
             {
                 case 0:
                     hintword.text = "還不是你的回合";
                     skillButton.enabled = false;
+                    PDSwitch.enabled = false;
                     break;
                 case 1:
                     hintword.text = "請出牌";
+                    PDSwitch.enabled = true;
                     switch (character)
                     {
                         case "2":
@@ -2423,6 +2504,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     break;
                 case 2:
                     hintword.text = "請回應";
+                    PDSwitch.enabled = false;
                     switch (character)
                     {
                         case "15": // 劭宇的社交蝴蝶
@@ -2451,11 +2533,20 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     }
                     break;
             }
+            if (PD)
+            {
+                PDtext.text = "出牌";
+            }
+            else
+            {
+                PDtext.text = "棄牌";
+            }
         }
         else
         {
             hintword.text = "您(社)死了";
             skillButton.enabled = false;
+            PDSwitch.enabled = false;
         }
         
     }

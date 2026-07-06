@@ -49,28 +49,35 @@ public class ToolCardController : MonoBehaviour, IPointerClickHandler
 
         if (sta == 1) // 1: 出牌階段
         {
-            if (tooltype == "strengthen")
-                HandleStrengthen(displayfrom);
-            else if (tooltype == "attack" || tooltype == "multiattack" || tooltype == "medicine")
-                HandleStandardCard(typeToIndex[tooltype], displayfrom);
-            else if (tooltype == "special")
+            if (!gameManager.PD)
             {
-                // 【權限判定】：確認這張特別卡允許在「自己的回合」出牌
-                if (gameManager.specialCardDict.ContainsKey(face) && gameManager.specialCardDict[face].canPlayOnTurn)
+                HandleToggleCard(typeToIndex[tooltype], displayfrom);
+            }
+            else
+            {
+                if (tooltype == "strengthen")
+                    HandleStrengthen(displayfrom);
+                else if (tooltype == "attack" || tooltype == "multiattack" || tooltype == "medicine")
+                    HandleStandardCard(typeToIndex[tooltype], displayfrom);
+                else if (tooltype == "special")
                 {
-                    if(face == "femboy1" || face == "femboy2")
+                    // 【權限判定】：確認這張特別卡允許在「自己的回合」出牌
+                    if (gameManager.specialCardDict.ContainsKey(face) && gameManager.specialCardDict[face].canPlayOnTurn)
                     {
-                        HandleFemboyCard(face, displayfrom);
+                        if(face == "femboy1" || face == "femboy2")
+                        {
+                            HandleFemboyCard(face, displayfrom);
+                        }
+                        else
+                        {
+                            HandleStandardCard(typeToIndex[tooltype], displayfrom);
+                        }
+                        
                     }
                     else
                     {
-                        HandleStandardCard(typeToIndex[tooltype], displayfrom);
+                        Debug.Log("這張特殊牌不能在主動回合打出！");
                     }
-                    
-                }
-                else
-                {
-                    Debug.Log("這張特殊牌不能在主動回合打出！");
                 }
             }
             gameManager.RefreshDisplay();
