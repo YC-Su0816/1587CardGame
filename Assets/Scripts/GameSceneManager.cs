@@ -434,6 +434,11 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     canPlayDefense = false;
                     canPlaySpecial = true;
                 }
+                else if (DisplayFace[0] == "zhenverse_broom")
+                {
+                    canPlayDefense = false;
+                    canPlaySpecial = true;
+                }
             }
         }
             
@@ -716,6 +721,25 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                         string msg = "古之學者必有師...\n師者，所以傳道、受業、解惑也...\n" + FromAndTo[0].NickName + " 召喚了 " + teacherName;
                         photonView.RPC("Announcement", RpcTarget.All, msg, 3000);
                     }
+                    await Task.Delay(3000);
+                }
+                else if (DisplayFace[0] == "zhenverse_broom")
+                {
+                    sb = new StringBuilder();
+                    sb.AppendLine("有朋自遠方來...");
+                    sb.AppendLine("花徑不曾緣客掃，蓬門今始為君開...");
+                    sb.Append(FromAndTo[0].NickName + " 掃掉了 " + FromAndTo[1].NickName + " 的三張卡牌");
+
+                    EnqueueLocalAnnouncement(sb.ToString(), 3000);
+
+                    if (PhotonNetwork.LocalPlayer == FromAndTo[1])
+                    {
+                        for (int i = 0; i < 3; i++)
+                        {
+                            DiscardACard();
+                        }
+                    }
+
                     await Task.Delay(3000);
                 }
                 else if (DisplayFace[0] == "nameless_doll")
