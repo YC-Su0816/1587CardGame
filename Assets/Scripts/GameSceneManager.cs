@@ -1,4 +1,5 @@
 using ExitGames.Client.Photon;
+using NUnit.Framework;
 using Photon.Pun;
 using Photon.Pun.Demo.Asteroids;
 using Photon.Realtime;
@@ -10,6 +11,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using TMPro;
+using Unity.Android.Gradle;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem.XR;
@@ -2224,7 +2226,40 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             if (roll <= 0.5f && playeridx == me)
             {
                 isResolvingVirtualCard = true;
-                PlayVirtualCard("attack", "what", "chenpenghsu");
+                roll = UnityEngine.Random.value;
+                if (roll <= 0.5f)
+                {
+                    PlayVirtualCard("multiattack", "stand_at_the_back", "chenpenghsu");
+                }
+                else if (roll <= 0.8f)
+                {
+                    PlayVirtualCard("multiattack", "cosine_law", "chenpenghsu");
+                }
+                else
+                {
+                    // 同學上課不要閉眼睛喔
+                    StringBuilder sb1 = new StringBuilder("同學上課不要閉眼睛喔\n");
+                    StringBuilder sb2 = new StringBuilder("陳鵬旭 喚醒了所有沉睡的同學\n");
+
+                    photonView.RPC("Announcement", RpcTarget.All, sb1.ToString(), 2500);
+                    photonView.RPC("Announcement", RpcTarget.All, sb2.ToString(), 2500);
+
+                    await Task.Delay(2500);
+
+                    for (int i = 0; i < total; i++)
+                    {
+                        if (!isAlive[i]) continue;
+
+                        PlayerPanelController ppc = PlayerPanels[i].GetComponent<PlayerPanelController>();
+                        if (ppc.isExist("sleep"))
+                        {
+                            photonView.RPC("RemoveEffect", RpcTarget.All, i, "sleep");
+                        }
+                    }
+
+                    await Task.Delay(2500);
+                    isResolvingVirtualCard = false;
+                }
                 while (isResolvingVirtualCard) 
                 {
                     await Task.Delay(100);
@@ -2250,7 +2285,15 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             if (roll <= 0.5f && playeridx == me)
             {
                 isResolvingVirtualCard = true;
-                PlayVirtualCard("attack", "what", "loyinting");
+                roll = UnityEngine.Random.value;
+                if (roll <= 0.9f)
+                {
+                    PlayVirtualCard("medicine", "heyheyhey", "loyinting");
+                }
+                else
+                {
+                    PlayVirtualCard("multiattack", "dissection", "loyinting");
+                }
                 while (isResolvingVirtualCard) 
                 {
                     await Task.Delay(100);
@@ -2263,7 +2306,36 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             if (roll <= 0.5f && playeridx == me)
             {
                 isResolvingVirtualCard = true;
-                PlayVirtualCard("attack", "what", "wangchinghua");
+                roll = UnityEngine.Random.value;
+                if (roll <= 0.8f)
+                {
+                    PlayVirtualCard("medicine", "geological_age", "wangchinghua");
+                }
+                else
+                {
+                    // 庭光今天很開心哦
+                    StringBuilder sb1 = new StringBuilder("庭光今天很開心哦\n");
+                    StringBuilder sb2 = new StringBuilder("王靖華 使所有神隱同學現身\n");
+
+                    photonView.RPC("Announcement", RpcTarget.All, sb1.ToString(), 2500);
+                    photonView.RPC("Announcement", RpcTarget.All, sb2.ToString(), 2500);
+
+                    await Task.Delay(2500);
+
+                    for (int i = 0; i < total; i++)
+                    {
+                        if (!isAlive[i]) continue;
+
+                        PlayerPanelController ppc = PlayerPanels[i].GetComponent<PlayerPanelController>();
+                        if (ppc.isExist("disappear"))
+                        {
+                            photonView.RPC("RemoveEffect", RpcTarget.All, i, "disappear");
+                        }
+                    }
+
+                    await Task.Delay(2500);
+                    isResolvingVirtualCard = false;
+                }
                 while (isResolvingVirtualCard) 
                 {
                     await Task.Delay(100);
