@@ -19,3 +19,6 @@ duck_bush
 grandparents
 farewell_neverland
 majong_kit
+flower_and_white
+south_maple_flower
+good_water
