@@ -2458,6 +2458,18 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     public void switchPlayDiscard()
     {
         PD = !PD;
+        for (int y = 0; y < typeNum; y++)
+        {
+            if (CardsInDisplay[y].Count > 0)
+            {
+                foreach (GameObject o in CardsInDisplay[y])
+                {
+                    o.GetComponent<ToolDisplayController>().kill();
+                }
+                CardsInDisplay[y].Clear();
+            }
+        }
+        displaycount = 0;
     }
     void Update()
     {

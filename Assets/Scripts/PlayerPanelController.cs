@@ -28,10 +28,10 @@ public class PlayerPanelController : MonoBehaviourPunCallbacks
         = new Dictionary<string, (string, string, bool, bool)>()
     {
         // 格式: { "效果代號", ("顯示名稱", "詳細敘述文字", 是否常駐, 能否被藥物消除) }
-        { "disappear", ("神隱", "不可選中，回復狀態。", true, false) }, // 常駐，不可除
-        { "sleep", ("沉睡", "不可選中，略為降低狀態。", false, true) },  // 非常駐，可被藥消除
-        { "dizzy", ("失神", "每回合少卡片。", false, true) },
-        { "malice", ("怨念", "時刻給予關注，否則...後果自負。", false, true) },
+        { "disappear", ("神隱", "大家肯定是再熟悉不過了...\n不可選中，每回合回復所有數值三點。\n回合開始50%維持、50%解除本效果", true, false) }, // 常駐，不可除
+        { "sleep", ("沉睡", "不可選中，每回合扣除智慧、聲譽各一點。\n指定回合後解除", false, true) },  // 非常駐，可被藥消除
+        { "dizzy", ("失神", "每回合隨機失去一張卡片。\n指定回合後解除", false, true) },
+        { "malice", ("怨念", "時刻給予關注，否則...後果自負。\nCD歸0時引爆，扣除所有數值各15點。\n單體攻擊自己並造成傷害可重置回合", false, true) },
         { "21water", ("柔水", "降攻、增防。", true, false) },
         { "21knife", ("鋼刀", "增攻、破防。", true, false) },
         { "chenchienting", ("陳建廷", "建章常繞勒沙理，廷殿時聞酸鹼音。", true, false) },
