@@ -61,7 +61,7 @@ public class PlayerPanelController : MonoBehaviourPunCallbacks
     {
         UnityEngine.Application.targetFrameRate = 60;
         effectlist = new List<Eff>();
-        effEdgex = 520; effEdgey = 0;
+        effEdgex = 520; effEdgey = -20;
         manager = GameObject.Find("GameSceneManager");
         bar = this.transform;
         TMP_Text[] texts = GetComponentsInChildren<TMP_Text>();
