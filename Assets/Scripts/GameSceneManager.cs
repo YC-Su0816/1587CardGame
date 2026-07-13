@@ -1552,7 +1552,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     
                     sb.AppendLine(FromAndTo[0].NickName + " 連牌都棄不掉");
                     sb.Append("可憐阿");
-                    EnqueueLocalAnnouncement(sb.ToString(), 2000);
+                    photonView.RPC("Announcement", RpcTarget.All, sb.ToString(), 2000);
                     await Task.Delay(2000);
                     RefreshCards();
                     displaycount = 0;
@@ -1587,7 +1587,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 sb.AppendLine(FromAndTo[0].NickName + " 選擇棄牌");
                 sb.AppendLine("如老師當掉他般");
                 sb.AppendLine("棄掉了 " + discardCount + " 張牌");
-                EnqueueLocalAnnouncement(sb.ToString(), 2000);
+                photonView.RPC("Announcement", RpcTarget.All, sb.ToString(), 2000);
                 await Task.Delay(2000);
                 RefreshCards();
                 displaycount = 0;
@@ -2234,6 +2234,22 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     }
     public void UseSkill()
     {
+        if (displaycount > 0)
+        {
+            for (int y = 0; y < typeNum; y++)
+            {
+                if (CardsInDisplay[y].Count > 0)
+                {
+                    foreach (GameObject o in CardsInDisplay[y])
+                    {
+                        o.GetComponent<ToolDisplayController>().kill();
+                    }
+                    CardsInDisplay[y].Clear();
+                }
+            }
+            displaycount = 0;
+            RefreshCards();
+        }
         if(character != "2" || skillUseCounter >= 2)
             cd = cdLength;
         ++skillUseCounter;
@@ -2619,6 +2635,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             }
         }
         displaycount = 0;
+        RefreshCards();
     }
     void Update()
     {
