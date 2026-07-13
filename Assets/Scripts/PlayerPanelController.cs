@@ -119,7 +119,20 @@ public class PlayerPanelController : MonoBehaviourPunCallbacks
     // 修改後的 AddEffect：現在只要傳效果代號與持續回合即可
     public void AddEffect(string effId, int round, bool can) // 保留原本 PUN 呼叫的參數介面
     {
+        // 如果資料庫裡沒有定義這個效果，給個預設值防止崩潰
+        string dName = effId;
+        string dDesc = "未知效果";
         bool isPerm = round == -1; // 如果傳入 -1 則自動視為常駐
+        bool canClean = can;
+
+        // 從資料庫撈取詳細設定
+        if (effectDatabase.TryGetValue(effId, out var data))
+        {
+            dName = data.name;
+            dDesc = data.desc;
+            isPerm = data.isPerm;
+            canClean = data.canClean;
+        }
 
         // Check if the same effect already exists.
         for (int i = 0; i < effectlist.Count; i++)
@@ -144,20 +157,6 @@ public class PlayerPanelController : MonoBehaviourPunCallbacks
                 // Task completed.
                 return; 
             }
-        }
-
-        // 如果資料庫裡沒有定義這個效果，給個預設值防止崩潰
-        string dName = effId;
-        string dDesc = "未知效果";
-        bool canClean = can;
-
-        // 從資料庫撈取詳細設定
-        if (effectDatabase.TryGetValue(effId, out var data))
-        {
-            dName = data.name;
-            dDesc = data.desc;
-            isPerm = data.isPerm;
-            canClean = data.canClean;
         }
 
         // 生成 UI 小圖示
