@@ -89,6 +89,63 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     public Dictionary<string, SpecialCardData> specialCardDict = new Dictionary<string, SpecialCardData>();
 
     [PunRPC]
+    public void RPC_LiteratureReview_Ask(int targetIdx, int attackerIdx)
+    {
+        if (PhotonNetwork.LocalPlayer == LocalPlayerList[targetIdx])
+        {
+            int defCount = CardsInType[2].Count; // defense
+            photonView.RPC("RPC_LiteratureReview_PrivateAnswer", LocalPlayerList[attackerIdx], targetIdx, defCount);
+            photonView.RPC("RPC_LiteratureReview_PublicAnswer", RpcTarget.All, targetIdx, attackerIdx);
+        }
+    }
+    [PunRPC]
+    public void RPC_LiteratureReview_PrivateAnswer(int targetIdx, int defCount)
+    {
+        string tName = LocalPlayerList[targetIdx].NickName;
+        StringBuilder sb = new StringBuilder();
+        
+        sb.AppendLine("Literature review...");
+        sb.AppendLine("林敏靜 告訴你：");
+        sb.Append(tName + " 手中有 " + defCount + " 張防禦卡");
+        
+        EnqueueLocalAnnouncement(sb.ToString(), 3000);
+    }
+    [PunRPC]
+    public void RPC_LiteratureReview_PublicAnswer(int targetIdx, int attackerIdx)
+    {
+        if (PhotonNetwork.LocalPlayer == LocalPlayerList[attackerIdx]) return;
+
+        string tName = LocalPlayerList[targetIdx].NickName;
+        string aName = LocalPlayerList[attackerIdx].NickName;
+        StringBuilder sb = new StringBuilder();
+        
+        sb.AppendLine("Literature review...");
+        sb.AppendLine("在 林敏靜 的指導下");
+        sb.Append(aName + " 看穿了 " + tName + " 的防禦底細");
+        
+        EnqueueLocalAnnouncement(sb.ToString(), 3000);
+    }
+    [PunRPC]
+    public void RPC_ChenChihSheng_NonZero()
+    {
+        if (!isAlive[me]) return;
+
+        int currentW = (int)PhotonNetwork.LocalPlayer.CustomProperties["Wisdom"];
+        int currentS = (int)PhotonNetwork.LocalPlayer.CustomProperties["Strength"];
+        int currentR = (int)PhotonNetwork.LocalPlayer.CustomProperties["Reputation"];
+
+        int addW = 0, addS = 0, addR = 0;
+
+        if (currentW == 0) { addW = 1; Wdead = false; }
+        if (currentS == 0) { addS = 1; Sdead = false; }
+        if (currentR == 0) { addR = 1; Rdead = false; }
+
+        if (addW > 0 || addS > 0 || addR > 0)
+        {
+            UpdatePlayerProperties(addW, addS, addR);
+        }
+    }
+    [PunRPC]
     void EndGame(string winner = "")
     {
         StaticData.winnerName = winner;
@@ -443,7 +500,12 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 else if (DisplayFace[0] == "confiscate_smartphone_ipad")
                 {
                     canPlayDefense = false;
-                    canPlaySpecial = false;
+                    canPlaySpecial = true;
+                }
+                else if (DisplayFace[0] == "diplomacy")
+                {
+                    canPlayDefense = false;
+                    canPlaySpecial = true;
                 }
                 else if (DisplayFace[0] == "zhenverse_broom")
                 {
@@ -770,6 +832,36 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                             photonView.RPC("Announcement", RpcTarget.All, announceMsg, 3000);
                         }
                     }
+                    await Task.Delay(3000);
+                }
+                else if (DisplayFace[0] == "diplomacy")
+                {
+                    sb = new StringBuilder();
+                    sb.AppendLine("越國以鄙遠，君知其難也...");
+                    sb.AppendLine("焉用亡鄭以陪鄰...");
+                    sb.Append("林敏靜 協助 " + FromAndTo[0].NickName + " 與 " + FromAndTo[1].NickName + " 建交");
+
+                    EnqueueLocalAnnouncement(sb.ToString(), 3000);
+
+                    if (PhotonNetwork.LocalPlayer == FromAndTo[0])
+                    {
+                        Player targetPlayer = FromAndTo[1];
+
+                        int targetW = (int)targetPlayer.CustomProperties["Wisdom"];
+                        int targetS = (int)targetPlayer.CustomProperties["Strength"];
+                        int targetR = (int)targetPlayer.CustomProperties["Reputation"];
+
+                        int myW = (int)PhotonNetwork.LocalPlayer.CustomProperties["Wisdom"];
+                        int myS = (int)PhotonNetwork.LocalPlayer.CustomProperties["Strength"];
+                        int myR = (int)PhotonNetwork.LocalPlayer.CustomProperties["Reputation"];
+
+                        int diffW = (targetW > myW) ? Mathf.Min(targetW, maxW) - myW : 0;
+                        int diffS = (targetS > myS) ? Mathf.Min(targetS, maxS) - myS : 0;
+                        int diffR = (targetR > myR) ? Mathf.Min(targetR, maxR) - myR : 0;
+
+                        UpdatePlayerProperties(diffW, diffS, diffR);
+                    }
+                    await Task.Delay(3000);
                 }
                 else if (DisplayFace[0] == "zhenverse_broom")
                 {
@@ -1562,7 +1654,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             targetIdx = (me + 1) % total;
         }
 
-        if (virtualFace == "confiscate_smartphone_ipad")
+        if (virtualFace == "confiscate_smartphone_ipad" || virtualFace == "diplomacy")
         {
             List<int> validTargets = new List<int>();
             for (int i = 0; i < total; i++)
@@ -2291,7 +2383,39 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             if (roll <= 0.5f && playeridx == me)
             {
                 isResolvingVirtualCard = true;
-                PlayVirtualCard("attack", "what", "linminching");
+                roll = UnityEngine.Random.value;
+                if (roll <= 0.8f)
+                {
+                    List<int> validTargets = new List<int>();
+                    for (int i = 0; i < total; i++)
+                    {
+                        if (i == me) continue;
+                        if (!isAlive[i]) continue;
+                        PlayerPanelController ppc = PlayerPanels[i].GetComponent<PlayerPanelController>();
+                        if (ppc.isExist("disappear") || ppc.isExist("sleep")) continue;
+                        validTargets.Add(i);
+                    }
+                    int targetIdx = me;
+                    if (validTargets.Count > 0)
+                    {
+                        targetIdx = validTargets[UnityEngine.Random.Range(0, validTargets.Count)];
+                    }
+                    if (targetIdx != me)
+                    {
+                        photonView.RPC("RPC_LiteratureReview_Ask", RpcTarget.All, targetIdx, me);
+                        await Task.Delay(3500);
+                    }
+                    else
+                    {
+                        photonView.RPC("Announcement", RpcTarget.All, "缺乏參考文獻...\n林敏靜 找不到目標進行 Literature Review", 2500);
+                        await Task.Delay(2500);
+                    }
+                    isResolvingVirtualCard = false;
+                }
+                else
+                {
+                    PlayVirtualCard("special", "diplomacy", "linminching");
+                }
                 while (isResolvingVirtualCard) 
                 {
                     await Task.Delay(100);
@@ -2350,7 +2474,32 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             if (roll <= 0.5f && playeridx == me)
             {
                 isResolvingVirtualCard = true;
-                PlayVirtualCard("attack", "what", "chenchihsheng");
+                roll = UnityEngine.Random.value;
+                if (roll <= 0.5f)
+                {
+                    PlayVirtualCard("multiattack", "chalk_dust_hand", "chenchihsheng");
+                }
+                else if (roll <= 0.8f)
+                {
+                    PlayVirtualCard("multiattack", "circular_motion", "chenchihsheng");
+                }
+                else
+                {
+                    StringBuilder sb1 = new StringBuilder("大家的分數...\n");
+                    StringBuilder sb2 = new StringBuilder("都是非零整數！\n");
+                    StringBuilder sb3 = new StringBuilder("陳智勝 讓全場玩家\n為 0 的數值強行 +1\n");
+
+                    photonView.RPC("Announcement", RpcTarget.All, sb1.ToString(), 2000);
+                    photonView.RPC("Announcement", RpcTarget.All, sb2.ToString(), 2000);
+                    photonView.RPC("Announcement", RpcTarget.All, sb3.ToString(), 2500);
+
+                    await Task.Delay(4000);
+
+                    photonView.RPC("RPC_ChenChihSheng_NonZero", RpcTarget.All);
+
+                    await Task.Delay(2500);
+                    isResolvingVirtualCard = false;
+                }
                 while (isResolvingVirtualCard) 
                 {
                     await Task.Delay(100);
