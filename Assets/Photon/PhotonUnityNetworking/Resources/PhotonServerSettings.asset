@@ -60,6 +60,10 @@ MonoBehaviour:
   - StartReflection
   - CallResponse
   - EndGame
+  - RPC_ChenChihSheng_NonZero
+  - RPC_LiteratureReview_Ask
+  - RPC_LiteratureReview_PrivateAnswer
+  - RPC_LiteratureReview_PublicAnswer
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

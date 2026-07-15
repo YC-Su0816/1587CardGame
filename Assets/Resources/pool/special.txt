@@ -9,3 +9,4 @@ carbon,true,false,false
 nah_bro,true,false,false
 nameless_doll,true,false,false
 zhenverse_broom,true,false,false
+science_train,true,false,falseS

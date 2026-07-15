@@ -512,6 +512,11 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     canPlayDefense = false;
                     canPlaySpecial = true;
                 }
+                else if (DisplayFace[0] == "science_train")
+                {
+                    canPlayDefense = false;
+                    canPlaySpecial = true;
+                }
             }
         }
             
@@ -893,11 +898,45 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
 
                     EnqueueLocalAnnouncement(sb.ToString(), 3000);
 
-                    if (PhotonNetwork.LocalPlayer == FromAndTo[0])
+                    if (PhotonNetwork.LocalPlayer == FromAndTo[1])
                     {
                         photonView.RPC("PutEffect", RpcTarget.All, defIdx, 5, "malice");
                     }
                     await Task.Delay(3000);
+                }
+                else if (DisplayFace[0] == "science_train")
+                {
+                    sb = new StringBuilder();
+                    sb.AppendLine("急速列車出發~");
+                    sb.AppendLine("就叫你不要打翻嘛");
+                    EnqueueLocalAnnouncement(sb.ToString(), 2000);
+                    sb.AppendLine("說到精準，我們就...");
+                    sb.AppendLine("下一個是三視圖和光反射");
+                    EnqueueLocalAnnouncement(sb.ToString(), 2000);
+                    sb.AppendLine("好想回到那些日子...");
+                    sb.AppendLine("再多相處一點...");
+                    sb.AppendLine("希望永遠如此...");
+                    sb.AppendLine("清除了 " + FromAndTo[1].NickName + " 的附加效果");     
+                    
+                    EnqueueLocalAnnouncement(sb.ToString(), 2000);
+
+                    if (PhotonNetwork.LocalPlayer == FromAndTo[1])
+                    {
+                        PlayerPanelController ppc = PlayerPanels[me].GetComponent<PlayerPanelController>();
+                        if(ppc.effectlist.Count > 0)
+                        {
+                            List<string> effe = new List<string>();
+                            foreach(var ef in ppc.effectlist)
+                            {
+                                effe.Add(ef.id);
+                            }
+                            foreach(string id in effe)
+                            {
+                                photonView.RPC("RemoveEffect", RpcTarget.All, me, id);
+                            }
+                        }
+                    }
+                    await Task.Delay(6000);
                 }
                 else if (DisplayFace[0] == "king")
                 {
