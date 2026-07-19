@@ -53,6 +53,7 @@ public class PickingSceneManager : MonoBehaviourPunCallbacks
     }
     void Start()
     {
+        picking = "nobody";
         panel.SetActive(false);
         Application.targetFrameRate = 60;
         Debug.Log(PhotonNetwork.CurrentRoom.PlayerCount);

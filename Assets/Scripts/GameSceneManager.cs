@@ -11,14 +11,14 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using TMPro;
-using Unity.Android.Gradle;
+//using Unity.Android.Gradle;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem.XR;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using static Unity.VisualScripting.Dependencies.Sqlite.SQLite3;
+//using static Unity.VisualScripting.Dependencies.Sqlite.SQLite3;
 using static UnityEngine.Rendering.DebugUI.Table;
 using HashTable = ExitGames.Client.Photon.Hashtable;
 
@@ -517,6 +517,11 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     canPlayDefense = false;
                     canPlaySpecial = true;
                 }
+                else
+                {
+                    canPlayDefense = false;
+                    canPlaySpecial = true;
+                }
             }
         }
             
@@ -666,6 +671,19 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             sb.AppendLine("卷不贏XXX...");
             sb.AppendLine("遁隱虛空，跳出三界");
             sb.Append(FromAndTo[1].NickName + "使所有失效");
+            
+            EnqueueLocalAnnouncement(sb.ToString(), 3000);
+            await Task.Delay(3000);
+        }
+        else if (k > temp && DisplayInRally[temp].GetComponent<ToolDisplayController>().face == "nah_bro" && DisplayType[0] == "special")
+        {
+            
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("在尹X把這坨線裡好之前");
+            sb.AppendLine("你這牌先別出了吧");
+            sb.AppendLine("(把線直接藏在投影機上方)");
+            sb.AppendLine("哎呀？還有這招");
+            sb.Append(FromAndTo[1].NickName + "使特殊牌失效");
             
             EnqueueLocalAnnouncement(sb.ToString(), 3000);
             await Task.Delay(3000);
@@ -910,9 +928,11 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     sb.AppendLine("急速列車出發~");
                     sb.AppendLine("就叫你不要打翻嘛");
                     EnqueueLocalAnnouncement(sb.ToString(), 2000);
+                    sb = new StringBuilder();
                     sb.AppendLine("說到精準，我們就...");
                     sb.AppendLine("下一個是三視圖和光反射");
                     EnqueueLocalAnnouncement(sb.ToString(), 2000);
+                    sb = new StringBuilder();
                     sb.AppendLine("好想回到那些日子...");
                     sb.AppendLine("再多相處一點...");
                     sb.AppendLine("希望永遠如此...");
@@ -1283,7 +1303,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             // PickACard(5.67f, "femboy1");
             // PickACard(5.67f, "nameless_doll");
             // PickACard(5.67f, "carbon");
-            for (int i = 0; i < 12; i++)
+            for (int i = 0; i < 10; i++)
             {
                 PickACard(5.67f, "carbon");
             }
@@ -1292,6 +1312,9 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 float rnd = (float)(6*rand.NextDouble());
                 PickACard(rnd);
             }
+            PickACard(5.67f, "nameless_doll");
+            PickACard(5.67f, "all_in_vain");
+            PickACard(5.67f, "nah_bro");
         }
         
 
@@ -1891,6 +1914,11 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     {
                         Debug.Log("w是" + -daW +" / s是"+ -daS +" / r是" + -daR);
                         Debug.Log("送出之後");
+                        photonView.RPC("Responded", RpcTarget.All, (int)-daW, (int)-daS, (int)-daR);
+                        PhotonNetwork.SendAllOutgoingCommands();
+                    }
+                    else if(spFace == "nah_bro")
+                    {
                         photonView.RPC("Responded", RpcTarget.All, (int)-daW, (int)-daS, (int)-daR);
                         PhotonNetwork.SendAllOutgoingCommands();
                     }

@@ -6,7 +6,7 @@ sleep_special,true,false,false
 femboy1,true,false,true
 femboy2,true,false,true
 carbon,true,false,false
-nah_bro,true,false,false
+nah_bro,false,true,false
 nameless_doll,true,false,false
 zhenverse_broom,true,false,false
-science_train,true,false,falseS
+science_train,true,false,false

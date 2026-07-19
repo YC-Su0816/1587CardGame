@@ -28,6 +28,7 @@ public class PIX : PlayerBase
     }
     public override void useSkill()
     {
+        manager.status = 0;
         StringBuilder sb = new StringBuilder();
         sb.AppendLine("Dio lin lou mou");
         sb.Append(handle.nickname + " 使用了技能！");
@@ -39,7 +40,6 @@ public class PIX : PlayerBase
         handle.View.RPC("SetFromTo", RpcTarget.All, manager.me, manager.targetnum);
         handle.View.RPC("GetCard", RpcTarget.All, "attack", "balisong");
         handle.View.RPC("Played", RpcTarget.All, -10, 0, 0);
-        manager.status = 0;
         PhotonNetwork.SendAllOutgoingCommands();
     }
     public override void updateAttack()
