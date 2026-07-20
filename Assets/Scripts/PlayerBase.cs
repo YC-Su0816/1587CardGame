@@ -91,6 +91,21 @@ public abstract class PlayerBase
         // 預設什麼都不做
     }
 
+    public virtual string[] characterDetailHelper(string c)
+    {
+        string[] inf = new string[3];
+        TextAsset det = Resources.Load<TextAsset>("text/CCard/" + c);
+        inf = det.text.Split("\n");
+        for (int i = 0; i < inf.Length; i++)
+        {
+            inf[i] = inf[i].Trim();
+        }
+        string[] p = {"智慧:", inf[0].ToString(), "體力:", inf[1].ToString(), "聲譽:", inf[2].ToString()};
+        inf[0] = System.String.Join(" ", p);
+        inf[1] = "被動 " + inf[3] + "\n" + inf[4];
+        inf[2] = "主動 " + inf[5] + "\n" + inf[6];
+        return inf;
+    }
     // Update is called once per frame
     void Update()
     {

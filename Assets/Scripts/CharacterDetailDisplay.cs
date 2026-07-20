@@ -29,20 +29,13 @@ public class CharacterDetailDisplay : MonoBehaviour
     {
         
     }
-    public void set(string face)
+    public void set(string face, GameSceneManager m)
     {
         img.sprite = Resources.Load<Sprite>("image/CCard/" + face);
-        TextAsset det = Resources.Load<TextAsset>("text/CCard/" + face);
-        string[] inf;
-        inf = det.text.Split("\n");
-        for (int i = 0; i < inf.Length; i++)
-        {
-            inf[i] = inf[i].Trim();
-        }
-        string[] p = {"智慧:", inf[0].ToString(), "體力:", inf[1].ToString(), "聲譽:", inf[2].ToString()};
-        properties.text = System.String.Join(" ", p);
-        passive.text = "被動 " + inf[3] + "\n" + inf[4];
-        active.text = "主動 " + inf[5] + "\n" + inf[6];
+        string[] inf = m.player.characterDetailHelper();
+        properties.text = inf[0];
+        passive.text = inf[1];
+        active.text = inf[2];
     }
     public void kill()
     {

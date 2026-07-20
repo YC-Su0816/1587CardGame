@@ -11,10 +11,12 @@ public class PlayerHandle : MonoBehaviourPunCallbacks
     public GameSceneManager manager;
     public PhotonView View => photonView;
     public string nickname;
-    public void Init(string character) 
+    public string character;
+    public void Init(string c) 
     {
         manager = gameObject.GetComponent<GameSceneManager>();
-        switch (character)
+        character = c;
+        switch (c)
         {
             case "1":
                 p = new PI();
@@ -142,7 +144,10 @@ public class PlayerHandle : MonoBehaviourPunCallbacks
     {
         
     }
-
+    public string[] characterDetailHelper()
+    {
+        return p.characterDetailHelper(character);
+    }
     // Update is called once per frame
     void Update()
     {

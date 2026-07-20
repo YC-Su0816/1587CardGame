@@ -10,9 +10,11 @@ public class PII : PlayerBase
     public int recordedWisdom;
     public int recordedReputation;
     public bool flag;
+    public bool flag2;
     public override void Init()
     {
         flag = false;
+        flag2 = false;
         attackRatio = new double[3];
         for (int i = 0; i < 3; ++i)
         {
@@ -36,6 +38,7 @@ public class PII : PlayerBase
     {
         if (flag) 
         {
+            flag2 = true;
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("！擦喀");
             sb.Append(handle.nickname + " 使用了技能！");
@@ -77,6 +80,32 @@ public class PII : PlayerBase
     public override void endRound()
     {
 
+    }public override string[] characterDetailHelper(string c)
+    {
+        string[] inf = new string[3];
+        TextAsset det = Resources.Load<TextAsset>("text/CCard/" + c);
+        inf = det.text.Split("\n");
+        for (int i = 0; i < inf.Length; i++)
+        {
+            inf[i] = inf[i].Trim();
+        }
+        string[] p = {"智慧:", inf[0].ToString(), "體力:", inf[1].ToString(), "聲譽:", inf[2].ToString()};
+        inf[0] = System.String.Join(" ", p);
+        inf[1] = "被動 " + inf[3] + "\n" + inf[4];
+        inf[2] = "主動 " + inf[5] + "\n" + inf[6] + "\n";
+        if (flag2)
+        {
+            inf[2] += "(已使用技能)";
+        }
+        else if (flag)
+        {
+            inf[2] += "紀錄值: 智"+ recordedWisdom +" 體" + recordedStrength + " 譽" + recordedReputation;
+        }
+        else
+        {
+            inf[2] += "(尚未紀錄狀態)";
+        }
+        return inf;
     }
     // Update is called once per frame
     void Update()

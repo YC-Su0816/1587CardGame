@@ -35,7 +35,7 @@ public class PXXIV : PlayerBase
         sb.AppendLine("保證自己有大學的手段！");
         sb.Append(handle.nickname + " 發動了【國際瑞士人才論壇】！");
         handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 2000);
-
+        manager.status = 0;
         // 如果玩家手殘已經先拉了防禦牌上去才按技能，幫他把展示區清空 (牌會被消耗掉當作防呆代價)
         if (manager.displaycount > 0)
         {
@@ -60,7 +60,7 @@ public class PXXIV : PlayerBase
         handle.View.RPC("Responded", RpcTarget.All, -manager.daW, -manager.daS, -manager.daR);
 
         // 3. 本地端安全下莊
-        manager.status = 0;
+        
         manager.RefreshCards();
         PhotonNetwork.SendAllOutgoingCommands();
     }
@@ -86,7 +86,21 @@ public class PXXIV : PlayerBase
             manager.photonView.RPC("Announcement", RpcTarget.All, handle.nickname + " 體力不支，體力防禦效果下降了！", 1500);
         }
     }
-
+    public override string[] characterDetailHelper(string c)
+    {
+        string[] inf = new string[3];
+        TextAsset det = Resources.Load<TextAsset>("text/CCard/" + c);
+        inf = det.text.Split("\n");
+        for (int i = 0; i < inf.Length; i++)
+        {
+            inf[i] = inf[i].Trim();
+        }
+        string[] p = {"智慧:", inf[0].ToString(), "體力:", inf[1].ToString(), "聲譽:", inf[2].ToString()};
+        inf[0] = System.String.Join(" ", p);
+        inf[1] = "被動 " + inf[3] + " (體防加成: " + (int)(100f*strengthDefBoost) + "%)\n" + inf[4];
+        inf[2] = "主動 " + inf[5] + "\n" + inf[6];
+        return inf;
+    }
     public override void updateAttack() { }
     public override void updateMed() { }
     public override void endRound() { }

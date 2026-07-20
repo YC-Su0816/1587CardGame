@@ -38,7 +38,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     public bool PD; //false: 棄牌 true: 出牌
     public string toolcardtype;
     public Vector3[] position = new Vector3[20];
-    public TMP_Text hintword, to, from, hint, PDtext;
+    public TMP_Text hintword, to, from, hint, PDtext, cdText;
     public PlayerHandle player;
     public GameObject playerprfeb;
     public GameObject effectprfeb;
@@ -2812,6 +2812,6 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             skillButton.enabled = false;
             PDSwitch.enabled = false;
         }
-        
+        cdText.text = "CD: " + cd;
     }
 }

@@ -86,7 +86,7 @@ public class PlayerPanelController : MonoBehaviourPunCallbacks
         Debug.Log(character);
         plname.text = nick;
         chara.sprite = Resources.Load<Sprite>("image/CCard/" + character);
-        chara.GetComponent<CharacterDescController>().init(character);
+        chara.GetComponent<CharacterDescController>().init(character, manager.GetComponent<GameSceneManager>());
         Wisdom = maxWisdom;
         Strength = maxStrength;
         Reputation = maxReputation;
