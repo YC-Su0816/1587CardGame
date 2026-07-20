@@ -75,6 +75,9 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     int multicount;
     public bool isResolvingVirtualCard = false;
 
+    double[] cardRatio = {3.0, 1.0, 2.0, 2.0, 1.0, 1.0};
+    
+    double[] cardCumulativeProbability;
     // Data structure for "Special"
     public class SpecialCardData
     {
@@ -1230,6 +1233,18 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             return;
         }
         typeNum = 6;
+        cardCumulativeProbability = new double[typeNum];
+        for(int i = 0; i < typeNum; ++i)
+        {
+            if(i == 0) 
+                cardCumulativeProbability[i] = cardRatio[i];
+            else
+                cardCumulativeProbability[i] = cardCumulativeProbability[i - 1] + cardRatio[i];
+        }
+        for(int i = 0; i < typeNum; ++i)
+        {
+            cardCumulativeProbability[i] /= cardCumulativeProbability[typeNum - 1];
+        }
         rand = new System.Random(Guid.NewGuid().GetHashCode());
         LoadCardPools();
         player = gameObject.GetComponent<PlayerHandle>();
@@ -1282,7 +1297,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         {
             for(int x = 0; x < 15; ++x)
             {
-                PickACard(3.67f, "Su_sticker");
+                PickACard(cardCumulativeProbability[4] - 0.01, "Su_sticker");
             }
         }
         else
@@ -1303,18 +1318,22 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             // PickACard(5.67f, "femboy1");
             // PickACard(5.67f, "nameless_doll");
             // PickACard(5.67f, "carbon");
-            for (int i = 0; i < 10; i++)
+            // for (int i = 0; i < 10; i++)
+            // {
+            //     PickACard(5.67f, "carbon");
+            // }
+            // for (int x = 0; x < 4; ++x)
+            // {
+            //     double rnd = rand.NextDouble();
+            //     PickACard(rnd);
+            // }
+            // PickACard(5.67f, "nameless_doll");
+            // PickACard(5.67f, "all_in_vain");
+            // PickACard(5.67f, "nah_bro");
+            for(int x = 0; x < 15; ++x)
             {
-                PickACard(5.67f, "carbon");
+                PickACard(rand.NextDouble());
             }
-            for (int x = 0; x < 4; ++x)
-            {
-                float rnd = (float)(6*rand.NextDouble());
-                PickACard(rnd);
-            }
-            PickACard(5.67f, "nameless_doll");
-            PickACard(5.67f, "all_in_vain");
-            PickACard(5.67f, "nah_bro");
         }
         
 
@@ -1444,7 +1463,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                         }
                         if (count < 20)
                         {
-                            float rnd = (float)(6 * rand.NextDouble());
+                            double rnd = rand.NextDouble();
                             PickACard(rnd);
                         }
                     }
@@ -1585,7 +1604,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     }
                     if (count < 20)
                     {
-                        float rnd = (float)(6 * rand.NextDouble());
+                        double rnd = rand.NextDouble();
                         PickACard(rnd);
                     }
                 }
@@ -1673,7 +1692,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 }
                 if (count < 20)
                 {
-                    float rnd = (float)(6 * rand.NextDouble());
+                    double rnd = rand.NextDouble();
                     PickACard(rnd);
                 }
             }
@@ -1819,7 +1838,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     }
     public void Skip()
     {
-        float rnd = (float)(6 * rand.NextDouble());
+        double rnd = rand.NextDouble();
         PickACard(rnd);
         RefreshCards();
     }
@@ -2100,18 +2119,18 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     }
     // 將 rndface 設為預設空字串 ("")。
     // 如果不傳第二個參數，就會「自動隨機抽」；如果傳了，就會「強制生出那張牌」！
-    public void PickACard(float rnd, string designatedFace = "")
+    public void PickACard(double rnd, string designatedFace = "")
     {
         string tooltype = "";
         int typeIndex = 0;
 
         // 1. 根據 rnd 決定卡牌「類別」與對應的「陣列 Index」
-        if (rnd < 1) { tooltype = "attack"; typeIndex = 0; }
-        else if (rnd < 2) { tooltype = "multiattack"; typeIndex = 1; }
-        else if (rnd < 3) { tooltype = "defense"; typeIndex = 2; }
-        else if (rnd < 4) { tooltype = "medicine"; typeIndex = 3; }
-        else if (rnd < 5) { tooltype = "strengthen"; typeIndex = 4; }
-        else { tooltype = "special"; typeIndex = 5; } // rnd < 6
+        if (rnd < cardCumulativeProbability[0]) { tooltype = "attack"; typeIndex = 0; }
+        else if (rnd < cardCumulativeProbability[1]) { tooltype = "multiattack"; typeIndex = 1; }
+        else if (rnd < cardCumulativeProbability[2]) { tooltype = "defense"; typeIndex = 2; }
+        else if (rnd < cardCumulativeProbability[3]) { tooltype = "medicine"; typeIndex = 3; }
+        else if (rnd < cardCumulativeProbability[4]) { tooltype = "strengthen"; typeIndex = 4; }
+        else { tooltype = "special"; typeIndex = 5; }
 
         // 2. 決定卡牌的 Face (檔名)
         string finalFace = designatedFace;
