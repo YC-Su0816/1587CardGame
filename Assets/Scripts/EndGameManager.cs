@@ -56,7 +56,8 @@ public class EndGameManager : MonoBehaviour
     // 時間到的強制懲罰
     private void TimeUp()
     {
-        SceneManager.LoadScene("ReadyScene");
+        if(PhotonNetwork.IsMasterClient)
+            SceneManager.LoadScene("ReadyScene");
     }
     // Update is called once per frame
     void Update()
