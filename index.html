@@ -3,110 +3,357 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>遊戲卡池預覽</title>
+    <title>1587 Card Game</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f9; margin: 0; padding: 20px; }
-        h1 { text-align: center; color: #333; }
+        /* ==========================================
+           1. 共用與基礎樣式 (Base Styles)
+           ========================================== */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f9; margin: 0; padding: 0; }
+        h1 { text-align: center; color: #333; margin-top: 0; }
+        
+        .top-nav { background-color: #2c3e50; padding: 15px 20px; display: flex; justify-content: center; gap: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); position: sticky; top: 0; z-index: 1000; }
+        .nav-link { color: #bdc3c7; text-decoration: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; transition: all 0.3s ease; }
+        .nav-link:hover { color: white; background-color: #34495e; }
+        .nav-link.active { color: white; background-color: #4CAF50; }
+
+        .view-section { display: none; padding: 30px 20px; animation: fadeIn 0.3s ease-in-out; }
+        .view-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .data-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; max-width: 1200px; margin: 0 auto; }
+
         .filters { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; flex-wrap: wrap; }
         .filter-btn { padding: 8px 16px; border: none; border-radius: 20px; background-color: #ddd; cursor: pointer; transition: 0.3s; font-weight: bold; }
         .filter-btn:hover, .filter-btn.active { background-color: #4CAF50; color: white; }
-        .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto; }
-        .card { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s; display: flex; flex-direction: column; }
-        .card:hover { transform: translateY(-5px); }
-        .card img { width: 100%; height: 320px; object-fit: cover; display: block; background-color: #eee; }
-        .card-content { padding: 15px; display: flex; flex-direction: column; flex-grow: 1; }
-        .card-category { align-self: flex-start; padding: 4px 8px; background-color: #ff9800; color: white; border-radius: 4px; font-size: 12px; margin-bottom: 10px; }
-        .card-title { margin: 0 0 10px 0; font-size: 20px; color: #222; font-weight: bold; }
-        .card-desc { font-size: 14px; color: #555; margin-bottom: 15px; flex-grow: 1; line-height: 1.5; }
-        
-        /* 數值區塊樣式 */
-        .card-stats { display: flex; justify-content: space-between; gap: 5px; border-top: 1px solid #eee; padding-top: 12px; }
+
+        /* ==========================================
+           2. 統一卡牌組件 (Unified Card Component)
+           ========================================== */
+        .card { 
+            background: white; 
+            border-radius: 12px; 
+            overflow: hidden; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08); 
+            /* 統一的聚焦浮動動畫 */
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
+            display: flex; 
+            flex-direction: column; 
+        }
+        .card:hover { 
+            transform: translateY(-8px); /* 向上浮動 */
+            box-shadow: 0 12px 20px rgba(0,0,0,0.15); /* 陰影加深 */
+        }
+        .card img { 
+            width: 100%; 
+            height: 320px; 
+            object-fit: cover; 
+            display: block; 
+            background-color: #eee; 
+        }
+        .card-content { 
+            padding: 18px; 
+            display: flex; 
+            flex-direction: column; 
+            flex-grow: 1; 
+        }
+        .card-title { 
+            margin: 0 0 12px 0; 
+            font-size: 22px; 
+            color: #2c3e50; 
+            font-weight: bold; 
+        }
+
+        /* ==========================================
+           3. 卡牌內部特定區塊樣式 (Specific Internal Blocks)
+           ========================================== */
+        /* 一般卡牌專用 */
+        .card-category { align-self: flex-start; padding: 4px 10px; background-color: #ff9800; color: white; border-radius: 6px; font-size: 12px; font-weight: bold; margin-bottom: 12px; }
+        .card-desc { font-size: 14px; color: #555; margin-bottom: 15px; flex-grow: 1; line-height: 1.6; }
+        .card-stats { display: flex; justify-content: space-between; gap: 8px; border-top: 1px solid #eee; padding-top: 12px; }
         .stat-item { background: #f0f0f0; color: #333; padding: 6px 4px; border-radius: 6px; font-size: 13px; font-weight: bold; flex: 1; text-align: center; }
-        
-        /* 特殊卡片效果樣式 */
         .card-effect { border-top: 1px dashed #d9534f; padding-top: 12px; font-size: 14px; color: #d9534f; }
+        
+        /* 角色卡牌專用 */
+        .char-stats { display: flex; justify-content: space-between; margin-bottom: 15px; gap: 8px; }
+        .char-stat-item { background: #e8f4f8; padding: 6px 10px; border-radius: 6px; font-weight: bold; font-size: 14px; color: #2980b9; flex: 1; text-align: center; }
+        .skill-box { background: #fafafa; border: 1px solid #eee; border-radius: 8px; padding: 12px; margin-bottom: 12px; }
+        .skill-box h4 { margin: 0 0 6px 0; color: #d35400; font-size: 14px; }
+        .skill-box p { margin: 0; font-size: 13.5px; color: #555; line-height: 1.5; }
     </style>
 </head>
 <body>
 
-    <h1>✨ 遊戲卡池預覽</h1>
-    
-    <div class="filters" id="filters">
-        <button class="filter-btn active" data-cat="all">全部</button>
-        <button class="filter-btn" data-cat="attack">攻擊</button>
-        <button class="filter-btn" data-cat="multiattack">群攻</button>
-        <button class="filter-btn" data-cat="defense">防禦</button>
-        <button class="filter-btn" data-cat="medicine">藥品</button>
-        <button class="filter-btn" data-cat="strengthen">增攻</button>
-        <button class="filter-btn" data-cat="special">特殊</button>
+    <nav class="top-nav">
+        <a href="#home" class="nav-link">首頁</a>
+        <a href="#characters" class="nav-link">角色</a>
+        <a href="#cards" class="nav-link">卡牌</a>
+        <a href="#effects" class="nav-link">效果</a>
+        <a href="#teachers" class="nav-link">老師</a>
+    </nav>
+
+    <!-- 視圖 0：首頁 -->
+    <div id="view-home" class="view-section">
+        <!-- 放大標題 -->
+        <h1 style="font-size: 3.5rem; color: #2c3e50; margin-bottom: 20px; letter-spacing: 2px;">
+            1587 Card Game
+        </h1>
+        
+        <!-- 藏頭詩區塊 -->
+        <div style="text-align: center; margin-bottom: 40px;">
+            <div style="display: inline-block; text-align: left; font-family: 'Kaiti', '標楷體', serif; color: #34495e; font-size: 20px; line-height: 1.9; letter-spacing: 2px;">
+                <span style="font-weight: bold; color: #c0392b;">附</span>葛囊螢勉子衿，<br>
+                <span style="font-weight: bold; color: #c0392b;">中</span>流碧淚化甘霖。<br>
+                <span style="font-weight: bold; color: #c0392b;">科</span>名滿世高才耀，<br>
+                <span style="font-weight: bold; color: #c0392b;">學</span>問橫霄萬古欽。<br>
+                <span style="font-weight: bold; color: #c0392b;">一</span>技已成暉曉日，<br>
+                <span style="font-weight: bold; color: #c0392b;">五</span>常兼具茂春林。<br>
+                <span style="font-weight: bold; color: #c0392b;">八</span>年跬步誰無識？<br>
+                <span style="font-weight: bold; color: #c0392b;">七</span>蹴靈思傲昔今。
+            </div>
+        </div>
+
+        <div style="text-align: center;">
+            <img src="Assets/Backgorund/startscene.jpg" alt="首頁圖片" style="max-width: 100%; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+            <p style="color: #666; margin-top: 20px; font-size: 18px;">請從上方導覽列選擇您要查看的預覽項目。</p>
+        </div>
     </div>
 
-    <div class="card-grid" id="cardGrid"></div>
+    <!-- 視圖 1：角色 -->
+    <div id="view-characters" class="view-section">
+        <h1>角色預覽</h1>
+        <div class="data-grid" id="grid-characters"></div>
+    </div>
+
+    <!-- 視圖 2：卡牌 -->
+    <div id="view-cards" class="view-section">
+        <h1>卡牌預覽</h1>
+        <div class="filters" id="filters">
+            <button class="filter-btn active" data-cat="all">全部</button>
+            <button class="filter-btn" data-cat="attack">攻擊</button>
+            <button class="filter-btn" data-cat="multiattack">群攻</button>
+            <button class="filter-btn" data-cat="defense">防禦</button>
+            <button class="filter-btn" data-cat="medicine">藥品</button>
+            <button class="filter-btn" data-cat="strengthen">增攻</button>
+            <button class="filter-btn" data-cat="special">特殊</button>
+        </div>
+        <div class="data-grid" id="grid-cards"></div>
+    </div>
+
+    <!-- 視圖 3：效果 -->
+    <div id="view-effects" class="view-section">
+        <h1>效果預覽</h1>
+        <div class="data-grid" id="grid-effects"></div>
+    </div>
+
+    <!-- 視圖 4：老師 -->
+    <div id="view-teachers" class="view-section">
+        <h1>老師預覽</h1>
+        <div style="max-width: 800px; margin: 0 auto 25px auto; background-color: #fff3cd; border-left: 5px solid #ffc107; padding: 15px 20px; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+            <h4 style="margin: 0 0 10px 0; color: #856404;">📌 規章</h4>
+            <ul style="margin: 0; padding-left: 20px; color: #856404; font-size: 14.5px; line-height: 1.6;">
+                <li>若為隨機/群攻，未特別註明，作用對象不含自己。</li>
+                <li>老師在自己回合結束時，有 50% 機率發動行動。</li>
+                <li>玩家聲譽減少後，老師有 25% 機率離開 (朽木不可雕也)。</li>
+            </ul>
+        </div>
+        <div class="data-grid" id="grid-teachers"></div>
+    </div>
 
     <script>
-        let allCards = [];
+        // ==========================================
+        // 核心狀態管理 (State Management)
+        // ==========================================
+        const appState = {
+            data: {
+                characters: null,
+                cards: null,
+                effects: [
+                    { name: "神隱", image: "Assets/Resources/image/Tool/effect/disappear.png", rules: ["不可選中，每回合結束時恢復所有數值各三點", "每回合初有50%機率解除神隱，50%機率維持神隱"] },
+                    { name: "沉睡", image: "Assets/Resources/image/Tool/effect/sleep.jpg", rules: ["不可選中，每回合結束時智慧與聲譽各減少一點", "於指定回合後解除"] },
+                    { name: "失神", image: "Assets/Resources/image/Tool/effect/dizzy.jpg", rules: ["每回合結束時失去一張隨機的牌", "於指定回合後解除"] },
+                    { name: "怨念(第五人格沒有授權)", image: "Assets/Resources/image/Tool/effect/malice.jpg", rules: ["倒數五回合(回合結束時-1)，倒數歸0時引爆，造成所有數值各15點的傷害；每次成功的自我攻擊(有造成傷害)將重置回合數(該回合不列入倒數)。", "需用特殊卡牌(尚未設計)解除"] }
+                ],
+                teachers: [
+                    { name: "陳建廷", quote: "建章常繞勒沙理，廷殿時聞酸鹼音", image: "Assets/Resources/image/Tool/effect/chenchienting.png", actions: [{ name: "午休單獨聊天", rate: "40%", desc: "智10 體-5 聲5 (藥品)" }, { name: "沒收手機平板", rate: "40%", desc: "隨機選取一位玩家，隨機選取一種卡牌類別，沒收該玩家所有該類別的卡牌" }, { name: "一起去騎單車", rate: "20%", desc: "與吳明麟一起步出校門，一起消失" }] },
+                    { name: "吳明麟", quote: "明師化雨澤天地，麟閣流芳縱往今", image: "Assets/Resources/image/Tool/effect/wuminglin.png", actions: [{ name: "哲學思考", rate: "80%", desc: "智4 體-15 聲1 (群攻)" }, { name: "一起去騎單車", rate: "20%", desc: "與陳建廷一起步出校門，一起消失" }] },
+                    { name: "林敏靜", quote: "敏心能辨他邦字，靜格易通百國言", image: "Assets/Resources/image/Tool/effect/linminching.png", actions: [{ name: "Literature Review", rate: "80%", desc: "隨機選取一位玩家，得知他有幾張 defense 類別卡牌 (僅自己知道)" }, { name: "外交", rate: "20%", desc: "隨機選取一位玩家，將自身數值調整為兩人數值之最大值" }] },
+                    { name: "陳鵬旭", quote: "鵬摶千里展新翅，旭照萬疆破險題", image: "Assets/Resources/image/Tool/effect/chenpenghsu.png", actions: [{ name: "去後面罰站", rate: "50%", desc: "智0 體-10 聲0 (群攻)" }, { name: "餘弦定理", rate: "30%", desc: "智-5 體-5 聲-5 (群攻)" }, { name: "同學上課不要閉眼睛喔", rate: "20%", desc: "喚醒所有沉睡的玩家 (包含自己)" }] },
+                    { name: "陳智勝", quote: "智術略窺量子貌，勝才能頌電磁詩", image: "Assets/Resources/image/Tool/effect/chenchihsheng.png", actions: [{ name: "粉筆灰之手", rate: "50%", desc: "智0 體0 聲-10 (群攻)" }, { name: "圓周運動", rate: "30%", desc: "智0 體-15 聲0 (群攻)" }, { name: "大家的分數都是非零整數", rate: "20%", desc: "使所有玩家為零數值增加1 (包含自己)" }] },
+                    { name: "羅尹廷", quote: "尹昭萬物存佳譽，廷滿百昌博藇名", image: "Assets/Resources/image/Tool/effect/loyinting.png", actions: [{ name: "喂喂喂 (麥克風測試)", rate: "90%", desc: "智5 體0 聲5 (藥品)" }, { name: "解剖", rate: "10%", desc: "智0 體-30 聲0 (群攻)" }] },
+                    { name: "王靖華", quote: "靖志自懷千古事，華才能授四時情", image: "Assets/Resources/image/Tool/effect/wangchinghua.png", actions: [{ name: "古始漸中上更全", rate: "80%", desc: "智10 體0 聲0 (藥品)" }, { name: "庭光今天很開心哦", rate: "20%", desc: "使所有神隱玩家現身 (包含自己)" }] }
+                ]
+            },
+            currentCardFilter: 'all'
+        };
 
-        fetch('cards.json')
-            .then(response => response.json())
-            .then(data => {
-                allCards = data;
-                renderCards(allCards);
-            })
-            .catch(error => {
-                console.error('讀取卡片資料失敗:', error);
-                document.getElementById('cardGrid').innerHTML = '<p style="text-align:center; width:100%;">無法讀取卡片資料，請確認 cards.json 是否已生成。</p>';
-            });
-
-        function renderCards(cards) {
-            const grid = document.getElementById('cardGrid');
-            grid.innerHTML = ''; 
-
-            cards.forEach(card => {
-                // 判斷是特殊卡片還是一般卡片，決定底部要渲染什麼
-                let bottomSection = '';
-                if (card.is_special) {
-                    bottomSection = `<div class="card-effect"><strong>✦ 特殊效果：</strong><br>${card.effect}</div>`;
-                } else {
-                    bottomSection = `
-                        <div class="card-stats">
-                            <div class="stat-item">${card.stats[0]}</div>
-                            <div class="stat-item">${card.stats[1]}</div>
-                            <div class="stat-item">${card.stats[2]}</div>
-                        </div>
-                    `;
-                }
-
-                const cardHTML = `
-                    <div class="card">
-                        <img src="${card.image}" alt="${card.name}" onerror="this.src='https://via.placeholder.com/280x320?text=圖片遺失'">
+        // ==========================================
+        // HTML 模板工廠 (Template Factory)
+        // ==========================================
+        const templates = {
+            // 1. 卡牌 (綠色邊框)
+            cards: (item) => {
+                const bottomSection = item.is_special 
+                    ? `<div class="card-effect"><strong>✦ 特殊效果：</strong><br>${item.effect}</div>`
+                    : `<div class="card-stats">
+                            <div class="stat-item">${item.stats[0]}</div>
+                            <div class="stat-item">${item.stats[1]}</div>
+                            <div class="stat-item">${item.stats[2]}</div>
+                       </div>`;
+                return `
+                    <div class="card" style="border-top: 5px solid #16a085;">
+                        <img src="${item.image}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/280x320?text=圖片遺失'">
                         <div class="card-content">
-                            <span class="card-category">${card.category_zh}</span>
-                            <h2 class="card-title">${card.name}</h2>
-                            <p class="card-desc">${card.description}</p>
+                            <span class="card-category">${item.category_zh}</span>
+                            <h2 class="card-title">${item.name}</h2>
+                            <p class="card-desc">${item.description}</p>
                             ${bottomSection}
                         </div>
+                    </div>`;
+            },
+            
+            // 2. 角色 (深色邊框)
+            characters: (item) => `
+                <div class="card" style="border-top: 5px solid #2c3e50;">
+                    <img src="${item.image}" alt="${item.id}" onerror="this.src='https://via.placeholder.com/280x400?text=圖片遺失'">
+                    <div class="card-content">
+                        <h2 class="card-title" style="text-transform: capitalize; border-bottom: 2px solid #eee; padding-bottom: 10px;">${item.name}</h2>
+                        <div class="char-stats">
+                            <div class="char-stat-item">智 ${item.stats.wisdom}</div>
+                            <div class="char-stat-item">體 ${item.stats.stamina}</div>
+                            <div class="char-stat-item">譽 ${item.stats.reputation}</div>
+                        </div>
+                        <div class="skill-box">
+                            <h4>🟡 被動：${item.skills.passive.name}</h4>
+                            <p>${item.skills.passive.desc}</p>
+                        </div>
+                        <div class="skill-box" style="margin-bottom: 0;">
+                            <h4>🔴 主動：${item.skills.active.name}</h4>
+                            <p>${item.skills.active.desc}</p>
+                        </div>
                     </div>
-                `;
-                grid.innerHTML += cardHTML;
-            });
+                </div>`,
+            
+            // 3. 效果 (紫色邊框)
+            effects: (item) => `
+                <div class="card" style="border-top: 5px solid #8e44ad;">
+                    <img src="${item.image}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/280x320?text=圖片遺失'">
+                    <div class="card-content">
+                        <h2 class="card-title" style="color: #8e44ad; border-bottom: 2px dashed #eee; padding-bottom: 10px;">${item.name}</h2>
+                        <div class="card-desc" style="margin-top: 5px; margin-bottom: 0;">
+                            <ul style="padding-left: 20px; margin: 0; color: #444; line-height: 1.6;">
+                                ${item.rules.map(rule => `<li>${rule}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                </div>`,
+                
+            // 4. 老師 (藍色邊框)
+            teachers: (item) => `
+                <div class="card" style="border-top: 5px solid #2980b9;">
+                    <img src="${item.image}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/280x320?text=圖片遺失'">
+                    <div class="card-content">
+                        <h2 class="card-title" style="color: #2980b9; margin-bottom: 8px;">${item.name}</h2>
+                        <div style="font-family: 'Kaiti', '標楷體', serif; color: #34495e; background: #f8f9fa; padding: 10px; border-left: 4px solid #2980b9; margin-bottom: 15px; font-size: 14.5px; font-style: italic; line-height: 1.4;">
+                            「${item.quote}」
+                        </div>
+                        <div style="flex-grow: 1;">
+                            ${item.actions.map(action => `
+                                <div style="margin-bottom: 12px; border-bottom: 1px dashed #eee; padding-bottom: 10px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px;">
+                                        <strong style="color: #c0392b; font-size: 15px;">${action.name}</strong>
+                                        <span style="background: #e8f4f8; color: #2980b9; font-size: 11px; padding: 3px 8px; border-radius: 12px; font-weight: bold; white-space: nowrap; margin-left: 10px;">
+                                            機率 ${action.rate}
+                                        </span>
+                                    </div>
+                                    <div style="font-size: 13.5px; color: #555; line-height: 1.5;">${action.desc}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>`
+        };
+
+        // ==========================================
+        // 模組設定檔與生命週期
+        // ==========================================
+        const viewConfigs = {
+            'characters': { url: 'characters.json', gridId: 'grid-characters' },
+            'cards':      { url: 'cards.json',      gridId: 'grid-cards' },
+            'effects':    { url: 'effects.json',    gridId: 'grid-effects' },
+            'teachers':   { url: 'teachers.json',   gridId: 'grid-teachers' }
+        };
+
+        async function fetchAndRenderData(viewKey) {
+            const config = viewConfigs[viewKey];
+            if (!config) return;
+
+            const gridElement = document.getElementById(config.gridId);
+
+            if (appState.data[viewKey]) {
+                executeRender(viewKey, appState.data[viewKey], gridElement);
+                return;
+            }
+
+            try {
+                gridElement.innerHTML = '<p style="text-align:center; width:100%;">載入中...</p>';
+                const response = await fetch(config.url);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                
+                const jsonData = await response.json();
+                appState.data[viewKey] = jsonData;
+                
+                executeRender(viewKey, jsonData, gridElement);
+            } catch (error) {
+                console.error(`讀取 ${viewKey} 資料失敗:`, error);
+                gridElement.innerHTML = `<p style="text-align:center; width:100%;">無法讀取資料，請確認 ${config.url} 是否已生成。</p>`;
+            }
         }
 
-        // 綁定篩選器事件
-        const filterBtns = document.querySelectorAll('.filter-btn');
-        filterBtns.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                filterBtns.forEach(b => b.classList.remove('active'));
-                e.target.classList.add('active');
+        function executeRender(viewKey, dataList, gridElement) {
+            let dataToRender = dataList;
+            if (viewKey === 'cards' && appState.currentCardFilter !== 'all') {
+                dataToRender = dataList.filter(item => item.category_eng === appState.currentCardFilter);
+            }
+            gridElement.innerHTML = dataToRender.map(item => templates[viewKey](item)).join('');
+        }
 
-                const selectedCat = e.target.getAttribute('data-cat');
-                if (selectedCat === 'all') {
-                    renderCards(allCards);
-                } else {
-                    const filtered = allCards.filter(card => card.category_eng === selectedCat);
-                    renderCards(filtered);
-                }
+        function handleRouting() {
+            const hash = window.location.hash || '#home';
+            const viewKey = hash.substring(1); 
+
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.toggle('active', link.getAttribute('href') === hash);
             });
+
+            const targetView = document.getElementById(`view-${viewKey}`);
+            if (!targetView) {
+                window.location.hash = '#home';
+                return;
+            }
+
+            document.querySelectorAll('.view-section').forEach(view => view.classList.remove('active'));
+            targetView.classList.add('active');
+
+            window.scrollTo(0, 0);
+
+            if (viewKey !== 'home') {
+                fetchAndRenderData(viewKey);
+            }
+        }
+
+        window.addEventListener('hashchange', handleRouting);
+
+        document.getElementById('filters').addEventListener('click', (e) => {
+            if (e.target.classList.contains('filter-btn')) {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                appState.currentCardFilter = e.target.getAttribute('data-cat');
+                fetchAndRenderData('cards'); 
+            }
         });
+
+        handleRouting();
+
     </script>
 </body>
 </html>
