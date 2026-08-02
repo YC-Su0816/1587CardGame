@@ -33,15 +33,31 @@ output_data = []
 # 支援的圖片附檔名列表 (大小寫都包含)
 SUPPORTED_EXTS = ['.jpg', '.JPG', '.jpeg', '.JPEG', '.png', '.PNG']
 
+pool_base_dir = os.path.join('Assets', 'Resources', 'pool')
+
 if os.path.exists(text_base_dir):
     for cat_eng, cat_zh in CATEGORY_MAP.items():
         cat_dir = os.path.join(text_base_dir, cat_eng)
         img_cat_dir = os.path.join(image_base_dir, cat_eng)
+
+        valid_pool = set()
+        pool_file_path = os.path.join(pool_base_dir, f"{cat_eng}.txt")
+        
+        if os.path.exists(pool_file_path):
+            with open(pool_file_path, 'r', encoding='utf-8') as f:
+                valid_pool = {line.split(',')[0].strip() for line in f if line.strip() != ""} # ',' is for "special"
+        else:
+            print(f"Warning: Pool list {pool_file_path} is not found, skip category {cat_eng}.")
+            continue
         
         if os.path.exists(cat_dir):
-            for filename in os.listdir(cat_dir):
+            for filename in sorted(os.listdir(cat_dir)):
                 if filename.endswith('.txt'):
                     base_name = os.path.splitext(filename)[0]
+
+                    if base_name not in valid_pool:
+                        continue
+
                     txt_path = os.path.join(cat_dir, filename)
                     
                     # --- 自動偵測圖片真實的附檔名 ---
