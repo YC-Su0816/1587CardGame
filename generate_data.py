@@ -39,7 +39,7 @@ if os.path.exists(text_base_dir):
         img_cat_dir = os.path.join(image_base_dir, cat_eng)
         
         if os.path.exists(cat_dir):
-            for filename in os.listdir(cat_dir):
+            for filename in sorted(os.listdir(cat_dir)):
                 if filename.endswith('.txt'):
                     base_name = os.path.splitext(filename)[0]
                     txt_path = os.path.join(cat_dir, filename)
