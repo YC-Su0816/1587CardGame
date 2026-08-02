@@ -31,7 +31,7 @@
     "id": "lava_crocodile",
     "category_eng": "attack",
     "category_zh": "攻擊",
-    "image": "Assets/Resources/image/Tool/attack/lava_crocodile.jpg",
+    "image": "Assets/Resources/image/Tool/attack/lava_crocodile.JPEG",
     "name": "熔岩鱷魚",
     "description": "當掉你物理的上古兇獸",
     "stats": [
@@ -87,7 +87,7 @@
     "id": "spike",
     "category_eng": "attack",
     "category_zh": "攻擊",
-    "image": "Assets/Resources/image/Tool/attack/spike.jpg",
+    "image": "Assets/Resources/image/Tool/attack/spike.png",
     "name": "殺球",
     "description": "哇X，定3米啊",
     "stats": [
@@ -297,7 +297,7 @@
     "id": "take_math_b",
     "category_eng": "attack",
     "category_zh": "攻擊",
-    "image": "Assets/Resources/image/Tool/attack/take_math_b.jpg",
+    "image": "Assets/Resources/image/Tool/attack/take_math_b.png",
     "name": "回來考數B",
     "description": "縱情猶未已，回馬欲黃昏",
     "stats": [
@@ -325,7 +325,7 @@
     "id": "XXIIISkill",
     "category_eng": "attack",
     "category_zh": "攻擊",
-    "image": "Assets/Resources/image/Tool/attack/XXIIISkill.jpg",
+    "image": "Assets/Resources/image/Tool/attack/XXIIISkill.png",
     "name": "幹片",
     "description": "享受智商被腐蝕的喜悅",
     "stats": [
@@ -353,7 +353,7 @@
     "id": "XXISkill",
     "category_eng": "attack",
     "category_zh": "攻擊",
-    "image": "Assets/Resources/image/Tool/attack/XXISkill.jpg",
+    "image": "Assets/Resources/image/Tool/attack/XXISkill.png",
     "name": "抱一下嘛",
     "description": "巍峨的柔情，巍峨的大漢",
     "stats": [
@@ -409,7 +409,7 @@
     "id": "test_attack",
     "category_eng": "attack",
     "category_zh": "攻擊",
-    "image": "Assets/Resources/image/Tool/attack/test_attack.jpg",
+    "image": "Assets/Resources/image/Tool/attack/test_attack.png",
     "name": "雷電戟",
     "description": "相傳是源於內測時期的文物",
     "stats": [
@@ -437,7 +437,7 @@
     "id": "Rome_soldier",
     "category_eng": "attack",
     "category_zh": "攻擊",
-    "image": "Assets/Resources/image/Tool/attack/Rome_soldier.jpg",
+    "image": "Assets/Resources/image/Tool/attack/Rome_soldier.JPG",
     "name": "羅馬士兵",
     "description": "相傳是AD28的羅馬大兵",
     "stats": [
@@ -675,7 +675,7 @@
     "id": "Tsing_presentation",
     "category_eng": "multiattack",
     "category_zh": "群攻",
-    "image": "Assets/Resources/image/Tool/multiattack/Tsing_presentation.jpg",
+    "image": "Assets/Resources/image/Tool/multiattack/Tsing_presentation.JPG",
     "name": "清大線上演講",
     "description": "我們都知道後來發生了什麼",
     "stats": [
@@ -689,7 +689,7 @@
     "id": "nietzsche",
     "category_eng": "multiattack",
     "category_zh": "群攻",
-    "image": "Assets/Resources/image/Tool/multiattack/nietzsche.jpg",
+    "image": "Assets/Resources/image/Tool/multiattack/nietzsche.png",
     "name": "哲學思考",
     "description": "沒有事實，只有詮釋",
     "stats": [
@@ -759,7 +759,7 @@
     "id": "circular_motion",
     "category_eng": "multiattack",
     "category_zh": "群攻",
-    "image": "Assets/Resources/image/Tool/multiattack/circular_motion.jpg",
+    "image": "Assets/Resources/image/Tool/multiattack/circular_motion.png",
     "name": "圓周運動",
     "description": "向心力是mv平方除以R",
     "stats": [
@@ -773,7 +773,7 @@
     "id": "t_equals_mg",
     "category_eng": "multiattack",
     "category_zh": "群攻",
-    "image": "Assets/Resources/image/Tool/multiattack/t_equals_mg.jpg",
+    "image": "Assets/Resources/image/Tool/multiattack/t_equals_mg.png",
     "name": "T = mg",
     "description": "幾乎全班都答錯了",
     "stats": [
@@ -787,7 +787,7 @@
     "id": "chalk_dust_hand",
     "category_eng": "multiattack",
     "category_zh": "群攻",
-    "image": "Assets/Resources/image/Tool/multiattack/chalk_dust_hand.jpg",
+    "image": "Assets/Resources/image/Tool/multiattack/chalk_dust_hand.png",
     "name": "粉筆灰之手",
     "description": "昱全你剛剛遇到智勝對不對",
     "stats": [
@@ -829,7 +829,7 @@
     "id": "cosine_law",
     "category_eng": "multiattack",
     "category_zh": "群攻",
-    "image": "Assets/Resources/image/Tool/multiattack/cosine_law.jpg",
+    "image": "Assets/Resources/image/Tool/multiattack/cosine_law.png",
     "name": "餘弦定理",
     "description": "a^2=b^2+c^2-2bccosA",
     "stats": [
@@ -871,7 +871,7 @@
     "id": "stand_at_the_back",
     "category_eng": "multiattack",
     "category_zh": "群攻",
-    "image": "Assets/Resources/image/Tool/multiattack/stand_at_the_back.jpg",
+    "image": "Assets/Resources/image/Tool/multiattack/stand_at_the_back.png",
     "name": "去後面罰站",
     "description": "要記得寫對話式啊",
     "stats": [
@@ -1011,7 +1011,7 @@
     "id": "state_position",
     "category_eng": "defense",
     "category_zh": "防禦",
-    "image": "Assets/Resources/image/Tool/defense/state_position.jpg",
+    "image": "Assets/Resources/image/Tool/defense/state_position.png",
     "name": "表明立場",
     "description": "冷傲做基佬",
     "stats": [
@@ -1053,7 +1053,7 @@
     "id": "all_star",
     "category_eng": "defense",
     "category_zh": "防禦",
-    "image": "Assets/Resources/image/Tool/defense/all_star.jpg",
+    "image": "Assets/Resources/image/Tool/defense/all_star.png",
     "name": "全明星",
     "description": "群賢畢至，少長咸集",
     "stats": [
@@ -1193,7 +1193,7 @@
     "id": "ISTF",
     "category_eng": "defense",
     "category_zh": "防禦",
-    "image": "Assets/Resources/image/Tool/defense/ISTF.jpg",
+    "image": "Assets/Resources/image/Tool/defense/ISTF.png",
     "name": "國際瑞士人才論壇",
     "description": "Water is life. Water is peace.",
     "stats": [
@@ -1277,7 +1277,7 @@
     "id": "lunch_break_chat",
     "category_eng": "medicine",
     "category_zh": "藥品",
-    "image": "Assets/Resources/image/Tool/medicine/lunch_break_chat.jpg",
+    "image": "Assets/Resources/image/Tool/medicine/lunch_break_chat.png",
     "name": "午休單獨聊天",
     "description": "幽賞未已，高談轉清",
     "stats": [
@@ -1333,7 +1333,7 @@
     "id": "new_discovery",
     "category_eng": "medicine",
     "category_zh": "藥品",
-    "image": "Assets/Resources/image/Tool/medicine/new_discovery.jpg",
+    "image": "Assets/Resources/image/Tool/medicine/new_discovery.JPG",
     "name": "發現新世界",
     "description": "瞧把孩子樂的",
     "stats": [
@@ -1361,7 +1361,7 @@
     "id": "AI",
     "category_eng": "medicine",
     "category_zh": "藥品",
-    "image": "Assets/Resources/image/Tool/medicine/AI.jpg",
+    "image": "Assets/Resources/image/Tool/medicine/AI.png",
     "name": "朝升的專題",
     "description": "我也不懂他在做什麼",
     "stats": [
@@ -1417,7 +1417,7 @@
     "id": "geological_age",
     "category_eng": "medicine",
     "category_zh": "藥品",
-    "image": "Assets/Resources/image/Tool/medicine/geological_age.jpg",
+    "image": "Assets/Resources/image/Tool/medicine/geological_age.png",
     "name": "古始漸中上更全",
     "description": "狗屎建中，附又贏",
     "stats": [
@@ -1431,7 +1431,7 @@
     "id": "XVIIISkill",
     "category_eng": "medicine",
     "category_zh": "藥品",
-    "image": "Assets/Resources/image/Tool/medicine/XVIIISkill.jpg",
+    "image": "Assets/Resources/image/Tool/medicine/XVIIISkill.png",
     "name": "捧場",
     "description": "各位學長們(？好",
     "stats": [
@@ -1487,7 +1487,7 @@
     "id": "Beitou_sulfur_cave",
     "category_eng": "medicine",
     "category_zh": "藥品",
-    "image": "Assets/Resources/image/Tool/medicine/Beitou_sulfur_cave.jpg",
+    "image": "Assets/Resources/image/Tool/medicine/Beitou_sulfur_cave.JPEG",
     "name": "裨海紀遊-北投硫穴",
     "description": "穴中毒焰撲人，目不能視",
     "stats": [
@@ -1515,7 +1515,7 @@
     "id": "redcross",
     "category_eng": "medicine",
     "category_zh": "藥品",
-    "image": "Assets/Resources/image/Tool/medicine/redcross.jpg",
+    "image": "https://via.placeholder.com/280x320?text=圖片遺失",
     "name": "紅十字會",
     "description": "大事管不了，小事不想管",
     "stats": [
@@ -1543,7 +1543,7 @@
     "id": "XXIISkill",
     "category_eng": "medicine",
     "category_zh": "藥品",
-    "image": "Assets/Resources/image/Tool/medicine/XXIISkill.jpg",
+    "image": "Assets/Resources/image/Tool/medicine/XXIISkill.png",
     "name": "輕小說與同人本",
     "description": "死亡遊戲沒有授權這張圖",
     "stats": [
@@ -1613,7 +1613,7 @@
     "id": "heyheyhey",
     "category_eng": "medicine",
     "category_zh": "藥品",
-    "image": "Assets/Resources/image/Tool/medicine/heyheyhey.jpg",
+    "image": "Assets/Resources/image/Tool/medicine/heyheyhey.png",
     "name": "喂喂喂",
     "description": "麥克風測試",
     "stats": [
@@ -1655,7 +1655,7 @@
     "id": "music_teacher",
     "category_eng": "medicine",
     "category_zh": "藥品",
-    "image": "Assets/Resources/image/Tool/medicine/music_teacher.jpg",
+    "image": "Assets/Resources/image/Tool/medicine/music_teacher.JPEG",
     "name": "音樂老師",
     "description": "啊~夏天的夢~",
     "stats": [
@@ -1711,7 +1711,7 @@
     "id": "shl_medical",
     "category_eng": "medicine",
     "category_zh": "藥品",
-    "image": "Assets/Resources/image/Tool/medicine/shl_medical.jpg",
+    "image": "Assets/Resources/image/Tool/medicine/shl_medical.png",
     "name": "自動注射器",
     "description": "領航全球的藥物輸送解決方案供應商",
     "stats": [
@@ -1739,7 +1739,7 @@
     "id": "dance",
     "category_eng": "medicine",
     "category_zh": "藥品",
-    "image": "Assets/Resources/image/Tool/medicine/dance.jpg",
+    "image": "Assets/Resources/image/Tool/medicine/dance.png",
     "name": "舞王",
     "description": "aka蘿蔔教の教主",
     "stats": [
@@ -1753,7 +1753,7 @@
     "id": "watermachine",
     "category_eng": "medicine",
     "category_zh": "藥品",
-    "image": "Assets/Resources/image/Tool/medicine/watermachine.jpg",
+    "image": "Assets/Resources/image/Tool/medicine/watermachine.png",
     "name": "抽水機",
     "description": "整趟旅途似乎只演示一次？",
     "stats": [
@@ -1795,7 +1795,7 @@
     "id": "test_strengthen",
     "category_eng": "strengthen",
     "category_zh": "增攻",
-    "image": "Assets/Resources/image/Tool/strengthen/test_strengthen.jpg",
+    "image": "Assets/Resources/image/Tool/strengthen/test_strengthen.png",
     "name": "力量藥水II",
     "description": "相傳是源於內測時期的文物",
     "stats": [
@@ -1871,7 +1871,7 @@
     "id": "self_defense",
     "category_eng": "special",
     "category_zh": "特殊",
-    "image": "Assets/Resources/image/Tool/special/self_defense.jpg",
+    "image": "Assets/Resources/image/Tool/special/self_defense.png",
     "name": "防身術",
     "description": "不要碰我！",
     "effect": "null",
@@ -1881,7 +1881,7 @@
     "id": "XIXSkill",
     "category_eng": "special",
     "category_zh": "特殊",
-    "image": "Assets/Resources/image/Tool/special/XIXSkill.jpg",
+    "image": "Assets/Resources/image/Tool/special/XIXSkill.png",
     "name": "經濟實惠",
     "description": "：你確定「經濟」是同義嗎",
     "effect": "重新計算數值",
@@ -1891,7 +1891,7 @@
     "id": "zhenverse_broom",
     "category_eng": "special",
     "category_zh": "特殊",
-    "image": "Assets/Resources/image/Tool/special/zhenverse_broom.jpg",
+    "image": "Assets/Resources/image/Tool/special/zhenverse_broom.png",
     "name": "冠宇的掃帚",
     "description": "花徑不曾緣客掃，蓬門今始為君開",
     "effect": "掃掉三張卡牌",
@@ -1941,7 +1941,7 @@
     "id": "confiscate_smartphone_ipad",
     "category_eng": "special",
     "category_zh": "特殊",
-    "image": "Assets/Resources/image/Tool/special/confiscate_smartphone_ipad.jpg",
+    "image": "Assets/Resources/image/Tool/special/confiscate_smartphone_ipad.png",
     "name": "沒收手機平板",
     "description": "手機平板交上來",
     "effect": "沒收某類別的卡牌",
@@ -1951,7 +1951,7 @@
     "id": "diplomacy",
     "category_eng": "special",
     "category_zh": "特殊",
-    "image": "Assets/Resources/image/Tool/special/diplomacy.jpg",
+    "image": "Assets/Resources/image/Tool/special/diplomacy.png",
     "name": "外交",
     "description": "若遂不改，方思僕言",
     "effect": "將自身數值調整為雙方最大值",
@@ -2001,7 +2001,7 @@
     "id": "test_reflect",
     "category_eng": "special",
     "category_zh": "特殊",
-    "image": "Assets/Resources/image/Tool/special/test_reflect.jpg",
+    "image": "Assets/Resources/image/Tool/special/test_reflect.png",
     "name": "死亡筆記本",
     "description": "相傳是源於內測時期的文物",
     "effect": "反彈傷害",
