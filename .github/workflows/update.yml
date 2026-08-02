@@ -1,9 +1,15 @@
-name: Update Card Data
+name: Update Game Data JSON
 
 on:
   push:
     branches:
-      - main # 如果你的主分支叫 master，請改成 master
+      - main # 確保這裡是你的主分支名稱
+    # 嚴謹度優化：只在以下目錄有變更時，才觸發這個 Action 浪費運算資源
+    paths:
+      - 'Assets/Resources/text/**'
+      - 'Assets/Resources/pool/**'
+      - 'generate_data.py'     # 你的卡牌生成腳本名稱
+      - 'build_characters.py'  # 你的角色生成腳本名稱
 
 jobs:
   build:
@@ -15,16 +21,28 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.x'
+          python-version: '3.10' # 明確指定版本，避免未來 3.x 預設升級造成的潛在不相容
 
-      - name: Generate JSON
-        run: python generate_data.py
+      - name: Execute Python Generators
+        run: |
+          # 依序執行所有的資料生成腳本
+          python generate_data.py
+          python build_characters.py
 
       - name: Commit and push if changed
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          
+          # 將所有可能被 Python 更新的 JSON 檔案加入追蹤
           git add cards.json
-          # 如果沒有變更就不 commit
-          git diff --quiet && git diff --staged --quiet || git commit -m "Auto-update cards.json"
-          git push
+          git add characters.json
+          
+          # 檢查是否有任何變更，若有則 Commit 並 Push
+          # 注意：這裡使用 git diff-index 來做更穩健的檢查
+          if ! git diff-index --quiet HEAD; then
+            git commit -m "Auto-update game data JSONs [skip ci]"
+            git push
+          else
+            echo "No changes in JSON files. Skipping commit."
+          fi
