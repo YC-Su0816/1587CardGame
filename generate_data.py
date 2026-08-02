@@ -25,13 +25,18 @@ def format_stat(val_str, pos_prefix, neg_prefix):
             return f"{neg_prefix}{val_str[1:]}"
         return f"{pos_prefix}{val_str}"
 
-# 🛑 修改 1：加上 Assets 目錄
+# 基礎路徑設定
 text_base_dir = os.path.join('Assets', 'Resources', 'text', 'Tool')
+image_base_dir = os.path.join('Assets', 'Resources', 'image', 'Tool')
 output_data = []
+
+# 支援的圖片附檔名列表 (大小寫都包含)
+SUPPORTED_EXTS = ['.jpg', '.JPG', '.jpeg', '.JPEG', '.png', '.PNG']
 
 if os.path.exists(text_base_dir):
     for cat_eng, cat_zh in CATEGORY_MAP.items():
         cat_dir = os.path.join(text_base_dir, cat_eng)
+        img_cat_dir = os.path.join(image_base_dir, cat_eng)
         
         if os.path.exists(cat_dir):
             for filename in os.listdir(cat_dir):
@@ -39,8 +44,20 @@ if os.path.exists(text_base_dir):
                     base_name = os.path.splitext(filename)[0]
                     txt_path = os.path.join(cat_dir, filename)
                     
-                    # 🛑 修改 2：圖片網址也要加上 Assets 前綴
-                    image_rel_path = f"Assets/Resources/image/Tool/{cat_eng}/{base_name}.jpg"
+                    # --- 自動偵測圖片真實的附檔名 ---
+                    image_rel_path = "" # 預設為空
+                    if os.path.exists(img_cat_dir):
+                        for ext in SUPPORTED_EXTS:
+                            test_img_path = os.path.join(img_cat_dir, base_name + ext)
+                            if os.path.exists(test_img_path):
+                                # 找到了！記錄下正確的網址路徑
+                                image_rel_path = f"Assets/Resources/image/Tool/{cat_eng}/{base_name}{ext}"
+                                break
+                    
+                    # 如果真的沒找到圖片，給一個預設的錯誤圖片路徑，避免網頁壞掉
+                    if not image_rel_path:
+                        image_rel_path = "https://via.placeholder.com/280x320?text=圖片遺失"
+                    # --------------------------------
                     
                     # 讀取文字檔內容 (過濾掉空白行)
                     with open(txt_path, 'r', encoding='utf-8') as f:
