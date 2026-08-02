@@ -1,56 +1,84 @@
 [
   {
-    "id": "galilean_cannon",
+    "id": "Rome_soldier",
     "category_eng": "attack",
     "category_zh": "攻擊",
-    "image": "Assets/Resources/image/Tool/attack/galilean_cannon.jpg",
-    "name": "伽利略炮",
-    "description": "h' = 9h",
+    "image": "Assets/Resources/image/Tool/attack/Rome_soldier.JPG",
+    "name": "羅馬士兵",
+    "description": "相傳是AD28的羅馬大兵",
+    "stats": [
+      "傷智2",
+      "治體0",
+      "傷譽2"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "YinTin_staring",
+    "category_eng": "attack",
+    "category_zh": "攻擊",
+    "image": "Assets/Resources/image/Tool/attack/YinTin_staring.jpg",
+    "name": "凝視",
+    "description": "你注視著尹廷，尹廷也注視著你",
     "stats": [
       "治智0",
-      "傷體4",
-      "治譽0"
+      "傷體2",
+      "傷譽2"
     ],
     "is_special": false
   },
   {
-    "id": "crippled_man",
+    "id": "am_I_cute",
     "category_eng": "attack",
     "category_zh": "攻擊",
-    "image": "Assets/Resources/image/Tool/attack/crippled_man.jpg",
-    "name": "破裂的半月板",
-    "description": "學了起跳，沒學落地",
-    "stats": [
-      "傷智6",
-      "傷體6",
-      "治譽0"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "lava_crocodile",
-    "category_eng": "attack",
-    "category_zh": "攻擊",
-    "image": "Assets/Resources/image/Tool/attack/lava_crocodile.JPEG",
-    "name": "熔岩鱷魚",
-    "description": "當掉你物理的上古兇獸",
-    "stats": [
-      "傷智15",
-      "傷體1",
-      "治譽0"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "stay_up",
-    "category_eng": "attack",
-    "category_zh": "攻擊",
-    "image": "Assets/Resources/image/Tool/attack/stay_up.jpg",
-    "name": "通宵打麻將",
-    "description": "看吧，你體力也不行嘛",
+    "image": "Assets/Resources/image/Tool/attack/am_I_cute.jpg",
+    "name": "我可愛嗎",
+    "description": "答案我們都心知肚明",
     "stats": [
       "治智0",
-      "傷體6",
+      "治體0",
+      "傷譽32"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "anniversary_dragon",
+    "category_eng": "attack",
+    "category_zh": "攻擊",
+    "image": "Assets/Resources/image/Tool/attack/anniversary_dragon.jpg",
+    "name": "附中校慶小龍",
+    "description": "一隻貴森森的全能龍玩偶",
+    "stats": [
+      "傷智3",
+      "傷體3",
+      "傷譽3"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "bad_boy",
+    "category_eng": "attack",
+    "category_zh": "攻擊",
+    "image": "Assets/Resources/image/Tool/attack/bad_boy.jpg",
+    "name": "搶佔博愛座",
+    "description": "公審這個人啊",
+    "stats": [
+      "傷智5",
+      "治體0",
+      "傷譽9"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "before_tragedy",
+    "category_eng": "attack",
+    "category_zh": "攻擊",
+    "image": "Assets/Resources/image/Tool/attack/before_tragedy.jpg",
+    "name": "意外的瞬間",
+    "description": "就說了走廊不能玩網球",
+    "stats": [
+      "傷智2",
+      "傷體5",
       "傷譽2"
     ],
     "is_special": false
@@ -70,30 +98,16 @@
     "is_special": false
   },
   {
-    "id": "yj_play_badminton",
+    "id": "believe_in_physics",
     "category_eng": "attack",
     "category_zh": "攻擊",
-    "image": "Assets/Resources/image/Tool/attack/yj_play_badminton.jpg",
-    "name": "宥鈞打羽球",
-    "description": "宥鈞打球，月鳥在後",
+    "image": "Assets/Resources/image/Tool/attack/believe_in_physics.jpg",
+    "name": "相信科學",
+    "description": "真理面前，眨眼也是笑話",
     "stats": [
       "治智0",
-      "治體0",
-      "傷譽30"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "spike",
-    "category_eng": "attack",
-    "category_zh": "攻擊",
-    "image": "Assets/Resources/image/Tool/attack/spike.png",
-    "name": "殺球",
-    "description": "哇X，定3米啊",
-    "stats": [
-      "傷智10",
-      "傷體10",
-      "治譽0"
+      "傷體2",
+      "傷譽4"
     ],
     "is_special": false
   },
@@ -112,48 +126,6 @@
     "is_special": false
   },
   {
-    "id": "anniversary_dragon",
-    "category_eng": "attack",
-    "category_zh": "攻擊",
-    "image": "Assets/Resources/image/Tool/attack/anniversary_dragon.jpg",
-    "name": "附中校慶小龍",
-    "description": "一隻貴森森的全能龍玩偶",
-    "stats": [
-      "傷智3",
-      "傷體3",
-      "傷譽3"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "fallen_dispenser",
-    "category_eng": "attack",
-    "category_zh": "攻擊",
-    "image": "Assets/Resources/image/Tool/attack/fallen_dispenser.jpg",
-    "name": "橫式飲水機",
-    "description": "喝不了水不會怎樣",
-    "stats": [
-      "治智0",
-      "傷體1",
-      "治譽0"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "evil_smile",
-    "category_eng": "attack",
-    "category_zh": "攻擊",
-    "image": "Assets/Resources/image/Tool/attack/evil_smile.jpg",
-    "name": "一笑傾城",
-    "description": "沐沐能有什麼壞心思呢",
-    "stats": [
-      "治智0",
-      "治體0",
-      "傷譽1"
-    ],
-    "is_special": false
-  },
-  {
     "id": "broken_light",
     "category_eng": "attack",
     "category_zh": "攻擊",
@@ -164,104 +136,6 @@
       "治智0",
       "傷體2",
       "治譽0"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "conan",
-    "category_eng": "attack",
-    "category_zh": "攻擊",
-    "image": "Assets/Resources/image/Tool/attack/conan.jpg",
-    "name": "粉筆柯南",
-    "description": "微笑著當你物理的光學怪物",
-    "stats": [
-      "傷智15",
-      "傷體10",
-      "治譽0"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "sea_food",
-    "category_eng": "attack",
-    "category_zh": "攻擊",
-    "image": "Assets/Resources/image/Tool/attack/sea_food.jpg",
-    "name": "夾不起來的魚皮",
-    "description": "@宥璿，筷子達人出來解釋",
-    "stats": [
-      "治智0",
-      "傷體1",
-      "傷譽8"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "nani",
-    "category_eng": "attack",
-    "category_zh": "攻擊",
-    "image": "Assets/Resources/image/Tool/attack/nani.jpg",
-    "name": "ええええええええ",
-    "description": "日本人的溝通語言：え、あ、お",
-    "stats": [
-      "傷智3",
-      "治體0",
-      "傷譽1"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "what",
-    "category_eng": "attack",
-    "category_zh": "攻擊",
-    "image": "Assets/Resources/image/Tool/attack/what.jpg",
-    "name": "WHAT",
-    "description": "連白菜都看你沒有",
-    "stats": [
-      "傷智10",
-      "治體0",
-      "傷譽10"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "before_tragedy",
-    "category_eng": "attack",
-    "category_zh": "攻擊",
-    "image": "Assets/Resources/image/Tool/attack/before_tragedy.jpg",
-    "name": "意外的瞬間",
-    "description": "就說了走廊不能玩網球",
-    "stats": [
-      "傷智2",
-      "傷體5",
-      "傷譽2"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "volleyball",
-    "category_eng": "attack",
-    "category_zh": "攻擊",
-    "image": "Assets/Resources/image/Tool/attack/volleyball.jpg",
-    "name": "扣球",
-    "description": "殺！殺！殺！",
-    "stats": [
-      "傷智10",
-      "傷體10",
-      "治譽0"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "forget_racket",
-    "category_eng": "attack",
-    "category_zh": "攻擊",
-    "image": "Assets/Resources/image/Tool/attack/forget_racket.jpg",
-    "name": "忘了帶球拍",
-    "description": "先幫我拿袋子，我回去拿球拍",
-    "stats": [
-      "傷智15",
-      "治體0",
-      "傷譽5"
     ],
     "is_special": false
   },
@@ -294,156 +168,30 @@
     "is_special": false
   },
   {
-    "id": "take_math_b",
+    "id": "conan",
     "category_eng": "attack",
     "category_zh": "攻擊",
-    "image": "Assets/Resources/image/Tool/attack/take_math_b.png",
-    "name": "回來考數B",
-    "description": "縱情猶未已，回馬欲黃昏",
+    "image": "Assets/Resources/image/Tool/attack/conan.jpg",
+    "name": "粉筆柯南",
+    "description": "微笑著當你物理的光學怪物",
     "stats": [
-      "治智0",
-      "治體0",
-      "傷譽6"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "am_I_cute",
-    "category_eng": "attack",
-    "category_zh": "攻擊",
-    "image": "Assets/Resources/image/Tool/attack/am_I_cute.jpg",
-    "name": "我可愛嗎",
-    "description": "答案我們都心知肚明",
-    "stats": [
-      "治智0",
-      "治體0",
-      "傷譽32"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "XXIIISkill",
-    "category_eng": "attack",
-    "category_zh": "攻擊",
-    "image": "Assets/Resources/image/Tool/attack/XXIIISkill.png",
-    "name": "幹片",
-    "description": "享受智商被腐蝕的喜悅",
-    "stats": [
-      "傷智10",
-      "治體0",
-      "治譽0"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "YinTin_staring",
-    "category_eng": "attack",
-    "category_zh": "攻擊",
-    "image": "Assets/Resources/image/Tool/attack/YinTin_staring.jpg",
-    "name": "凝視",
-    "description": "你注視著尹廷，尹廷也注視著你",
-    "stats": [
-      "治智0",
-      "傷體2",
-      "傷譽2"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "XXISkill",
-    "category_eng": "attack",
-    "category_zh": "攻擊",
-    "image": "Assets/Resources/image/Tool/attack/XXISkill.png",
-    "name": "抱一下嘛",
-    "description": "巍峨的柔情，巍峨的大漢",
-    "stats": [
-      "傷智10",
+      "傷智15",
       "傷體10",
       "治譽0"
     ],
     "is_special": false
   },
   {
-    "id": "hugroach",
+    "id": "crippled_man",
     "category_eng": "attack",
     "category_zh": "攻擊",
-    "image": "Assets/Resources/image/Tool/attack/hugroach.jpg",
-    "name": "蟑開雙臂要抱抱",
-    "description": "為什麼這張圖在這裡",
+    "image": "Assets/Resources/image/Tool/attack/crippled_man.jpg",
+    "name": "破裂的半月板",
+    "description": "學了起跳，沒學落地",
     "stats": [
-      "傷智4",
-      "傷體4",
-      "傷譽10"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "balisong",
-    "category_eng": "attack",
-    "category_zh": "攻擊",
-    "image": "Assets/Resources/image/Tool/attack/balisong.jpg",
-    "name": "蝴蝶刀",
-    "description": "笑你抽不到路諾啊",
-    "stats": [
-      "治智0",
-      "治體0",
-      "傷譽10"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "phy_study_group",
-    "category_eng": "attack",
-    "category_zh": "攻擊",
-    "image": "Assets/Resources/image/Tool/attack/phy_study_group.jpg",
-    "name": "1587物理讀書會",
-    "description": "為甚麼我都聽不懂拉格朗日力學",
-    "stats": [
-      "傷智10",
-      "傷體20",
+      "傷智6",
+      "傷體6",
       "治譽0"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "test_attack",
-    "category_eng": "attack",
-    "category_zh": "攻擊",
-    "image": "Assets/Resources/image/Tool/attack/test_attack.png",
-    "name": "雷電戟",
-    "description": "相傳是源於內測時期的文物",
-    "stats": [
-      "傷智5",
-      "傷體5",
-      "治譽0"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "who_am_I",
-    "category_eng": "attack",
-    "category_zh": "攻擊",
-    "image": "Assets/Resources/image/Tool/attack/who_am_I.jpg",
-    "name": "我是誰",
-    "description": "答錯就不...我說你答錯就答錯",
-    "stats": [
-      "治智0",
-      "治體0",
-      "傷譽18"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "Rome_soldier",
-    "category_eng": "attack",
-    "category_zh": "攻擊",
-    "image": "Assets/Resources/image/Tool/attack/Rome_soldier.JPG",
-    "name": "羅馬士兵",
-    "description": "相傳是AD28的羅馬大兵",
-    "stats": [
-      "傷智2",
-      "治體0",
-      "傷譽2"
     ],
     "is_special": false
   },
@@ -457,118 +205,6 @@
     "stats": [
       "治智0",
       "傷體8",
-      "治譽0"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "believe_in_physics",
-    "category_eng": "attack",
-    "category_zh": "攻擊",
-    "image": "Assets/Resources/image/Tool/attack/believe_in_physics.jpg",
-    "name": "相信科學",
-    "description": "真理面前，眨眼也是笑話",
-    "stats": [
-      "治智0",
-      "傷體2",
-      "傷譽4"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "papa_smurf",
-    "category_eng": "attack",
-    "category_zh": "攻擊",
-    "image": "Assets/Resources/image/Tool/attack/papa_smurf.jpg",
-    "name": "老爹",
-    "description": "我們都知道老爹背後是什麼怪物",
-    "stats": [
-      "傷智12",
-      "傷體12",
-      "治譽0"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "fuck_you",
-    "category_eng": "attack",
-    "category_zh": "攻擊",
-    "image": "Assets/Resources/image/Tool/attack/fuck_you.jpg",
-    "name": "啊XXX咧",
-    "description": "據說是最後一個跳起來的片段",
-    "stats": [
-      "治智0",
-      "傷體2",
-      "傷譽6"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "paper_brick",
-    "category_eng": "attack",
-    "category_zh": "攻擊",
-    "image": "Assets/Resources/image/Tool/attack/paper_brick.jpg",
-    "name": "紙磚",
-    "description": "使用方式：蓄力丟出",
-    "stats": [
-      "傷智5",
-      "傷體9",
-      "傷譽2"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "inner_alien",
-    "category_eng": "attack",
-    "category_zh": "攻擊",
-    "image": "Assets/Resources/image/Tool/attack/inner_alien.jpg",
-    "name": "內星人",
-    "description": "會當掉你物理的種族",
-    "stats": [
-      "傷智15",
-      "傷體10",
-      "治譽0"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "falling_cat",
-    "category_eng": "attack",
-    "category_zh": "攻擊",
-    "image": "Assets/Resources/image/Tool/attack/falling_cat.jpg",
-    "name": "貓的機制",
-    "description": "你連貓咪落地都看不明白",
-    "stats": [
-      "傷智6",
-      "治體0",
-      "治譽0"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "integral_airpod",
-    "category_eng": "attack",
-    "category_zh": "攻擊",
-    "image": "Assets/Resources/image/Tool/attack/integral_airpod.jpg",
-    "name": "耳機分",
-    "description": "Airpods都會積分，就你不會",
-    "stats": [
-      "傷智5",
-      "治體0",
-      "傷譽4"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "minebiology",
-    "category_eng": "attack",
-    "category_zh": "攻擊",
-    "image": "Assets/Resources/image/Tool/attack/minebiology.jpg",
-    "name": "生物講義",
-    "description": "重創但不當你的色色生物",
-    "stats": [
-      "傷智10",
-      "傷體10",
       "治譽0"
     ],
     "is_special": false
@@ -588,16 +224,226 @@
     "is_special": false
   },
   {
-    "id": "bad_boy",
+    "id": "evil_smile",
     "category_eng": "attack",
     "category_zh": "攻擊",
-    "image": "Assets/Resources/image/Tool/attack/bad_boy.jpg",
-    "name": "搶佔博愛座",
-    "description": "公審這個人啊",
+    "image": "Assets/Resources/image/Tool/attack/evil_smile.jpg",
+    "name": "一笑傾城",
+    "description": "沐沐能有什麼壞心思呢",
+    "stats": [
+      "治智0",
+      "治體0",
+      "傷譽1"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "falling_cat",
+    "category_eng": "attack",
+    "category_zh": "攻擊",
+    "image": "Assets/Resources/image/Tool/attack/falling_cat.jpg",
+    "name": "貓的機制",
+    "description": "你連貓咪落地都看不明白",
+    "stats": [
+      "傷智6",
+      "治體0",
+      "治譽0"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "forget_racket",
+    "category_eng": "attack",
+    "category_zh": "攻擊",
+    "image": "Assets/Resources/image/Tool/attack/forget_racket.jpg",
+    "name": "忘了帶球拍",
+    "description": "先幫我拿袋子，我回去拿球拍",
+    "stats": [
+      "傷智15",
+      "治體0",
+      "傷譽5"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "fuck_you",
+    "category_eng": "attack",
+    "category_zh": "攻擊",
+    "image": "Assets/Resources/image/Tool/attack/fuck_you.jpg",
+    "name": "啊XXX咧",
+    "description": "據說是最後一個跳起來的片段",
+    "stats": [
+      "治智0",
+      "傷體2",
+      "傷譽6"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "galilean_cannon",
+    "category_eng": "attack",
+    "category_zh": "攻擊",
+    "image": "Assets/Resources/image/Tool/attack/galilean_cannon.jpg",
+    "name": "伽利略炮",
+    "description": "h' = 9h",
+    "stats": [
+      "治智0",
+      "傷體4",
+      "治譽0"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "hugroach",
+    "category_eng": "attack",
+    "category_zh": "攻擊",
+    "image": "Assets/Resources/image/Tool/attack/hugroach.jpg",
+    "name": "蟑開雙臂要抱抱",
+    "description": "為什麼這張圖在這裡",
+    "stats": [
+      "傷智4",
+      "傷體4",
+      "傷譽10"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "inner_alien",
+    "category_eng": "attack",
+    "category_zh": "攻擊",
+    "image": "Assets/Resources/image/Tool/attack/inner_alien.jpg",
+    "name": "內星人",
+    "description": "會當掉你物理的種族",
+    "stats": [
+      "傷智15",
+      "傷體10",
+      "治譽0"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "integral_airpod",
+    "category_eng": "attack",
+    "category_zh": "攻擊",
+    "image": "Assets/Resources/image/Tool/attack/integral_airpod.jpg",
+    "name": "耳機分",
+    "description": "Airpods都會積分，就你不會",
     "stats": [
       "傷智5",
       "治體0",
-      "傷譽9"
+      "傷譽4"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "lava_crocodile",
+    "category_eng": "attack",
+    "category_zh": "攻擊",
+    "image": "Assets/Resources/image/Tool/attack/lava_crocodile.JPEG",
+    "name": "熔岩鱷魚",
+    "description": "當掉你物理的上古兇獸",
+    "stats": [
+      "傷智15",
+      "傷體1",
+      "治譽0"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "minebiology",
+    "category_eng": "attack",
+    "category_zh": "攻擊",
+    "image": "Assets/Resources/image/Tool/attack/minebiology.jpg",
+    "name": "生物講義",
+    "description": "重創但不當你的色色生物",
+    "stats": [
+      "傷智10",
+      "傷體10",
+      "治譽0"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "nani",
+    "category_eng": "attack",
+    "category_zh": "攻擊",
+    "image": "Assets/Resources/image/Tool/attack/nani.jpg",
+    "name": "ええええええええ",
+    "description": "日本人的溝通語言：え、あ、お",
+    "stats": [
+      "傷智3",
+      "治體0",
+      "傷譽1"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "paper_brick",
+    "category_eng": "attack",
+    "category_zh": "攻擊",
+    "image": "Assets/Resources/image/Tool/attack/paper_brick.jpg",
+    "name": "紙磚",
+    "description": "使用方式：蓄力丟出",
+    "stats": [
+      "傷智5",
+      "傷體9",
+      "傷譽2"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "phy_study_group",
+    "category_eng": "attack",
+    "category_zh": "攻擊",
+    "image": "Assets/Resources/image/Tool/attack/phy_study_group.jpg",
+    "name": "1587物理讀書會",
+    "description": "為甚麼我都聽不懂拉格朗日力學",
+    "stats": [
+      "傷智10",
+      "傷體20",
+      "治譽0"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "sea_food",
+    "category_eng": "attack",
+    "category_zh": "攻擊",
+    "image": "Assets/Resources/image/Tool/attack/sea_food.jpg",
+    "name": "夾不起來的魚皮",
+    "description": "@宥璿，筷子達人出來解釋",
+    "stats": [
+      "治智0",
+      "傷體1",
+      "傷譽8"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "take_math_b",
+    "category_eng": "attack",
+    "category_zh": "攻擊",
+    "image": "Assets/Resources/image/Tool/attack/take_math_b.png",
+    "name": "回來考數B",
+    "description": "縱情猶未已，回馬欲黃昏",
+    "stats": [
+      "治智0",
+      "治體0",
+      "傷譽6"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "test_attack",
+    "category_eng": "attack",
+    "category_zh": "攻擊",
+    "image": "Assets/Resources/image/Tool/attack/test_attack.png",
+    "name": "雷電戟",
+    "description": "相傳是源於內測時期的文物",
+    "stats": [
+      "傷智5",
+      "傷體5",
+      "治譽0"
     ],
     "is_special": false
   },
@@ -616,30 +462,44 @@
     "is_special": false
   },
   {
-    "id": "fallen_tree",
-    "category_eng": "multiattack",
-    "category_zh": "群攻",
-    "image": "Assets/Resources/image/Tool/multiattack/fallen_tree.jpg",
-    "name": "被風吹倒的樹",
-    "description": "被砸到可不是開玩笑的",
+    "id": "what",
+    "category_eng": "attack",
+    "category_zh": "攻擊",
+    "image": "Assets/Resources/image/Tool/attack/what.jpg",
+    "name": "WHAT",
+    "description": "連白菜都看你沒有",
     "stats": [
-      "治智0",
-      "傷體8",
-      "治譽0"
+      "傷智10",
+      "治體0",
+      "傷譽10"
     ],
     "is_special": false
   },
   {
-    "id": "two_player_game",
-    "category_eng": "multiattack",
-    "category_zh": "群攻",
-    "image": "Assets/Resources/image/Tool/multiattack/two_player_game.jpg",
-    "name": "雙人遊戲",
-    "description": "一起上課玩，一起被抓",
+    "id": "who_am_I",
+    "category_eng": "attack",
+    "category_zh": "攻擊",
+    "image": "Assets/Resources/image/Tool/attack/who_am_I.jpg",
+    "name": "我是誰",
+    "description": "答錯就不...我說你答錯就答錯",
     "stats": [
-      "傷智3",
-      "傷體1",
-      "傷譽8"
+      "治智0",
+      "治體0",
+      "傷譽18"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "yj_play_badminton",
+    "category_eng": "attack",
+    "category_zh": "攻擊",
+    "image": "Assets/Resources/image/Tool/attack/yj_play_badminton.jpg",
+    "name": "宥鈞打羽球",
+    "description": "宥鈞打球，月鳥在後",
+    "stats": [
+      "治智0",
+      "治體0",
+      "傷譽30"
     ],
     "is_special": false
   },
@@ -658,20 +518,6 @@
     "is_special": false
   },
   {
-    "id": "sevenskill",
-    "category_eng": "multiattack",
-    "category_zh": "群攻",
-    "image": "Assets/Resources/image/Tool/multiattack/sevenskill.jpg",
-    "name": "矩形密鋪",
-    "description": "科展沒出國沒資格叫科展",
-    "stats": [
-      "傷智5",
-      "傷體5",
-      "傷譽5"
-    ],
-    "is_special": false
-  },
-  {
     "id": "Tsing_presentation",
     "category_eng": "multiattack",
     "category_zh": "群攻",
@@ -682,34 +528,6 @@
       "傷智5",
       "治體0",
       "傷譽9"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "nietzsche",
-    "category_eng": "multiattack",
-    "category_zh": "群攻",
-    "image": "Assets/Resources/image/Tool/multiattack/nietzsche.png",
-    "name": "哲學思考",
-    "description": "沒有事實，只有詮釋",
-    "stats": [
-      "治智4",
-      "傷體15",
-      "治譽1"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "mc4",
-    "category_eng": "multiattack",
-    "category_zh": "群攻",
-    "image": "Assets/Resources/image/Tool/multiattack/mc4.jpg",
-    "name": "銘傳四劍客",
-    "description": "人多力量大",
-    "stats": [
-      "治智0",
-      "傷體4",
-      "治譽0"
     ],
     "is_special": false
   },
@@ -728,86 +546,16 @@
     "is_special": false
   },
   {
-    "id": "inspiring_talk",
+    "id": "fallen_tree",
     "category_eng": "multiattack",
     "category_zh": "群攻",
-    "image": "Assets/Resources/image/Tool/multiattack/inspiring_talk.jpg",
-    "name": "Aim High",
-    "description": "我們科學班是全班收手機",
+    "image": "Assets/Resources/image/Tool/multiattack/fallen_tree.jpg",
+    "name": "被風吹倒的樹",
+    "description": "被砸到可不是開玩笑的",
     "stats": [
       "治智0",
-      "傷體4",
+      "傷體8",
       "治譽0"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "masterbation",
-    "category_eng": "multiattack",
-    "category_zh": "群攻",
-    "image": "Assets/Resources/image/Tool/multiattack/masterbation.jpg",
-    "name": "陸官楷杰",
-    "description": "一群齷齪的男生",
-    "stats": [
-      "傷智4",
-      "治體0",
-      "傷譽4"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "circular_motion",
-    "category_eng": "multiattack",
-    "category_zh": "群攻",
-    "image": "Assets/Resources/image/Tool/multiattack/circular_motion.png",
-    "name": "圓周運動",
-    "description": "向心力是mv平方除以R",
-    "stats": [
-      "治智0",
-      "傷體15",
-      "治譽0"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "t_equals_mg",
-    "category_eng": "multiattack",
-    "category_zh": "群攻",
-    "image": "Assets/Resources/image/Tool/multiattack/t_equals_mg.png",
-    "name": "T = mg",
-    "description": "幾乎全班都答錯了",
-    "stats": [
-      "傷智10",
-      "治體5",
-      "傷譽10"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "chalk_dust_hand",
-    "category_eng": "multiattack",
-    "category_zh": "群攻",
-    "image": "Assets/Resources/image/Tool/multiattack/chalk_dust_hand.png",
-    "name": "粉筆灰之手",
-    "description": "昱全你剛剛遇到智勝對不對",
-    "stats": [
-      "治智0",
-      "治體0",
-      "傷譽10"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "test_multiattack",
-    "category_eng": "multiattack",
-    "category_zh": "群攻",
-    "image": "Assets/Resources/image/Tool/multiattack/test_multiattack.jpg",
-    "name": "馬加騎手贏才算贏",
-    "description": "相傳是源於內測時期的文物",
-    "stats": [
-      "傷智5",
-      "傷體5",
-      "傷譽5"
     ],
     "is_special": false
   },
@@ -821,34 +569,6 @@
     "stats": [
       "傷智4",
       "傷體4",
-      "治譽0"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "cosine_law",
-    "category_eng": "multiattack",
-    "category_zh": "群攻",
-    "image": "Assets/Resources/image/Tool/multiattack/cosine_law.png",
-    "name": "餘弦定理",
-    "description": "a^2=b^2+c^2-2bccosA",
-    "stats": [
-      "傷智5",
-      "傷體5",
-      "傷譽5"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "dissection",
-    "category_eng": "multiattack",
-    "category_zh": "群攻",
-    "image": "Assets/Resources/image/Tool/multiattack/dissection.jpg",
-    "name": "解剖",
-    "description": "王子終究等不到公主來救他",
-    "stats": [
-      "治智0",
-      "傷體30",
       "治譽0"
     ],
     "is_special": false
@@ -868,15 +588,57 @@
     "is_special": false
   },
   {
-    "id": "stand_at_the_back",
+    "id": "inspiring_talk",
     "category_eng": "multiattack",
     "category_zh": "群攻",
-    "image": "Assets/Resources/image/Tool/multiattack/stand_at_the_back.png",
-    "name": "去後面罰站",
-    "description": "要記得寫對話式啊",
+    "image": "Assets/Resources/image/Tool/multiattack/inspiring_talk.jpg",
+    "name": "Aim High",
+    "description": "我們科學班是全班收手機",
     "stats": [
       "治智0",
-      "傷體10",
+      "傷體4",
+      "治譽0"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "laptop_in_aquarium",
+    "category_eng": "multiattack",
+    "category_zh": "群攻",
+    "image": "Assets/Resources/image/Tool/multiattack/laptop_in_aquarium.jpg",
+    "name": "海生館裡有筆電",
+    "description": "畢旅做科展？可憐啊",
+    "stats": [
+      "治智0",
+      "傷體6",
+      "傷譽7"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "masterbation",
+    "category_eng": "multiattack",
+    "category_zh": "群攻",
+    "image": "Assets/Resources/image/Tool/multiattack/masterbation.jpg",
+    "name": "陸官楷杰",
+    "description": "一群齷齪的男生",
+    "stats": [
+      "傷智4",
+      "治體0",
+      "傷譽4"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "mc4",
+    "category_eng": "multiattack",
+    "category_zh": "群攻",
+    "image": "Assets/Resources/image/Tool/multiattack/mc4.jpg",
+    "name": "銘傳四劍客",
+    "description": "人多力量大",
+    "stats": [
+      "治智0",
+      "傷體4",
       "治譽0"
     ],
     "is_special": false
@@ -896,16 +658,142 @@
     "is_special": false
   },
   {
-    "id": "laptop_in_aquarium",
+    "id": "t_equals_mg",
     "category_eng": "multiattack",
     "category_zh": "群攻",
-    "image": "Assets/Resources/image/Tool/multiattack/laptop_in_aquarium.jpg",
-    "name": "海生館裡有筆電",
-    "description": "畢旅做科展？可憐啊",
+    "image": "Assets/Resources/image/Tool/multiattack/t_equals_mg.png",
+    "name": "T = mg",
+    "description": "幾乎全班都答錯了",
     "stats": [
-      "治智0",
-      "傷體6",
-      "傷譽7"
+      "傷智10",
+      "治體5",
+      "傷譽10"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "test_multiattack",
+    "category_eng": "multiattack",
+    "category_zh": "群攻",
+    "image": "Assets/Resources/image/Tool/multiattack/test_multiattack.jpg",
+    "name": "馬加騎手贏才算贏",
+    "description": "相傳是源於內測時期的文物",
+    "stats": [
+      "傷智5",
+      "傷體5",
+      "傷譽5"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "two_player_game",
+    "category_eng": "multiattack",
+    "category_zh": "群攻",
+    "image": "Assets/Resources/image/Tool/multiattack/two_player_game.jpg",
+    "name": "雙人遊戲",
+    "description": "一起上課玩，一起被抓",
+    "stats": [
+      "傷智3",
+      "傷體1",
+      "傷譽8"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "1st_place",
+    "category_eng": "defense",
+    "category_zh": "防禦",
+    "image": "Assets/Resources/image/Tool/defense/1st_place.jpg",
+    "name": "班排1",
+    "description": "成績好的力量...大家都懂",
+    "stats": [
+      "智防10",
+      "體防10",
+      "譽防10"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "Ai_Hoshino",
+    "category_eng": "defense",
+    "category_zh": "防禦",
+    "image": "Assets/Resources/image/Tool/defense/Ai_Hoshino.jpg",
+    "name": "星野璿",
+    "description": "瘋，是維持理智的手段",
+    "stats": [
+      "智防5",
+      "體防0",
+      "譽防0"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "Date_Masamune",
+    "category_eng": "defense",
+    "category_zh": "防禦",
+    "image": "Assets/Resources/image/Tool/defense/Date_Masamune.jpg",
+    "name": "伊達政宗",
+    "description": "日本行瞻仰的偉大藩主",
+    "stats": [
+      "智防0",
+      "體防10",
+      "譽防10"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "Naoe_Kanetsugu",
+    "category_eng": "defense",
+    "category_zh": "防禦",
+    "image": "Assets/Resources/image/Tool/defense/Naoe_Kanetsugu.jpg",
+    "name": "Q版直江兼續",
+    "description": "庇護了教育旅行的順利",
+    "stats": [
+      "智防8",
+      "體防6",
+      "譽防0"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "Vitruvian_Man",
+    "category_eng": "defense",
+    "category_zh": "防禦",
+    "image": "Assets/Resources/image/Tool/defense/Vitruvian_Man.jpg",
+    "name": "維騰魯威勳",
+    "description": "犧牲小我，成就87",
+    "stats": [
+      "耗智1",
+      "耗體1",
+      "譽防20"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "Yaju_signiture",
+    "category_eng": "defense",
+    "category_zh": "防禦",
+    "image": "Assets/Resources/image/Tool/defense/Yaju_signiture.jpg",
+    "name": "雅如的簽名",
+    "description": "畢冊上教授的簽名",
+    "stats": [
+      "智防6",
+      "體防0",
+      "譽防8"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "all_star",
+    "category_eng": "defense",
+    "category_zh": "防禦",
+    "image": "Assets/Resources/image/Tool/defense/all_star.png",
+    "name": "全明星",
+    "description": "群賢畢至，少長咸集",
+    "stats": [
+      "智防7",
+      "體防7",
+      "譽防7"
     ],
     "is_special": false
   },
@@ -938,20 +826,6 @@
     "is_special": false
   },
   {
-    "id": "yes_sir",
-    "category_eng": "defense",
-    "category_zh": "防禦",
-    "image": "Assets/Resources/image/Tool/defense/yes_sir.jpg",
-    "name": "是的長官！",
-    "description": "猜猜什麼時候拍下的呀",
-    "stats": [
-      "智防7",
-      "體防7",
-      "譽防7"
-    ],
-    "is_special": false
-  },
-  {
     "id": "beautiful_shrimps",
     "category_eng": "defense",
     "category_zh": "防禦",
@@ -966,62 +840,6 @@
     "is_special": false
   },
   {
-    "id": "nameless_island",
-    "category_eng": "defense",
-    "category_zh": "防禦",
-    "image": "Assets/Resources/image/Tool/defense/nameless_island.jpg",
-    "name": "世外桃源-無名小島",
-    "description": "日本行無意拍下的小島",
-    "stats": [
-      "智防15",
-      "體防0",
-      "譽防15"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "Vitruvian_Man",
-    "category_eng": "defense",
-    "category_zh": "防禦",
-    "image": "Assets/Resources/image/Tool/defense/Vitruvian_Man.jpg",
-    "name": "維騰魯威勳",
-    "description": "犧牲小我，成就87",
-    "stats": [
-      "耗智1",
-      "耗體1",
-      "譽防20"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "Ai_Hoshino",
-    "category_eng": "defense",
-    "category_zh": "防禦",
-    "image": "Assets/Resources/image/Tool/defense/Ai_Hoshino.jpg",
-    "name": "星野璿",
-    "description": "瘋，是維持理智的手段",
-    "stats": [
-      "智防5",
-      "體防0",
-      "譽防0"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "state_position",
-    "category_eng": "defense",
-    "category_zh": "防禦",
-    "image": "Assets/Resources/image/Tool/defense/state_position.png",
-    "name": "表明立場",
-    "description": "冷傲做基佬",
-    "stats": [
-      "智防0",
-      "體防0",
-      "譽防16"
-    ],
-    "is_special": false
-  },
-  {
     "id": "beautiful_shrimps_promax",
     "category_eng": "defense",
     "category_zh": "防禦",
@@ -1032,34 +850,6 @@
       "智防4",
       "體防4",
       "譽防8"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "Naoe_Kanetsugu",
-    "category_eng": "defense",
-    "category_zh": "防禦",
-    "image": "Assets/Resources/image/Tool/defense/Naoe_Kanetsugu.jpg",
-    "name": "Q版直江兼續",
-    "description": "庇護了教育旅行的順利",
-    "stats": [
-      "智防8",
-      "體防6",
-      "譽防0"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "all_star",
-    "category_eng": "defense",
-    "category_zh": "防禦",
-    "image": "Assets/Resources/image/Tool/defense/all_star.png",
-    "name": "全明星",
-    "description": "群賢畢至，少長咸集",
-    "stats": [
-      "智防7",
-      "體防7",
-      "譽防7"
     ],
     "is_special": false
   },
@@ -1092,30 +882,44 @@
     "is_special": false
   },
   {
-    "id": "science_notebook",
+    "id": "civics_report",
     "category_eng": "defense",
     "category_zh": "防禦",
-    "image": "Assets/Resources/image/Tool/defense/science_notebook.jpg",
-    "name": "專研本",
-    "description": "養成隨時記錄的好習慣",
+    "image": "Assets/Resources/image/Tool/defense/civics_report.jpg",
+    "name": "公民報告",
+    "description": "爆卷！(冠字宇真好看)",
     "stats": [
-      "智防6",
-      "體防0",
-      "譽防4"
+      "智防7",
+      "耗體1",
+      "譽防7"
     ],
     "is_special": false
   },
   {
-    "id": "toilet",
+    "id": "lil_black_12",
     "category_eng": "defense",
     "category_zh": "防禦",
-    "image": "Assets/Resources/image/Tool/defense/toilet.jpg",
-    "name": "馬桶",
-    "description": "嘈嘈切切錯雜出，大丰小韡落茅坑",
+    "image": "Assets/Resources/image/Tool/defense/lil_black_12.jpg",
+    "name": "對話式-12冊",
+    "description": "學測複習的基礎",
     "stats": [
-      "智防5",
-      "體防5",
-      "耗譽3"
+      "智防2",
+      "體防0",
+      "譽防2"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "lil_black_34A",
+    "category_eng": "defense",
+    "category_zh": "防禦",
+    "image": "Assets/Resources/image/Tool/defense/lil_black_34A.jpg",
+    "name": "對話式-34A",
+    "description": "學測複習的進階內容",
+    "stats": [
+      "智防4",
+      "體防0",
+      "譽防4"
     ],
     "is_special": false
   },
@@ -1134,16 +938,58 @@
     "is_special": false
   },
   {
-    "id": "Yaju_signiture",
+    "id": "lil_black_pro",
     "category_eng": "defense",
     "category_zh": "防禦",
-    "image": "Assets/Resources/image/Tool/defense/Yaju_signiture.jpg",
-    "name": "雅如的簽名",
-    "description": "畢冊上教授的簽名",
+    "image": "Assets/Resources/image/Tool/defense/lil_black_pro.jpg",
+    "name": "對話式-選修甲",
+    "description": "高中數學的頂峰",
+    "stats": [
+      "智防8",
+      "體防0",
+      "譽防8"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "nameless_island",
+    "category_eng": "defense",
+    "category_zh": "防禦",
+    "image": "Assets/Resources/image/Tool/defense/nameless_island.jpg",
+    "name": "世外桃源-無名小島",
+    "description": "日本行無意拍下的小島",
+    "stats": [
+      "智防15",
+      "體防0",
+      "譽防15"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "science_notebook",
+    "category_eng": "defense",
+    "category_zh": "防禦",
+    "image": "Assets/Resources/image/Tool/defense/science_notebook.jpg",
+    "name": "專研本",
+    "description": "養成隨時記錄的好習慣",
     "stats": [
       "智防6",
       "體防0",
-      "譽防8"
+      "譽防4"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "state_position",
+    "category_eng": "defense",
+    "category_zh": "防禦",
+    "image": "Assets/Resources/image/Tool/defense/state_position.png",
+    "name": "表明立場",
+    "description": "冷傲做基佬",
+    "stats": [
+      "智防0",
+      "體防0",
+      "譽防16"
     ],
     "is_special": false
   },
@@ -1176,114 +1022,170 @@
     "is_special": false
   },
   {
-    "id": "lil_black_12",
+    "id": "toilet",
     "category_eng": "defense",
     "category_zh": "防禦",
-    "image": "Assets/Resources/image/Tool/defense/lil_black_12.jpg",
-    "name": "對話式-12冊",
-    "description": "學測複習的基礎",
+    "image": "Assets/Resources/image/Tool/defense/toilet.jpg",
+    "name": "馬桶",
+    "description": "嘈嘈切切錯雜出，大丰小韡落茅坑",
     "stats": [
-      "智防2",
-      "體防0",
-      "譽防2"
+      "智防5",
+      "體防5",
+      "耗譽3"
     ],
     "is_special": false
   },
   {
-    "id": "ISTF",
+    "id": "yes_sir",
     "category_eng": "defense",
     "category_zh": "防禦",
-    "image": "Assets/Resources/image/Tool/defense/ISTF.png",
-    "name": "國際瑞士人才論壇",
-    "description": "Water is life. Water is peace.",
-    "stats": [
-      "智防0",
-      "體防0",
-      "譽防0"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "Date_Masamune",
-    "category_eng": "defense",
-    "category_zh": "防禦",
-    "image": "Assets/Resources/image/Tool/defense/Date_Masamune.jpg",
-    "name": "伊達政宗",
-    "description": "日本行瞻仰的偉大藩主",
-    "stats": [
-      "智防0",
-      "體防10",
-      "譽防10"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "lil_black_34A",
-    "category_eng": "defense",
-    "category_zh": "防禦",
-    "image": "Assets/Resources/image/Tool/defense/lil_black_34A.jpg",
-    "name": "對話式-34A",
-    "description": "學測複習的進階內容",
-    "stats": [
-      "智防4",
-      "體防0",
-      "譽防4"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "1st_place",
-    "category_eng": "defense",
-    "category_zh": "防禦",
-    "image": "Assets/Resources/image/Tool/defense/1st_place.jpg",
-    "name": "班排1",
-    "description": "成績好的力量...大家都懂",
-    "stats": [
-      "智防10",
-      "體防10",
-      "譽防10"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "civics_report",
-    "category_eng": "defense",
-    "category_zh": "防禦",
-    "image": "Assets/Resources/image/Tool/defense/civics_report.jpg",
-    "name": "公民報告",
-    "description": "爆卷！(冠字宇真好看)",
+    "image": "Assets/Resources/image/Tool/defense/yes_sir.jpg",
+    "name": "是的長官！",
+    "description": "猜猜什麼時候拍下的呀",
     "stats": [
       "智防7",
-      "耗體1",
+      "體防7",
       "譽防7"
     ],
     "is_special": false
   },
   {
-    "id": "lil_black_pro",
-    "category_eng": "defense",
-    "category_zh": "防禦",
-    "image": "Assets/Resources/image/Tool/defense/lil_black_pro.jpg",
-    "name": "對話式-選修甲",
-    "description": "高中數學的頂峰",
+    "id": "Beitou_sulfur_cave",
+    "category_eng": "medicine",
+    "category_zh": "藥品",
+    "image": "Assets/Resources/image/Tool/medicine/Beitou_sulfur_cave.JPEG",
+    "name": "裨海紀遊-北投硫穴",
+    "description": "穴中毒焰撲人，目不能視",
     "stats": [
-      "智防8",
-      "體防0",
-      "譽防8"
+      "治智15",
+      "治體15",
+      "治譽15"
     ],
     "is_special": false
   },
   {
-    "id": "lunch_break_chat",
+    "id": "HSNUCOS_good_stuff",
     "category_eng": "medicine",
     "category_zh": "藥品",
-    "image": "Assets/Resources/image/Tool/medicine/lunch_break_chat.png",
-    "name": "午休單獨聊天",
-    "description": "幽賞未已，高談轉清",
+    "image": "Assets/Resources/image/Tool/medicine/HSNUCOS_good_stuff.jpg",
+    "name": "附科良品",
+    "description": "這必須給到一個夯",
     "stats": [
-      "治智10",
-      "傷體5",
+      "治智15",
+      "治體15",
+      "治譽15"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "Q_zhenverse",
+    "category_eng": "medicine",
+    "category_zh": "藥品",
+    "image": "Assets/Resources/image/Tool/medicine/Q_zhenverse.jpg",
+    "name": "Q版冠宇",
+    "description": "療癒人心的可愛小插圖",
+    "stats": [
+      "治智0",
+      "治體10",
+      "治譽9"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "Su_sticker",
+    "category_eng": "medicine",
+    "category_zh": "藥品",
+    "image": "Assets/Resources/image/Tool/medicine/Su_sticker.jpg",
+    "name": "Q版昱全",
+    "description": "別打出我好不好(｡ŏ_ŏ)",
+    "stats": [
+      "治智0",
+      "治體0",
+      "治譽0"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "WaiAo_beach",
+    "category_eng": "medicine",
+    "category_zh": "藥品",
+    "image": "Assets/Resources/image/Tool/medicine/WaiAo_beach.jpg",
+    "name": "外澳海灘",
+    "description": "盛載著美好回憶的地方",
+    "stats": [
+      "治智5",
+      "治體7",
       "治譽5"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "badminton",
+    "category_eng": "medicine",
+    "category_zh": "藥品",
+    "image": "Assets/Resources/image/Tool/medicine/badminton.jpg",
+    "name": "87羽球隊",
+    "description": "第一輪就被刷下來了(拍拍",
+    "stats": [
+      "治智0",
+      "治體0",
+      "治譽3"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "cactus",
+    "category_eng": "medicine",
+    "category_zh": "藥品",
+    "image": "Assets/Resources/image/Tool/medicine/cactus.jpg",
+    "name": "噴水的仙人掌",
+    "description": "在一片仙氣之中",
+    "stats": [
+      "治智5",
+      "治體10",
+      "傷譽5"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "cookie_dual_slit",
+    "category_eng": "medicine",
+    "category_zh": "藥品",
+    "image": "Assets/Resources/image/Tool/medicine/cookie_dual_slit.jpg",
+    "name": "餅乾干涉",
+    "description": "餅乾的雙狹縫干涉實驗",
+    "stats": [
+      "傷智1",
+      "治體4",
+      "治譽5"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "duck_bush",
+    "category_eng": "medicine",
+    "category_zh": "藥品",
+    "image": "Assets/Resources/image/Tool/medicine/duck_bush.jpg",
+    "name": "鴨子造型灌木",
+    "description": "公館師大的可愛造景，療癒人心",
+    "stats": [
+      "治智7",
+      "治體0",
+      "治譽0"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "farewell_neverland",
+    "category_eng": "medicine",
+    "category_zh": "藥品",
+    "image": "Assets/Resources/image/Tool/medicine/farewell_neverland.jpg",
+    "name": "畢業典禮",
+    "description": "FN肯定是指FortNite",
+    "stats": [
+      "治智0",
+      "治體2",
+      "治譽6"
     ],
     "is_special": false
   },
@@ -1294,6 +1196,132 @@
     "image": "Assets/Resources/image/Tool/medicine/flower_and_white.jpg",
     "name": "花語白(冠O的愛妃)",
     "description": "O宇在雀魂中使用的雀士",
+    "stats": [
+      "治智0",
+      "治體20",
+      "治譽0"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "good_water",
+    "category_eng": "medicine",
+    "category_zh": "藥品",
+    "image": "Assets/Resources/image/Tool/medicine/good_water.jpg",
+    "name": "OO好水",
+    "description": "鄭醫師推薦的好水",
+    "stats": [
+      "治智1",
+      "治體5",
+      "治譽0"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "grandparents",
+    "category_eng": "medicine",
+    "category_zh": "藥品",
+    "image": "Assets/Resources/image/Tool/medicine/grandparents.jpg",
+    "name": "小乖與阿公阿嬤",
+    "description": "祖孫情足感心啊",
+    "stats": [
+      "治智0",
+      "治體7",
+      "治譽9"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "guitar_boy",
+    "category_eng": "medicine",
+    "category_zh": "藥品",
+    "image": "Assets/Resources/image/Tool/medicine/guitar_boy.jpg",
+    "name": "吉他男孩",
+    "description": "放鬆身心並被放上匿附",
+    "stats": [
+      "治智3",
+      "治體3",
+      "傷譽1"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "majong_kit",
+    "category_eng": "medicine",
+    "category_zh": "藥品",
+    "image": "Assets/Resources/image/Tool/medicine/majong_kit.jpg",
+    "name": "隨身麻將套組",
+    "description": "蛋基咧蛋基咧靠X(並沒有這一段",
+    "stats": [
+      "治智0",
+      "治體0",
+      "治譽4"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "music_teacher",
+    "category_eng": "medicine",
+    "category_zh": "藥品",
+    "image": "Assets/Resources/image/Tool/medicine/music_teacher.JPEG",
+    "name": "音樂老師",
+    "description": "啊~夏天的夢~",
+    "stats": [
+      "治智3",
+      "治體5",
+      "治譽0"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "new_discovery",
+    "category_eng": "medicine",
+    "category_zh": "藥品",
+    "image": "Assets/Resources/image/Tool/medicine/new_discovery.JPG",
+    "name": "發現新世界",
+    "description": "瞧把孩子樂的",
+    "stats": [
+      "治智3",
+      "治體5",
+      "治譽0"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "shl_medical",
+    "category_eng": "medicine",
+    "category_zh": "藥品",
+    "image": "Assets/Resources/image/Tool/medicine/shl_medical.png",
+    "name": "自動注射器",
+    "description": "領航全球的藥物輸送解決方案供應商",
+    "stats": [
+      "治智5",
+      "治體5",
+      "治譽5"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "small_hot_pot",
+    "category_eng": "medicine",
+    "category_zh": "藥品",
+    "image": "Assets/Resources/image/Tool/medicine/small_hot_pot.jpg",
+    "name": "i99小火鍋",
+    "description": "慰勞科普列車的辛勞",
+    "stats": [
+      "治智5",
+      "治體5",
+      "治譽0"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "south_maple_flower",
+    "category_eng": "medicine",
+    "category_zh": "藥品",
+    "image": "Assets/Resources/image/Tool/medicine/south_maple_flower.jpg",
+    "name": "南楓花(昱O的愛妃)",
+    "description": "O全在雀魂中使用的雀士",
     "stats": [
       "治智0",
       "治體20",
@@ -1316,132 +1344,6 @@
     "is_special": false
   },
   {
-    "id": "cookie_dual_slit",
-    "category_eng": "medicine",
-    "category_zh": "藥品",
-    "image": "Assets/Resources/image/Tool/medicine/cookie_dual_slit.jpg",
-    "name": "餅乾干涉",
-    "description": "餅乾的雙狹縫干涉實驗",
-    "stats": [
-      "傷智1",
-      "治體4",
-      "治譽5"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "new_discovery",
-    "category_eng": "medicine",
-    "category_zh": "藥品",
-    "image": "Assets/Resources/image/Tool/medicine/new_discovery.JPG",
-    "name": "發現新世界",
-    "description": "瞧把孩子樂的",
-    "stats": [
-      "治智3",
-      "治體5",
-      "治譽0"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "grandparents",
-    "category_eng": "medicine",
-    "category_zh": "藥品",
-    "image": "Assets/Resources/image/Tool/medicine/grandparents.jpg",
-    "name": "小乖與阿公阿嬤",
-    "description": "祖孫情足感心啊",
-    "stats": [
-      "治智0",
-      "治體7",
-      "治譽9"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "AI",
-    "category_eng": "medicine",
-    "category_zh": "藥品",
-    "image": "Assets/Resources/image/Tool/medicine/AI.png",
-    "name": "朝升的專題",
-    "description": "我也不懂他在做什麼",
-    "stats": [
-      "治智0",
-      "治體0",
-      "治譽7"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "south_maple_flower",
-    "category_eng": "medicine",
-    "category_zh": "藥品",
-    "image": "Assets/Resources/image/Tool/medicine/south_maple_flower.jpg",
-    "name": "南楓花(昱O的愛妃)",
-    "description": "O全在雀魂中使用的雀士",
-    "stats": [
-      "治智0",
-      "治體20",
-      "治譽0"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "Q_zhenverse",
-    "category_eng": "medicine",
-    "category_zh": "藥品",
-    "image": "Assets/Resources/image/Tool/medicine/Q_zhenverse.jpg",
-    "name": "Q版冠宇",
-    "description": "療癒人心的可愛小插圖",
-    "stats": [
-      "治智0",
-      "治體10",
-      "治譽9"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "mian",
-    "category_eng": "medicine",
-    "category_zh": "藥品",
-    "image": "Assets/Resources/image/Tool/medicine/mian.jpg",
-    "name": "滷味麵",
-    "description": "ㄟ~宥鈞，你不是去廁所嗎？",
-    "stats": [
-      "治智5",
-      "治體10",
-      "傷譽5"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "geological_age",
-    "category_eng": "medicine",
-    "category_zh": "藥品",
-    "image": "Assets/Resources/image/Tool/medicine/geological_age.png",
-    "name": "古始漸中上更全",
-    "description": "狗屎建中，附又贏",
-    "stats": [
-      "治智10",
-      "治體0",
-      "治譽0"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "XVIIISkill",
-    "category_eng": "medicine",
-    "category_zh": "藥品",
-    "image": "Assets/Resources/image/Tool/medicine/XVIIISkill.png",
-    "name": "捧場",
-    "description": "各位學長們(？好",
-    "stats": [
-      "治智0",
-      "傷體2",
-      "治譽10"
-    ],
-    "is_special": false
-  },
-  {
     "id": "what",
     "category_eng": "medicine",
     "category_zh": "藥品",
@@ -1452,146 +1354,6 @@
       "治智0",
       "治體0",
       "治譽0"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "XXSkill",
-    "category_eng": "medicine",
-    "category_zh": "藥品",
-    "image": "Assets/Resources/image/Tool/medicine/XXSkill.jpg",
-    "name": "中醫",
-    "description": "神醫與庸醫僅一線之隔",
-    "stats": [
-      "治智0",
-      "治體0",
-      "治譽0"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "HSNUCOS_good_stuff",
-    "category_eng": "medicine",
-    "category_zh": "藥品",
-    "image": "Assets/Resources/image/Tool/medicine/HSNUCOS_good_stuff.jpg",
-    "name": "附科良品",
-    "description": "這必須給到一個夯",
-    "stats": [
-      "治智15",
-      "治體15",
-      "治譽15"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "Beitou_sulfur_cave",
-    "category_eng": "medicine",
-    "category_zh": "藥品",
-    "image": "Assets/Resources/image/Tool/medicine/Beitou_sulfur_cave.JPEG",
-    "name": "裨海紀遊-北投硫穴",
-    "description": "穴中毒焰撲人，目不能視",
-    "stats": [
-      "治智15",
-      "治體15",
-      "治譽15"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "yuehlin_study_english",
-    "category_eng": "medicine",
-    "category_zh": "藥品",
-    "image": "Assets/Resources/image/Tool/medicine/yuehlin_study_english.jpg",
-    "name": "白菜讀英文",
-    "description": "奇山異水，天下獨絕",
-    "stats": [
-      "治智1",
-      "傷體15",
-      "治譽30"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "redcross",
-    "category_eng": "medicine",
-    "category_zh": "藥品",
-    "image": "https://via.placeholder.com/280x320?text=圖片遺失",
-    "name": "紅十字會",
-    "description": "大事管不了，小事不想管",
-    "stats": [
-      "治智10",
-      "治體10",
-      "治譽10"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "majong_kit",
-    "category_eng": "medicine",
-    "category_zh": "藥品",
-    "image": "Assets/Resources/image/Tool/medicine/majong_kit.jpg",
-    "name": "隨身麻將套組",
-    "description": "蛋基咧蛋基咧靠X(並沒有這一段",
-    "stats": [
-      "治智0",
-      "治體0",
-      "治譽4"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "XXIISkill",
-    "category_eng": "medicine",
-    "category_zh": "藥品",
-    "image": "Assets/Resources/image/Tool/medicine/XXIISkill.png",
-    "name": "輕小說與同人本",
-    "description": "死亡遊戲沒有授權這張圖",
-    "stats": [
-      "治智10",
-      "治體10",
-      "治譽0"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "cactus",
-    "category_eng": "medicine",
-    "category_zh": "藥品",
-    "image": "Assets/Resources/image/Tool/medicine/cactus.jpg",
-    "name": "噴水的仙人掌",
-    "description": "在一片仙氣之中",
-    "stats": [
-      "治智5",
-      "治體10",
-      "傷譽5"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "duck_bush",
-    "category_eng": "medicine",
-    "category_zh": "藥品",
-    "image": "Assets/Resources/image/Tool/medicine/duck_bush.jpg",
-    "name": "鴨子造型灌木",
-    "description": "公館師大的可愛造景，療癒人心",
-    "stats": [
-      "治智7",
-      "治體0",
-      "治譽0"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "badminton",
-    "category_eng": "medicine",
-    "category_zh": "藥品",
-    "image": "Assets/Resources/image/Tool/medicine/badminton.jpg",
-    "name": "87羽球隊",
-    "description": "第一輪就被刷下來了(拍拍",
-    "stats": [
-      "治智0",
-      "治體0",
-      "治譽3"
     ],
     "is_special": false
   },
@@ -1610,198 +1372,16 @@
     "is_special": false
   },
   {
-    "id": "heyheyhey",
+    "id": "yuehlin_study_english",
     "category_eng": "medicine",
     "category_zh": "藥品",
-    "image": "Assets/Resources/image/Tool/medicine/heyheyhey.png",
-    "name": "喂喂喂",
-    "description": "麥克風測試",
-    "stats": [
-      "治智5",
-      "治體0",
-      "治譽5"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "WaiAo_beach",
-    "category_eng": "medicine",
-    "category_zh": "藥品",
-    "image": "Assets/Resources/image/Tool/medicine/WaiAo_beach.jpg",
-    "name": "外澳海灘",
-    "description": "盛載著美好回憶的地方",
-    "stats": [
-      "治智5",
-      "治體7",
-      "治譽5"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "small_hot_pot",
-    "category_eng": "medicine",
-    "category_zh": "藥品",
-    "image": "Assets/Resources/image/Tool/medicine/small_hot_pot.jpg",
-    "name": "i99小火鍋",
-    "description": "慰勞科普列車的辛勞",
-    "stats": [
-      "治智5",
-      "治體5",
-      "治譽0"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "music_teacher",
-    "category_eng": "medicine",
-    "category_zh": "藥品",
-    "image": "Assets/Resources/image/Tool/medicine/music_teacher.JPEG",
-    "name": "音樂老師",
-    "description": "啊~夏天的夢~",
-    "stats": [
-      "治智3",
-      "治體5",
-      "治譽0"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "good_water",
-    "category_eng": "medicine",
-    "category_zh": "藥品",
-    "image": "Assets/Resources/image/Tool/medicine/good_water.jpg",
-    "name": "OO好水",
-    "description": "鄭醫師推薦的好水",
+    "image": "Assets/Resources/image/Tool/medicine/yuehlin_study_english.jpg",
+    "name": "白菜讀英文",
+    "description": "奇山異水，天下獨絕",
     "stats": [
       "治智1",
-      "治體5",
-      "治譽0"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "farewell_neverland",
-    "category_eng": "medicine",
-    "category_zh": "藥品",
-    "image": "Assets/Resources/image/Tool/medicine/farewell_neverland.jpg",
-    "name": "畢業典禮",
-    "description": "FN肯定是指FortNite",
-    "stats": [
-      "治智0",
-      "治體2",
-      "治譽6"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "guitar_boy",
-    "category_eng": "medicine",
-    "category_zh": "藥品",
-    "image": "Assets/Resources/image/Tool/medicine/guitar_boy.jpg",
-    "name": "吉他男孩",
-    "description": "放鬆身心並被放上匿附",
-    "stats": [
-      "治智3",
-      "治體3",
-      "傷譽1"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "shl_medical",
-    "category_eng": "medicine",
-    "category_zh": "藥品",
-    "image": "Assets/Resources/image/Tool/medicine/shl_medical.png",
-    "name": "自動注射器",
-    "description": "領航全球的藥物輸送解決方案供應商",
-    "stats": [
-      "治智5",
-      "治體5",
-      "治譽5"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "Su_sticker",
-    "category_eng": "medicine",
-    "category_zh": "藥品",
-    "image": "Assets/Resources/image/Tool/medicine/Su_sticker.jpg",
-    "name": "Q版昱全",
-    "description": "別打出我好不好(｡ŏ_ŏ)",
-    "stats": [
-      "治智0",
-      "治體0",
-      "治譽0"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "dance",
-    "category_eng": "medicine",
-    "category_zh": "藥品",
-    "image": "Assets/Resources/image/Tool/medicine/dance.png",
-    "name": "舞王",
-    "description": "aka蘿蔔教の教主",
-    "stats": [
-      "治智0",
-      "治體0",
-      "治譽0"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "watermachine",
-    "category_eng": "medicine",
-    "category_zh": "藥品",
-    "image": "Assets/Resources/image/Tool/medicine/watermachine.png",
-    "name": "抽水機",
-    "description": "整趟旅途似乎只演示一次？",
-    "stats": [
-      "治智0",
-      "治體0",
-      "治譽15"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "expensive_equipment",
-    "category_eng": "strengthen",
-    "category_zh": "增攻",
-    "image": "Assets/Resources/image/Tool/strengthen/expensive_equipment.jpg",
-    "name": "高檔儀器",
-    "description": "好的儀器能輔助實驗進行",
-    "stats": [
-      "增智傷6",
-      "減體傷0",
-      "減譽傷0"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "stamp",
-    "category_eng": "strengthen",
-    "category_zh": "增攻",
-    "image": "Assets/Resources/image/Tool/strengthen/stamp.jpg",
-    "name": "印章",
-    "description": "有科學班背書的底氣",
-    "stats": [
-      "增智傷3",
-      "增體傷3",
-      "增譽傷3"
-    ],
-    "is_special": false
-  },
-  {
-    "id": "test_strengthen",
-    "category_eng": "strengthen",
-    "category_zh": "增攻",
-    "image": "Assets/Resources/image/Tool/strengthen/test_strengthen.png",
-    "name": "力量藥水II",
-    "description": "相傳是源於內測時期的文物",
-    "stats": [
-      "增智傷3",
-      "增體傷3",
-      "增譽傷3"
+      "傷體15",
+      "治譽30"
     ],
     "is_special": false
   },
@@ -1834,6 +1414,20 @@
     "is_special": false
   },
   {
+    "id": "expensive_equipment",
+    "category_eng": "strengthen",
+    "category_zh": "增攻",
+    "image": "Assets/Resources/image/Tool/strengthen/expensive_equipment.jpg",
+    "name": "高檔儀器",
+    "description": "好的儀器能輔助實驗進行",
+    "stats": [
+      "增智傷6",
+      "減體傷0",
+      "減譽傷0"
+    ],
+    "is_special": false
+  },
+  {
     "id": "spring_like",
     "category_eng": "strengthen",
     "category_zh": "增攻",
@@ -1846,6 +1440,54 @@
       "增譽傷3"
     ],
     "is_special": false
+  },
+  {
+    "id": "stamp",
+    "category_eng": "strengthen",
+    "category_zh": "增攻",
+    "image": "Assets/Resources/image/Tool/strengthen/stamp.jpg",
+    "name": "印章",
+    "description": "有科學班背書的底氣",
+    "stats": [
+      "增智傷3",
+      "增體傷3",
+      "增譽傷3"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "test_strengthen",
+    "category_eng": "strengthen",
+    "category_zh": "增攻",
+    "image": "Assets/Resources/image/Tool/strengthen/test_strengthen.png",
+    "name": "力量藥水II",
+    "description": "相傳是源於內測時期的文物",
+    "stats": [
+      "增智傷3",
+      "增體傷3",
+      "增譽傷3"
+    ],
+    "is_special": false
+  },
+  {
+    "id": "all_in_vain",
+    "category_eng": "special",
+    "category_zh": "特殊",
+    "image": "Assets/Resources/image/Tool/special/all_in_vain.jpg",
+    "name": "All in Vain",
+    "description": "王霸雄圖，血海深恨，盡歸塵土",
+    "effect": "使所有卡牌無效化",
+    "is_special": true
+  },
+  {
+    "id": "carbon",
+    "category_eng": "special",
+    "category_zh": "特殊",
+    "image": "Assets/Resources/image/Tool/special/carbon.jpg",
+    "name": "卡蹦",
+    "description": "手機暴走了",
+    "effect": "召喚老師",
+    "is_special": true
   },
   {
     "id": "femboy1",
@@ -1868,46 +1510,6 @@
     "is_special": true
   },
   {
-    "id": "self_defense",
-    "category_eng": "special",
-    "category_zh": "特殊",
-    "image": "Assets/Resources/image/Tool/special/self_defense.png",
-    "name": "防身術",
-    "description": "不要碰我！",
-    "effect": "null",
-    "is_special": true
-  },
-  {
-    "id": "XIXSkill",
-    "category_eng": "special",
-    "category_zh": "特殊",
-    "image": "Assets/Resources/image/Tool/special/XIXSkill.png",
-    "name": "經濟實惠",
-    "description": "：你確定「經濟」是同義嗎",
-    "effect": "重新計算數值",
-    "is_special": true
-  },
-  {
-    "id": "zhenverse_broom",
-    "category_eng": "special",
-    "category_zh": "特殊",
-    "image": "Assets/Resources/image/Tool/special/zhenverse_broom.png",
-    "name": "冠宇的掃帚",
-    "description": "花徑不曾緣客掃，蓬門今始為君開",
-    "effect": "掃掉三張卡牌",
-    "is_special": true
-  },
-  {
-    "id": "test_special",
-    "category_eng": "special",
-    "category_zh": "特殊",
-    "image": "Assets/Resources/image/Tool/special/test_special.jpg",
-    "name": "紅姐",
-    "description": "相傳是源於內測時期的文物",
-    "effect": "擺好看的，沒有任何效果",
-    "is_special": true
-  },
-  {
     "id": "mate",
     "category_eng": "special",
     "category_zh": "特殊",
@@ -1915,76 +1517,6 @@
     "name": "締結契約",
     "description": "金屋妝成嬌侍夜，玉樓宴罷醉和春",
     "effect": "將自身數值調整為與對象相同",
-    "is_special": true
-  },
-  {
-    "id": "king",
-    "category_eng": "special",
-    "category_zh": "特殊",
-    "image": "Assets/Resources/image/Tool/special/king.jpg",
-    "name": "化學平衡",
-    "description": "吾心吾行，皆乃神意",
-    "effect": "平衡兩人數值",
-    "is_special": true
-  },
-  {
-    "id": "all_in_vain",
-    "category_eng": "special",
-    "category_zh": "特殊",
-    "image": "Assets/Resources/image/Tool/special/all_in_vain.jpg",
-    "name": "All in Vain",
-    "description": "王霸雄圖，血海深恨，盡歸塵土",
-    "effect": "使所有卡牌無效化",
-    "is_special": true
-  },
-  {
-    "id": "confiscate_smartphone_ipad",
-    "category_eng": "special",
-    "category_zh": "特殊",
-    "image": "Assets/Resources/image/Tool/special/confiscate_smartphone_ipad.png",
-    "name": "沒收手機平板",
-    "description": "手機平板交上來",
-    "effect": "沒收某類別的卡牌",
-    "is_special": true
-  },
-  {
-    "id": "diplomacy",
-    "category_eng": "special",
-    "category_zh": "特殊",
-    "image": "Assets/Resources/image/Tool/special/diplomacy.png",
-    "name": "外交",
-    "description": "若遂不改，方思僕言",
-    "effect": "將自身數值調整為雙方最大值",
-    "is_special": true
-  },
-  {
-    "id": "science_train",
-    "category_eng": "special",
-    "category_zh": "特殊",
-    "image": "Assets/Resources/image/Tool/special/science_train.jpg",
-    "name": "科普列車",
-    "description": "再不能回的美好時光",
-    "effect": "清除所有狀態",
-    "is_special": true
-  },
-  {
-    "id": "nameless_doll",
-    "category_eng": "special",
-    "category_zh": "特殊",
-    "image": "Assets/Resources/image/Tool/special/nameless_doll.jpg",
-    "name": "無名布偶",
-    "description": "作者妹妹吵著要加的卡",
-    "effect": "隨時會爆發的小怪物",
-    "is_special": true
-  },
-  {
-    "id": "carbon",
-    "category_eng": "special",
-    "category_zh": "特殊",
-    "image": "Assets/Resources/image/Tool/special/carbon.jpg",
-    "name": "卡蹦",
-    "description": "手機暴走了",
-    "effect": "召喚老師",
     "is_special": true
   },
   {
@@ -1998,13 +1530,23 @@
     "is_special": true
   },
   {
-    "id": "test_reflect",
+    "id": "nameless_doll",
     "category_eng": "special",
     "category_zh": "特殊",
-    "image": "Assets/Resources/image/Tool/special/test_reflect.png",
-    "name": "死亡筆記本",
-    "description": "相傳是源於內測時期的文物",
-    "effect": "反彈傷害",
+    "image": "Assets/Resources/image/Tool/special/nameless_doll.jpg",
+    "name": "無名布偶",
+    "description": "作者妹妹吵著要加的卡",
+    "effect": "隨時會爆發的小怪物",
+    "is_special": true
+  },
+  {
+    "id": "science_train",
+    "category_eng": "special",
+    "category_zh": "特殊",
+    "image": "Assets/Resources/image/Tool/special/science_train.jpg",
+    "name": "科普列車",
+    "description": "再不能回的美好時光",
+    "effect": "清除所有狀態",
     "is_special": true
   },
   {
@@ -2015,6 +1557,36 @@
     "name": "沉睡",
     "description": "睡去依依隨雁斷，驚迴故故惱蛩鳴",
     "effect": "使人沉睡2回合",
+    "is_special": true
+  },
+  {
+    "id": "test_reflect",
+    "category_eng": "special",
+    "category_zh": "特殊",
+    "image": "Assets/Resources/image/Tool/special/test_reflect.png",
+    "name": "死亡筆記本",
+    "description": "相傳是源於內測時期的文物",
+    "effect": "反彈傷害",
+    "is_special": true
+  },
+  {
+    "id": "test_special",
+    "category_eng": "special",
+    "category_zh": "特殊",
+    "image": "Assets/Resources/image/Tool/special/test_special.jpg",
+    "name": "紅姐",
+    "description": "相傳是源於內測時期的文物",
+    "effect": "擺好看的，沒有任何效果",
+    "is_special": true
+  },
+  {
+    "id": "zhenverse_broom",
+    "category_eng": "special",
+    "category_zh": "特殊",
+    "image": "Assets/Resources/image/Tool/special/zhenverse_broom.png",
+    "name": "冠宇的掃帚",
+    "description": "花徑不曾緣客掃，蓬門今始為君開",
+    "effect": "掃掉三張卡牌",
     "is_special": true
   }
 ]
