@@ -309,7 +309,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         displaytime = false;
     }
     [PunRPC]
-    void Go()
+    async Task Go()
     {
         if (over || !pickable) return;
 
@@ -321,27 +321,30 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
 
             if (rand.NextDouble() <= 0.5f)
             {
-                photonView.RPC("Announcement", RpcTarget.All, " 噢！"+ PhotonNetwork.LocalPlayer.NickName + "回來了！", 1500);
+                photonView.RPC("Announcement", RpcTarget.All, " 噢！"+ PhotonNetwork.LocalPlayer.NickName + "回來了！", 2000);
                 photonView.RPC("RemoveEffect", RpcTarget.All, me, "disappear");
+                await Task.Delay(2000);
             }
             else
             {
-                photonView.RPC("Announcement", RpcTarget.All, "不行，聯絡不上"+PhotonNetwork.LocalPlayer.NickName + "...", 1500);
+                photonView.RPC("Announcement", RpcTarget.All, "不行，聯絡不上"+PhotonNetwork.LocalPlayer.NickName + "...", 2000);
                 UpdatePlayerProperties(3, 3, 3);
                 status = 0;
                 player.endRound();
-                Task.Delay(1500).ContinueWith(t => isGameEnded((me + 1) % total));
+                await Task.Delay(2000);
+                isGameEnded((me + 1) % total);
                 if (PlayerPanels != null) photonView.RPC("UpdateEffect", RpcTarget.All, me);
                 return;
             }
         }
         if (myPanel.isExist("sleep")) 
         {
-            photonView.RPC("Announcement", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName + " 睡死了...", 1500);
+            photonView.RPC("Announcement", RpcTarget.All, PhotonNetwork.LocalPlayer.NickName + " 睡死了...", 2000);
             UpdatePlayerProperties(-1, 0, -1);
             status = 0;
             player.endRound();
-            Task.Delay(1500).ContinueWith(t => isGameEnded((me + 1) % total));
+            await Task.Delay(2000);
+            isGameEnded((me + 1) % total);
             if (PlayerPanels != null) photonView.RPC("UpdateEffect", RpcTarget.All, me);
             return;
         }
@@ -1093,7 +1096,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                                 sb.Append(LocalPlayerList[me].NickName + "再次行動");
                                 photonView.RPC("Announcement", RpcTarget.All, sb.ToString(), 2500);
                                 await Task.Delay(2500);
-                                photonView.RPC("Go", LocalPlayerList[me]);
+                                isGameEnded(me);
                             }
                             else
                             {
@@ -1141,7 +1144,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                             sb.Append(LocalPlayerList[me].NickName + "再次行動");
                             photonView.RPC("Announcement", RpcTarget.All, sb.ToString(), 2500);
                             await endRoundEffectHandler(PlayerPanels, me, 2000);
-                            photonView.RPC("Go", LocalPlayerList[me]);
+                            isGameEnded(me);
                         }
                         else
                         {
