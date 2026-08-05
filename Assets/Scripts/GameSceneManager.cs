@@ -266,7 +266,8 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void PutEffect(int n, int last, string f)
     {
-        PlayerPanels[n].GetComponent<PlayerPanelController>().AddEffect(f, last, true);
+        if(!player.p.checkImmune(f))
+            PlayerPanels[n].GetComponent<PlayerPanelController>().AddEffect(f, last, true);
     }
     [PunRPC]
     void UpdateEffect(int n)

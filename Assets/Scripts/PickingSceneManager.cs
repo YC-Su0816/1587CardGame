@@ -74,7 +74,7 @@ public class PickingSceneManager : MonoBehaviourPunCallbacks
                 for (int i = 0; i <= 2; i++)
                 {
                     float rnd = (float)rand.NextDouble();
-                    //if(times == 0) rnd = 0.22f;
+                    if(times == 0) rnd =0.01f;
                     sb.Append(card[(int)(rnd * (30 - 3 * times - i))].ToString() + ' ');
                     card.RemoveAt((int)(rnd * (30 - 3 * times - i)));
                 }
