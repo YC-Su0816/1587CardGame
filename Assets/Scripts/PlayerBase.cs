@@ -112,6 +112,12 @@ public abstract class PlayerBase
         inf[2] = "主動 " + inf[5] + "\n" + inf[6];
         return inf;
     }
+
+    public virtual void initializeEffect()
+    {
+        
+    }
+
     // Update is called once per frame
     void Update()
     {

@@ -19,7 +19,7 @@ public class PXVII : PlayerBase
         {
             manager.PlayerPanels[manager.me].GetComponent<PlayerPanelController>().AddEffect("disappear", -1, true);
         }
-        _ = BroadcastDisappearAsync();
+        //_ = BroadcastDisappearAsync();
     }
 
     private async Task BroadcastDisappearAsync()
@@ -36,6 +36,12 @@ public class PXVII : PlayerBase
         //     manager.photonView.RPC("PutEffect", RpcTarget.All, manager.me, -1, "disappear");
         //     isInitUI = true;
         // }
+    }
+    public override void initializeEffect()
+    {
+        
+        manager.photonView.RPC("PutEffect", RpcTarget.All, manager.me, -1, "disappear");
+        //     isInitUI = true;
     }
 
     // 主動技能：吊嘎男

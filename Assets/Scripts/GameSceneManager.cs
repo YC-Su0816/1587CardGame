@@ -149,6 +149,11 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         }
     }
     [PunRPC]
+    void InitializeEffect()
+    {
+        player.initializeEffect();
+    }
+    [PunRPC]
     void EndGame(string winner = "")
     {
         StaticData.winnerName = winner;
@@ -311,6 +316,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     [PunRPC]
     async Task Go()
     {
+        await Task.Delay(400);
         if (over || !pickable) return;
 
         // 【新增攔截邏輯】：檢查自己當前有沒有被限制行動的效果
@@ -1237,7 +1243,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         EnqueueLocalAnnouncement(content, time);
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    async Task Start()
     {
         if (PhotonNetwork.IsConnected == false)
         {
@@ -1362,8 +1368,13 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 }
                 photonView.RPC("PlayerList", RpcTarget.All, kvp.Value);
             }
-
+            //photonView.RPC("Announcement", RpcTarget.All, "正在初始化遊戲", 1000);
+            await Task.Delay(1000);
             // 【修正】：不要用 LocalPlayerList[0]，直接傳入剛剛抓到的 firstPlayer！
+            photonView.RPC("InitializeEffect", RpcTarget.All);
+            
+            PhotonNetwork.SendAllOutgoingCommands();
+
             photonView.RPC("Go", firstPlayer);
         }
 
