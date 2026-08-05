@@ -36,7 +36,14 @@ public class PXVIII : PlayerBase
     {
         for (int i = 0; i < 3; i++)
         {
-            defendAdd[i] = -2; // 防禦值常駐減少2
+            if (currentBaseDefends[i] >= 2)
+            {
+                defendAdd[i] = -2;
+            }
+            else
+            {
+                defendAdd[i] = 0;
+            }
         }
     }
 

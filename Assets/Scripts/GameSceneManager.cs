@@ -1948,6 +1948,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             }
             else
             {
+                player.p.currentBaseDefends = Defends;
                 player.p.updateDefend();
                 for (int i = 0; i < 3; ++i)
                 {
