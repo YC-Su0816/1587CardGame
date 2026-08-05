@@ -1055,15 +1055,18 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     await Task.Delay(1600);
                     PhotonNetwork.SendAllOutgoingCommands();
                     photonView.RPC("GetCard", RpcTarget.All, "special", "self_defense");
-                    photonView.RPC("StartReflection", RpcTarget.All, targetnum, me, Calculator(daW, 0.27f), Calculator(daS, 0.27f), Calculator(daR, 0.27f), multi, false, false);
+                    photonView.RPC("StartReflection", RpcTarget.All, defIdx, attIdx, Calculator(daW, 0.37f), Calculator(daS, 0.37f), Calculator(daR, 0.37f), multi, false, false);
                     PhotonNetwork.SendAllOutgoingCommands();
                     return;
                     //UpdatePlayerProperties(Calculator(toW, 0.27f), Calculator(toS, 0.27f), Calculator(toR, 0.27f));
                 }
                 else if(defCharacter == "13")
                 {
-                    System.Random syncRand = new System.Random(FromAndTo[0].ActorNumber + FromAndTo[1].ActorNumber + w + s + r);
-                    if (syncRand.NextDouble() <= 0.25f) is13Reflecting = true;
+                    int seed = FromAndTo[0].ActorNumber * 100 + FromAndTo[1].ActorNumber * 10 + w + s + r + daW + daS + daR + DisplayType.Count;
+                    System.Random syncRand = new System.Random(seed);
+                    
+                    if (syncRand.NextDouble() <= 0.45f) is13Reflecting = true;
+                    
                     if (is13Reflecting)
                     {
                         EnqueueLocalAnnouncement("對上眼了！", 2000);
@@ -1072,11 +1075,12 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                         {
                             photonView.RPC("Cleaning", RpcTarget.All);
                             photonView.RPC("GetCard", RpcTarget.All, "attack", "boxing");
-                            photonView.RPC("StartReflection", RpcTarget.All, targetnum, me, Calculator(daW, 0.27f), Calculator(daS, 0.27f), Calculator(daR, 0.27f), multi, true, false);
+                            
+                            photonView.RPC("StartReflection", RpcTarget.All, defIdx, attIdx, daW, daS, daR, multi, true, false);
 
                             PhotonNetwork.SendAllOutgoingCommands();
                         }
-                        return; // 成功打出新攻擊卡，直接中斷本次結算，讓狀態機進入下一輪
+                        return;
                     }
                 }
                 
