@@ -318,21 +318,23 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void CleaningMulti()
     {
-        for (int j = 1; j < DisplayInRally.Count; j++)
+        for (int j = 0; j < DisplayInRally.Count; j++)
         {
             DisplayInRally[j].GetComponent<ToolDisplayController>().kill();
-            DisplayInRally.RemoveAt(DisplayInRally.Count - 1);
-            DisplayType.Clear();
-            DisplayFace.Clear();
         }
+        DisplayInRally.Clear();
+        DisplayType.Clear();
+        DisplayFace.Clear();
         //Theoretically
     }
 
     [PunRPC]
     async Task Go()
     {
-        await Task.Delay(400);
-        if (over || !pickable) return;
+        if (over || !pickable)
+        {
+            isGameEnded((me + 1) % total);
+        }
 
         // 【新增攔截邏輯】：檢查自己當前有沒有被限制行動的效果
         PlayerPanelController myPanel = PlayerPanels[me].GetComponent<PlayerPanelController>();
@@ -595,7 +597,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 return;
             }
             status = 2;
-            PD = true;
+            PD = false;
             canPlayDefense = true;
             canPlaySpecial = false;
 
@@ -1183,7 +1185,9 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 else
                 {
                     // 繼續傳遞群攻
-                    photonView.RPC("CleaningMulti", RpcTarget.All);
+                    string typeMemo = DisplayType[0];
+                    string faceMemo = DisplayFace[0];
+                    
 
                     int nextVictim = (defIdx + 1) % total;
                     
@@ -1196,13 +1200,43 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     if (nextVictim == attIdx)
                     {
                         status = 0;
-                        player.endRound();
-                        await endRoundEffectHandler(PlayerPanels, me, 2000);
-                        if (PlayerPanels != null) photonView.RPC("UpdateEffect", RpcTarget.All, me);
-                        isGameEnded((me + 1) % total);
+                        multi = false;
+                        photonView.RPC("Cleaning", RpcTarget.All);
+                        if (character == "7")
+                        {
+                            double p = rand.NextDouble();
+                            if (p < 0.2)
+                            {
+                                StringBuilder sb = new StringBuilder();
+                                sb.AppendLine("不特別針對誰");
+                                sb.AppendLine("但你們的專題");
+                                sb.AppendLine("配不上稱為研究");
+                                sb.Append(LocalPlayerList[me].NickName + "再次行動");
+                                photonView.RPC("Announcement", RpcTarget.All, sb.ToString(), 2500);
+                                await endRoundEffectHandler(PlayerPanels, me, 2000);
+                                isGameEnded(me);
+                            }
+                            else
+                            {
+                                player.endRound();
+                                await endRoundEffectHandler(PlayerPanels, me, 2000);
+                                if (PlayerPanels != null) photonView.RPC("UpdateEffect", RpcTarget.All, me);
+                                isGameEnded((me + 1) % total);
+                            }
+                        }
+                        else
+                        {
+                            player.endRound();
+                            await endRoundEffectHandler(PlayerPanels, me, 2000);
+                            if (PlayerPanels != null) photonView.RPC("UpdateEffect", RpcTarget.All, me);
+                            isGameEnded((me + 1) % total);
+                        }
                     }
                     else
                     {
+                        photonView.RPC("CleaningMulti", RpcTarget.All);
+                        photonView.RPC("GetCard", RpcTarget.All, typeMemo, faceMemo);
+                        PhotonNetwork.SendAllOutgoingCommands();
                         status = 0;
                         photonView.RPC("SetFromTo", RpcTarget.All, me, nextVictim);
                         PhotonNetwork.SendAllOutgoingCommands();
