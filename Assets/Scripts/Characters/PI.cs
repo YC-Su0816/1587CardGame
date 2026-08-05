@@ -40,6 +40,7 @@ public class PI : PlayerBase
         // 3. 抽三張卡
         for (int i = 0; i < 3; i++)
         {
+            System.Random rand = new System.Random(Guid.NewGuid().GetHashCode());
             double rnd = rand.NextDouble();
             PickACard(rnd);
         }
