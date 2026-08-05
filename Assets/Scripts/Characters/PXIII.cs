@@ -34,11 +34,12 @@ public class PXIII : PlayerBase
         StringBuilder sb = new StringBuilder();
         sb.AppendLine("(精湛的舞姿)");
         sb.Append(handle.nickname + " 使用了技能！");
+        manager.photonView.RPC("Announcement", RpcTarget.All, sb.ToString(), 2000);
         int[] mine = new int[3];
         mine[0] = (int)manager.LocalPlayerList[manager.me].CustomProperties["Wisdom"];
         mine[1] = (int)manager.LocalPlayerList[manager.me].CustomProperties["Strength"];
         mine[2] = (int)manager.LocalPlayerList[manager.me].CustomProperties["Reputation"];
-        int lowest = 100;
+        int lowest = int.MaxValue;
         int index = 0;
         for (int i = 0; i < 3; ++i)
         {
@@ -66,9 +67,9 @@ public class PXIII : PlayerBase
                 mine[2] = (int)((manager.maxR - mine[2]) * 0.8f);
                 break;
         }
-        handle.View.RPC("SetFromTo", RpcTarget.All, manager.me, manager.me);
-        handle.View.RPC("GetCard", RpcTarget.All, "medicine", "dance");
-        handle.View.RPC("Played", RpcTarget.All, mine[0], mine[1], mine[2]);
+        manager.photonView.RPC("SetFromTo", RpcTarget.All, manager.me, manager.me);
+        manager.photonView.RPC("GetCard", RpcTarget.All, "medicine", "dance");
+        manager.photonView.RPC("Played", RpcTarget.All, mine[0], mine[1], mine[2]);
         PhotonNetwork.SendAllOutgoingCommands();
     }
     public override void updateAttack()
