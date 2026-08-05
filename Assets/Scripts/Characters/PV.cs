@@ -42,7 +42,15 @@ public class PV : PlayerBase
         handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 2000);
         if (manager.targetnum == -1)
         {
-            manager.targetnum = (manager.me + 1) % manager.total;
+            int targetIdx = (manager.me + 1) % manager.total;
+            while (!manager.isAlive[targetIdx] || 
+                    manager.PlayerPanels[targetIdx].GetComponent<PlayerPanelController>().isExist("disappear") || 
+                    manager.PlayerPanels[targetIdx].GetComponent<PlayerPanelController>().isExist("sleep"))
+            {
+                targetIdx = (targetIdx + 1) % manager.total;
+                if (targetIdx == manager.me) break;
+            }
+            manager.targetnum = targetIdx;
         }
         int[] mine = new int[3];
         int[] yours = new int[3];

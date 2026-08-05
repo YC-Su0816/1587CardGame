@@ -50,7 +50,7 @@ public class PVIII : PlayerBase
         List<string> typeList = new List<string>();
         for(int i = 0; i < manager.total; ++i)
         {
-            if (i != manager.me && manager.isPickable[i])
+            if (i != manager.me && manager.isAlive[i])
             {
                 nameList.Add(manager.LocalPlayerList[i].NickName);
             }
@@ -102,7 +102,8 @@ public class PVIII : PlayerBase
     }
     public override void newRound()
     {
-
+        guessPlayer = null;
+        guessType = null;
     }
     public override void endRound()
     {

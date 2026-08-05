@@ -37,13 +37,28 @@ public class PXV : PlayerBase
         }
 
         GameObject controlBoard = GameObject.Instantiate(skillPrefab, uiParent);
+
+        RectTransform rectTransform = controlBoard.GetComponent<RectTransform>();
+        if (rectTransform != null)
+        {
+            // 1. 重置 Anchor 與 Pivot 到中心點 (0.5, 0.5)
+            rectTransform.anchorMin = new Vector2(0.5f, 0.5f);
+            rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
+            rectTransform.pivot = new Vector2(0.5f, 0.5f);
+
+            // 2. 歸零座標與旋轉，並確保縮放為 1
+            rectTransform.anchoredPosition = Vector2.zero;
+            rectTransform.localRotation = Quaternion.identity;
+            rectTransform.localScale = Vector3.one;
+        }
+
         PXVSkill mono = controlBoard.GetComponent<PXVSkill>();
         List<string> nameList = new List<string>();
 
         for (int i = 0; i < manager.total; ++i)
         {
             // 2. 防錯與防呆：確保玩家存在，且把「自己」從替死鬼名單中排除
-            if (manager.isPickable[i] && manager.LocalPlayerList[i] != null && manager.LocalPlayerList[i] != PhotonNetwork.LocalPlayer)
+            if (manager.isAlive[i] && manager.LocalPlayerList[i] != null && i != manager.me && !manager.PlayerPanels[i].GetComponent<PlayerPanelController>().isExist("disappear") && !manager.PlayerPanels[i].GetComponent<PlayerPanelController>().isExist("sleep"))
             {
                 nameList.Add(manager.LocalPlayerList[i].NickName);
             }
@@ -72,7 +87,7 @@ public class PXV : PlayerBase
         StringBuilder sb = new StringBuilder();
         sb.AppendLine("這點事交給其他人辦就好了。");
         sb.Append(handle.nickname + " 發動了社交蝴蝶，轉移了目標！");
-        handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 2000);
+        manager.photonView.RPC("Announcement", RpcTarget.All, sb.ToString(), 2000);
 
         // --- 核心轉移邏輯 ---
 
