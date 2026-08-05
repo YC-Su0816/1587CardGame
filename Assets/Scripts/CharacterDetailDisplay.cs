@@ -32,7 +32,7 @@ public class CharacterDetailDisplay : MonoBehaviour
     public void set(string face, GameSceneManager m)
     {
         img.sprite = Resources.Load<Sprite>("image/CCard/" + face);
-        string[] inf = m.player.characterDetailHelper();
+        string[] inf = m.player.characterDetailHelper(face);
         properties.text = inf[0];
         passive.text = inf[1];
         active.text = inf[2];
