@@ -1091,47 +1091,40 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         }
 
         // === 殘局處理與回合交棒 ===
-        if (PhotonNetwork.LocalPlayer == FromAndTo[0]) // 原則上由發起攻擊的人負責清空與交棒
+        if (isResolvingVirtualCard)
         {
-            if (isResolvingVirtualCard)
+            if (PhotonNetwork.LocalPlayer == FromAndTo[0])
             {
                 photonView.RPC("Cleaning", RpcTarget.All);
                 status = 0;
                 isResolvingVirtualCard = false;
                 return; // don't 交棒！！！
             }
-            if (wasReflect)
+        }
+        else if (wasReflect)
+        {
+            // 反彈殘局：交棒邏輯由反彈起點 (reflectMemoPlayer) 獨立接管
+            if (PhotonNetwork.LocalPlayer == reflectMemoPlayer)
             {
-                // 反彈殘局：交棒邏輯由反彈起點 (reflectMemoPlayer) 接管
-                if (PhotonNetwork.LocalPlayer == reflectMemoPlayer)
+                if (!multi || reflectMemoNext == me)
                 {
-                    if (!multi || reflectMemoNext == me)
+                    // 單體反彈結束，或群攻反彈繞完一圈回到自己：清空場地，交棒下家
+                    photonView.RPC("Cleaning", RpcTarget.All);
+                    status = 0;
+                    
+                    if(character == "7")
                     {
-                        // 單體反彈結束，或群攻反彈繞完一圈回到自己：清空場地，交棒下家
-                        photonView.RPC("Cleaning", RpcTarget.All);
-                        status = 0;
-                        
-                        if(character == "7")
+                        double p = rand.NextDouble();
+                        if(p < 0.2)
                         {
-                            double p = rand.NextDouble();
-                            if(p < 0.2)
-                            {
-                                StringBuilder sb = new StringBuilder(); 
-                                sb.AppendLine("不特別針對誰");
-                                sb.AppendLine("但你們的專題");
-                                sb.AppendLine("配不上稱為研究");
-                                sb.Append(LocalPlayerList[me].NickName + "再次行動");
-                                photonView.RPC("Announcement", RpcTarget.All, sb.ToString(), 2500);
-                                await Task.Delay(2500);
-                                isGameEnded(me);
-                            }
-                            else
-                            {
-                                player.endRound();
-                                await endRoundEffectHandler(PlayerPanels, me, 2000);
-                                if (PlayerPanels != null) photonView.RPC("UpdateEffect", RpcTarget.All, me);
-                                isGameEnded((me + 1) % total);
-                            }
+                            StringBuilder sb = new StringBuilder(); 
+                            sb.AppendLine("不特別針對誰");
+                            sb.AppendLine("但你們的專題");
+                            sb.AppendLine("配不上稱為研究");
+                            sb.Append(LocalPlayerList[me].NickName + "再次行動");
+                            photonView.RPC("Announcement", RpcTarget.All, sb.ToString(), 2500);
+                            await Task.Delay(2500); // 注意這裡要用 await Task.Delay
+                            isGameEnded(me);
                         }
                         else
                         {
@@ -1143,22 +1136,79 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     }
                     else
                     {
-                        // 群攻尚未結束，繼續傳給下一個排隊的人
-                        photonView.RPC("Cleaning", RpcTarget.All);
-                        status = 0;
-                        photonView.RPC("SetFromTo", RpcTarget.All, me, reflectMemoNext);
-                        PhotonNetwork.SendAllOutgoingCommands();
-                        photonView.RPC("Multi", RpcTarget.All, daW, daS, daR);
+                        player.endRound();
+                        await endRoundEffectHandler(PlayerPanels, me, 2000);
+                        if (PlayerPanels != null) photonView.RPC("UpdateEffect", RpcTarget.All, me);
+                        isGameEnded((me + 1) % total);
                     }
+                }
+                else
+                {
+                    // 群攻尚未結束，繼續傳給下一個排隊的人
+                    photonView.RPC("Cleaning", RpcTarget.All);
+                    status = 0;
+                    photonView.RPC("SetFromTo", RpcTarget.All, me, reflectMemoNext);
+                    PhotonNetwork.SendAllOutgoingCommands();
+                    photonView.RPC("Multi", RpcTarget.All, daW, daS, daR);
+                }
+            }
+        }
+        else if (PhotonNetwork.LocalPlayer == FromAndTo[0]) 
+        {
+            // 一般攻擊殘局
+            if (!multi)
+            {
+                photonView.RPC("Cleaning", RpcTarget.All);
+                status = 0;
+                if (character == "7")
+                {
+                    double p = rand.NextDouble();
+                    if (p < 0.2)
+                    {
+                        StringBuilder sb = new StringBuilder();
+                        sb.AppendLine("不特別針對誰");
+                        sb.AppendLine("但你們的專題");
+                        sb.AppendLine("配不上稱為研究");
+                        sb.Append(LocalPlayerList[me].NickName + "再次行動");
+                        photonView.RPC("Announcement", RpcTarget.All, sb.ToString(), 2500);
+                        await endRoundEffectHandler(PlayerPanels, me, 2000);
+                        isGameEnded(me);
+                    }
+                    else
+                    {
+                        player.endRound();
+                        await endRoundEffectHandler(PlayerPanels, me, 2000);
+                        if (PlayerPanels != null) photonView.RPC("UpdateEffect", RpcTarget.All, me);
+                        isGameEnded((me + 1) % total);
+                    }
+                }
+                else
+                {
+                    player.endRound();
+                    await endRoundEffectHandler(PlayerPanels, me, 2000);
+                    if (PlayerPanels != null) photonView.RPC("UpdateEffect", RpcTarget.All, me);
+                    isGameEnded((me + 1) % total);
                 }
             }
             else
             {
-                // 一般攻擊殘局
-                if (!multi)
+                // 繼續傳遞群攻
+                string typeMemo = DisplayType[0];
+                string faceMemo = DisplayFace[0];
+
+                int nextVictim = (defIdx + 1) % total;
+                
+                while (!isAlive[nextVictim] || PlayerPanels[nextVictim].GetComponent<PlayerPanelController>().isExist("disappear") || PlayerPanels[nextVictim].GetComponent<PlayerPanelController>().isExist("sleep"))
                 {
-                    photonView.RPC("Cleaning", RpcTarget.All);
+                    nextVictim = (nextVictim + 1) % total;
+                    if (nextVictim == attIdx) break;
+                }
+
+                if (nextVictim == attIdx)
+                {
                     status = 0;
+                    multi = false;
+                    photonView.RPC("Cleaning", RpcTarget.All);
                     if (character == "7")
                     {
                         double p = rand.NextDouble();
@@ -1191,68 +1241,18 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 }
                 else
                 {
-                    // 繼續傳遞群攻
-                    string typeMemo = DisplayType[0];
-                    string faceMemo = DisplayFace[0];
-                    
-
-                    int nextVictim = (defIdx + 1) % total;
-                    
-                    while (!isAlive[nextVictim] || PlayerPanels[nextVictim].GetComponent<PlayerPanelController>().isExist("disappear") || PlayerPanels[nextVictim].GetComponent<PlayerPanelController>().isExist("sleep"))
-                    {
-                        nextVictim = (nextVictim + 1) % total;
-                        if (nextVictim == attIdx) break;
-                    }
-
-                    if (nextVictim == attIdx)
-                    {
-                        status = 0;
-                        multi = false;
-                        photonView.RPC("Cleaning", RpcTarget.All);
-                        if (character == "7")
-                        {
-                            double p = rand.NextDouble();
-                            if (p < 0.2)
-                            {
-                                StringBuilder sb = new StringBuilder();
-                                sb.AppendLine("不特別針對誰");
-                                sb.AppendLine("但你們的專題");
-                                sb.AppendLine("配不上稱為研究");
-                                sb.Append(LocalPlayerList[me].NickName + "再次行動");
-                                photonView.RPC("Announcement", RpcTarget.All, sb.ToString(), 2500);
-                                await endRoundEffectHandler(PlayerPanels, me, 2000);
-                                isGameEnded(me);
-                            }
-                            else
-                            {
-                                player.endRound();
-                                await endRoundEffectHandler(PlayerPanels, me, 2000);
-                                if (PlayerPanels != null) photonView.RPC("UpdateEffect", RpcTarget.All, me);
-                                isGameEnded((me + 1) % total);
-                            }
-                        }
-                        else
-                        {
-                            player.endRound();
-                            await endRoundEffectHandler(PlayerPanels, me, 2000);
-                            if (PlayerPanels != null) photonView.RPC("UpdateEffect", RpcTarget.All, me);
-                            isGameEnded((me + 1) % total);
-                        }
-                    }
-                    else
-                    {
-                        photonView.RPC("CleaningMulti", RpcTarget.All);
-                        photonView.RPC("GetCard", RpcTarget.All, typeMemo, faceMemo);
-                        PhotonNetwork.SendAllOutgoingCommands();
-                        status = 0;
-                        photonView.RPC("SetFromTo", RpcTarget.All, me, nextVictim);
-                        PhotonNetwork.SendAllOutgoingCommands();
-                        photonView.RPC("Multi", RpcTarget.All, daW, daS, daR);
-                    }
+                    photonView.RPC("CleaningMulti", RpcTarget.All);
+                    photonView.RPC("GetCard", RpcTarget.All, typeMemo, faceMemo);
+                    PhotonNetwork.SendAllOutgoingCommands();
+                    status = 0;
+                    photonView.RPC("SetFromTo", RpcTarget.All, me, nextVictim);
+                    PhotonNetwork.SendAllOutgoingCommands();
+                    photonView.RPC("Multi", RpcTarget.All, daW, daS, daR);
                 }
             }
         }
-        // 清空本地陣列防呆
+        
+        // 清空本地陣列防呆 (必須確保所有客戶端都能執行到這裡)
         DisplayFace.Clear();
         DisplayType.Clear();
         multi = false;
