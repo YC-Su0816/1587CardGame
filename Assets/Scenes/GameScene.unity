@@ -277,7 +277,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   VIIIskillPrefab: {fileID: 6414015220957479414, guid: 45cb00020d901744190db6856138cd29, type: 3}
-  XVskillPrefab: {fileID: 0}
+  XVskillPrefab: {fileID: 4410716000973287935, guid: c807a4bda87e55849a22bf0169fbc03a, type: 3}
   manager: {fileID: 181892502}
   nickname: 
   character: 
