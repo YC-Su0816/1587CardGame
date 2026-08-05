@@ -22,6 +22,7 @@ public class PXXV : PlayerBase
     // 主動技能：托球與扣球
     public override void useSkill()
     {
+        manager.status = 0;
         System.Random rand = new System.Random(Guid.NewGuid().GetHashCode());
         StringBuilder sb = new StringBuilder();
 
@@ -33,13 +34,10 @@ public class PXXV : PlayerBase
             // ==========================================
             sb.AppendLine("精準的托球！");
             sb.Append(handle.nickname + " 恢復了所有屬性！");
-            handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 2000);
-
-            handle.View.RPC("SetFromTo", RpcTarget.All, manager.me, manager.me);
-            handle.View.RPC("GetCard", RpcTarget.All, "medicine", "set");
-
-            // 傳入正數 (5, 5, 5) 代表補血
-            handle.View.RPC("Played", RpcTarget.All, 5, 5, 5);
+            manager.photonView.RPC("Announcement", RpcTarget.All, sb.ToString(), 2000);
+            manager.photonView.RPC("SetFromTo", RpcTarget.All, manager.me, manager.me);
+            manager.photonView.RPC("GetCard", RpcTarget.All, "medicine", "set");
+            manager.photonView.RPC("Played", RpcTarget.All, 5, 5, 5);
         }
         else
         {
@@ -50,21 +48,23 @@ public class PXXV : PlayerBase
             sb.Append(handle.nickname + " 擊中了對手的頭部！");
             handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 2000);
 
-            // 防呆：如果沒有選定目標，預設打下家
+            // 過濾無效目標
             if (manager.targetnum == -1)
             {
-                manager.targetnum = (manager.me + 1) % manager.total;
+                int targetIdx = (manager.me + 1) % manager.total;
+                while (!manager.isAlive[targetIdx] || 
+                       manager.PlayerPanels[targetIdx].GetComponent<PlayerPanelController>().isExist("disappear") || 
+                       manager.PlayerPanels[targetIdx].GetComponent<PlayerPanelController>().isExist("sleep"))
+                {
+                    targetIdx = (targetIdx + 1) % manager.total;
+                    if (targetIdx == manager.me) break;
+                }
+                manager.targetnum = targetIdx;
             }
 
-            // 對目標發動攻擊，走 attack 路線 (對方可防禦)
-            handle.View.RPC("SetFromTo", RpcTarget.All, manager.me, manager.targetnum);
-            handle.View.RPC("GetCard", RpcTarget.All, "attack", "spike");
-
-            // 傳入負數 (-10, -10, 0) 代表傷害
-            handle.View.RPC("Played", RpcTarget.All, -10, -10, 0);
-
-            // 【關鍵鎖定】：因為是 attack，必須把自己鎖死，讓系統進入等待對方防禦的狀態
-            manager.status = 0;
+            manager.photonView.RPC("SetFromTo", RpcTarget.All, manager.me, manager.targetnum);
+            manager.photonView.RPC("GetCard", RpcTarget.All, "attack", "spike");
+            manager.photonView.RPC("Played", RpcTarget.All, -10, -10, 0);
         }
 
         PhotonNetwork.SendAllOutgoingCommands();
