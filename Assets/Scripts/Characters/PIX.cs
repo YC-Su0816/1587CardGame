@@ -32,14 +32,22 @@ public class PIX : PlayerBase
         StringBuilder sb = new StringBuilder();
         sb.AppendLine("Dio lin lou mou");
         sb.Append(handle.nickname + " 使用了技能！");
-        handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 1500);
+        manager.photonView.RPC("Announcement", RpcTarget.All, sb.ToString(), 1500);
         if (manager.targetnum == -1)
         {
-            manager.targetnum = (manager.me + 1) % manager.total;
+            int targetIdx = (manager.me + 1) % manager.total;
+            while (!manager.isAlive[targetIdx] || 
+                   manager.PlayerPanels[targetIdx].GetComponent<PlayerPanelController>().isExist("disappear") || 
+                   manager.PlayerPanels[targetIdx].GetComponent<PlayerPanelController>().isExist("sleep"))
+            {
+                targetIdx = (targetIdx + 1) % manager.total;
+                if (targetIdx == manager.me) break;
+            }
+            manager.targetnum = targetIdx;
         }
-        handle.View.RPC("SetFromTo", RpcTarget.All, manager.me, manager.targetnum);
-        handle.View.RPC("GetCard", RpcTarget.All, "attack", "balisong");
-        handle.View.RPC("Played", RpcTarget.All, -10, 0, 0);
+        manager.photonView.RPC("SetFromTo", RpcTarget.All, manager.me, manager.targetnum);
+        manager.photonView.RPC("GetCard", RpcTarget.All, "attack", "balisong");
+        manager.photonView.RPC("Played", RpcTarget.All, -10, 0, 0);
         PhotonNetwork.SendAllOutgoingCommands();
     }
     public override void updateAttack()
