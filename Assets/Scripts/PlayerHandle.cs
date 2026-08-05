@@ -144,6 +144,10 @@ public class PlayerHandle : MonoBehaviourPunCallbacks
     {
         
     }
+    public void initializeEffect()
+    {
+        p.initializeEffect();
+    }
     public string[] characterDetailHelper()
     {
         return p.characterDetailHelper(character);
