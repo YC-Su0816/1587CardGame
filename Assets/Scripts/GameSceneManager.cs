@@ -1053,7 +1053,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     await Task.Delay(1600);
                     PhotonNetwork.SendAllOutgoingCommands();
                     photonView.RPC("GetCard", RpcTarget.All, "special", "self_defense");
-                    photonView.RPC("StartReflection", RpcTarget.All, defIdx, attIdx, Calculator(daW, 0.27f), Calculator(daS, 0.27f), Calculator(daR, 0.27f), multi, false, false);
+                    photonView.RPC("StartReflection", RpcTarget.All, defIdx, attIdx, Calculator(daW, 0.37f), Calculator(daS, 0.37f), Calculator(daR, 0.37f), multi, false, false);
                     PhotonNetwork.SendAllOutgoingCommands();
                     return;
                     //UpdatePlayerProperties(Calculator(toW, 0.27f), Calculator(toS, 0.27f), Calculator(toR, 0.27f));
@@ -1063,7 +1063,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     int seed = FromAndTo[0].ActorNumber * 100 + FromAndTo[1].ActorNumber * 10 + w + s + r + daW + daS + daR + DisplayType.Count;
                     System.Random syncRand = new System.Random(seed);
                     
-                    if (syncRand.NextDouble() <= 0.25f) is13Reflecting = true;
+                    if (syncRand.NextDouble() <= 0.45f) is13Reflecting = true;
                     
                     if (is13Reflecting)
                     {
