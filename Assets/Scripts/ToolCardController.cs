@@ -86,7 +86,7 @@ public class ToolCardController : MonoBehaviour, IPointerClickHandler
         {
             if (gameManager.canPlayDefense && tooltype == "defense")
                 HandleDefenseCard(displayto);
-            else if (face == "all_in_vain" || (gameManager.canPlaySpecial && tooltype == "special"))
+            else if (face == "all_in_vain" || (face == "test_reflect" && gameManager.canPlayDefense) || (gameManager.canPlaySpecial && tooltype == "special"))
             {
                 // 【權限判定】：確認這張特別卡允許在「被攻擊/作用時」出牌
                 if (gameManager.specialCardDict.ContainsKey(face) && gameManager.specialCardDict[face].canPlayOnAttacked)
