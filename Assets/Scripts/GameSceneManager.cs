@@ -1936,6 +1936,45 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         List<string> playedSpecialFaces = new List<string>();
         if (displaycount > 0)
         {
+            List<string> attemptTypes = new List<string>();
+            for (int i = 0; i < typeNum; i++)
+            {
+                foreach (GameObject obj in CardsInDisplay[i])
+                {
+                    attemptTypes.Add(obj.GetComponent<ToolDisplayController>().tooltype);
+                }
+            }
+            if (player.p.checkActionFailure(attemptTypes))
+            {
+                for (int i = 0; i < typeNum; i++)
+                {
+                    if (CardsInDisplay[i].Count > 0)
+                    {
+                        foreach (GameObject obj in CardsInDisplay[i])
+                        {
+                            int j = 0;
+                            foreach (GameObject o in CardsInType[i])
+                            {
+                                if (o.GetComponent<ToolCardController>().num == obj.GetComponent<ToolDisplayController>().num) break;
+                                else j++;
+                            }
+                            CardsInType[i][j].GetComponent<ToolCardController>().kill();
+                            CardsInType[i].Remove(CardsInType[i][j]);
+                            obj.GetComponent<ToolDisplayController>().kill();
+                        }
+                        CardsInDisplay[i].Clear();
+                    }
+                }
+
+                photonView.RPC("Responded", RpcTarget.All, 0, 0, 0);
+                PhotonNetwork.SendAllOutgoingCommands();
+
+                RefreshCards();
+                toolcardtype = "none";
+                cardpicking = -1;
+                displaycount = 0;
+                return; 
+            }
             for (int i = 0; i < typeNum; i++)
             {
                 foreach (GameObject obj in CardsInDisplay[i])
@@ -2416,6 +2455,20 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             displaycount = 0;
             RefreshCards();
         }
+
+        List<string> attemptTypes = new List<string> { "Skill" };
+        if (player.p.checkActionFailure(attemptTypes))
+        {
+            if (character != "2" || skillUseCounter >= 2)
+                cd = cdLength;
+            ++skillUseCounter;
+            
+            status = 0;
+            
+            isGameEnded((me + 1) % total);
+            return;
+        }
+
         if(character != "2" || skillUseCounter >= 2)
             cd = cdLength;
         ++skillUseCounter;

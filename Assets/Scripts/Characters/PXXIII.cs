@@ -31,27 +31,32 @@ public class PXXIII : PlayerBase
     }
     public override void useSkill()
     {
+        manager.status = 0;
         StringBuilder sb = new StringBuilder();
         sb.AppendLine("白菜 分享了一則reel");
         sb.AppendLine("你有 99+ 則訊息");
         sb.Append(handle.nickname + " 使用了技能！");
-        handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 1000);
+        manager.photonView.RPC("Announcement", RpcTarget.All, sb.ToString(), 1500);
 
         // 使用幹片，提升 10% 失敗率
         fail = (fail <= 0.65f) ? fail + 0.1f : 0.75f;
 
         if (manager.targetnum == -1)
         {
-            manager.targetnum = (manager.me + 1) % manager.total;
+            int targetIdx = (manager.me + 1) % manager.total;
+            while (!manager.isAlive[targetIdx] || 
+                   manager.PlayerPanels[targetIdx].GetComponent<PlayerPanelController>().isExist("disappear") || 
+                   manager.PlayerPanels[targetIdx].GetComponent<PlayerPanelController>().isExist("sleep"))
+            {
+                targetIdx = (targetIdx + 1) % manager.total;
+                if (targetIdx == manager.me) break;
+            }
+            manager.targetnum = targetIdx;
         }
 
-        manager.status = 0;
-        handle.View.RPC("SetFromTo", RpcTarget.All, manager.me, manager.targetnum);
-
-        // 【修正】使用指定的技能卡片圖示
-        handle.View.RPC("GetCard", RpcTarget.All, "attack", "XXIIISkill");
-        
-        handle.View.RPC("Played", RpcTarget.All, -20, 0, 0); // 對目標造成 20 點智力傷害
+        manager.photonView.RPC("SetFromTo", RpcTarget.All, manager.me, manager.targetnum);
+        manager.photonView.RPC("GetCard", RpcTarget.All, "attack", "XXIIISkill");
+        manager.photonView.RPC("Played", RpcTarget.All, -20, 0, 0);
 
         // 因為是 attack (可防禦)，必須將自己狀態鎖死，交給系統等待對手回應
         PhotonNetwork.SendAllOutgoingCommands();
@@ -74,7 +79,7 @@ public class PXXIII : PlayerBase
             sb.AppendLine("我的主題......");
             sb.AppendLine("砰磅！(板溝凹陷)");
             sb.Append(handle.nickname + " 遭遇偶發性事故！");
-            handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 2000);
+            manager.photonView.RPC("Announcement", RpcTarget.All, sb.ToString(), 2000);
             return true; // 行動直接作廢
         }
         return false;

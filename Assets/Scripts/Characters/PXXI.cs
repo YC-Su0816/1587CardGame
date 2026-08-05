@@ -4,7 +4,7 @@ using System.Text;
 
 public class PXXI : PlayerBase
 {
-    private bool isWater = false;  // 預設為 false，這樣第一回合 newRound 反轉後就會變成剛好是柔水
+    private bool isWater = true;  // 預設為 false，這樣第一回合 newRound 反轉後就會變成剛好是柔水
     private bool isInitUI = false;
     private int cooldown = 0;      // 主動技能冷卻計時器
 
@@ -18,6 +18,12 @@ public class PXXI : PlayerBase
         defendAdd = new int[3];
         medAdd = new int[3];
         
+    }
+
+    public override void initializeEffect()
+    {
+        manager.photonView.RPC("PutEffect", RpcTarget.All, manager.me, 99, "21water");
+        isInitUI = true;
     }
 
     public override void newRound()
@@ -46,24 +52,34 @@ public class PXXI : PlayerBase
     // 主動技能：抱一下嘛
     public override void useSkill()
     {
+        manager.status = 0;
+
         // 消耗自身 5 點信譽
         manager.UpdatePlayerProperties(0, 0, -5);
 
         StringBuilder sb = new StringBuilder();
         sb.AppendLine("「宜蘭人天生帶山帶水，性格裡難免多一份巍峨的柔情」");
         sb.Append(handle.nickname + " 給了你一個擁抱！");
-        handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 2500);
+        manager.photonView.RPC("Announcement", RpcTarget.All, sb.ToString(), 2500);
 
         // 如果沒有選定目標，預設抱下家
         if (manager.targetnum == -1)
         {
-            manager.targetnum = (manager.me + 1) % manager.total;
+            int targetIdx = (manager.me + 1) % manager.total;
+            while (!manager.isAlive[targetIdx] || 
+                   manager.PlayerPanels[targetIdx].GetComponent<PlayerPanelController>().isExist("disappear") || 
+                   manager.PlayerPanels[targetIdx].GetComponent<PlayerPanelController>().isExist("sleep"))
+            {
+                targetIdx = (targetIdx + 1) % manager.total;
+                if (targetIdx == manager.me) break;
+            }
+            manager.targetnum = targetIdx;
         }
 
         // 廣播目標並發射攻擊 (造成智力 10、體力 10 的傷害)
-        handle.View.RPC("SetFromTo", RpcTarget.All, manager.me, manager.targetnum);
-        handle.View.RPC("GetCard", RpcTarget.All, "attack", "XXISkill"); // 這裡的 "hug" 可以換成你對應的擁抱卡面圖示
-        handle.View.RPC("Played", RpcTarget.All, -10, -10, 0);
+        manager.photonView.RPC("SetFromTo", RpcTarget.All, manager.me, manager.targetnum);
+        manager.photonView.RPC("GetCard", RpcTarget.All, "attack", "XXISkill"); 
+        manager.photonView.RPC("Played", RpcTarget.All, -10, -10, 0);
         PhotonNetwork.SendAllOutgoingCommands();
     }
 
