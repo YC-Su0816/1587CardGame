@@ -704,6 +704,8 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             if (daR > 0) toR = daR + +Mathf.Min(0, deR);
             else toR = Mathf.Min(0, daR + deR);
 
+            player.p.overrideFinalReceiveDamage(ref toW, ref toS, ref toR);
+
             if(FromAndTo[0] == FromAndTo[1] && (DisplayType[0] == "attack" || DisplayType[0] == "multiattack") && (toW < 0 || toS < 0 || toR < 0))
             {
                 if(FromAndTo[1].NickName == PhotonNetwork.LocalPlayer.NickName)

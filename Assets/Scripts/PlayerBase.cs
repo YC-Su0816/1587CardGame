@@ -31,11 +31,16 @@ public abstract class PlayerBase
     public abstract void newRound();
     public abstract void endRound();
 
-    // 1. 【最終傷害覆寫】(解決 29號 睿均的固定傷害問題)
+    // 1. 【最終傷害覆寫】(解決 29號 睿均的固定傷害問題、19號 翊豪的mod 10受到傷害問題)
     // 傳入結算完的 Damages 陣列，讓子類別可以直接強行修改最終扣除的數值
     public virtual void overrideFinalDamage(ref int w, ref int s, ref int r)
     {
         // 預設什麼都不做，維持原傷害
+    }
+
+    public virtual void overrideFinalReceiveDamage(ref int toW, ref int toS, ref int toR)
+    {
+        // 預設什麼都不做，維持原接受傷害
     }
 
     // 2. 【被動閃避檢測】(解決 6號 育田、12號 喻翔)

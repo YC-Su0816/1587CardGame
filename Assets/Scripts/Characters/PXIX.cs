@@ -43,7 +43,7 @@ public class PXIX : PlayerBase
     }
 
     // 被動技能：ㄏㄧㄏ
-    public override void overrideFinalDamage(ref int w, ref int s, ref int r)
+    public override void overrideFinalReceiveDamage(ref int w, ref int s, ref int r)
     {
         // 傷害為負數才觸發 mod 10 (在 C# 裡，負數取餘數依然會保留負號，完美符合扣血運算)
         if (w < 0) w %= 10;
