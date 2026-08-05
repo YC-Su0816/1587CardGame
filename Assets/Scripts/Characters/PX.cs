@@ -34,7 +34,7 @@ public class PX : PlayerBase
         sb.Append(handle.nickname + " 使用了技能！");
         handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 1500);
         handle.View.RPC("SetFromTo", RpcTarget.All, manager.me, manager.me);
-        handle.View.RPC("GetCard", RpcTarget.All, "medicine", "redcorss");
+        handle.View.RPC("GetCard", RpcTarget.All, "medicine", "redcross");
         handle.View.RPC("Played", RpcTarget.All, 10, 10, 10);
         PhotonNetwork.SendAllOutgoingCommands();
     }

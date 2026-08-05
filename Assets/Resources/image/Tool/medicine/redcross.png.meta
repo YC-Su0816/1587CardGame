@@ -3,8 +3,8 @@ guid: 9525f68609c9a1b4296e1a992b5eb03b
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 3500392670155240510
-    second: redcorss_0
+      213: -6734316118285297601
+    second: redcross_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -109,24 +109,11 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
-  - serializedVersion: 4
-    buildTarget: iOS
-    maxTextureSize: 2048
-    resizeAlgorithm: 0
-    textureFormat: -1
-    textureCompression: 1
-    compressionQuality: 50
-    crunchedCompression: 0
-    allowsAlphaSplitting: 0
-    overridden: 0
-    ignorePlatformSupport: 0
-    androidETC2FallbackOverride: 0
-    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: redcorss_0
+      name: redcross_0
       rect:
         serializedVersion: 2
         x: 0
@@ -141,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: e34fbfe6694e39030800000000000000
-      internalID: 3500392670155240510
+      spriteID: f38da6c9b27ea82a0800000000000000
+      internalID: -6734316118285297601
       vertices: []
       indices: 
       edges: []
@@ -161,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      redcorss_0: 3500392670155240510
+      redcross_0: -6734316118285297601
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
