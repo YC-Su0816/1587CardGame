@@ -148,9 +148,9 @@ public class PlayerHandle : MonoBehaviourPunCallbacks
     {
         p.initializeEffect();
     }
-    public string[] characterDetailHelper()
+    public string[] characterDetailHelper(string targetFace)
     {
-        return p.characterDetailHelper(character);
+        return p.characterDetailHelper(targetFace);
     }
     // Update is called once per frame
     void Update()
