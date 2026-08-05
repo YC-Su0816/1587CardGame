@@ -13,6 +13,7 @@ public abstract class PlayerBase
     public int[] attackAdd = new int[3];
     public int[] defendAdd = new int[3];
     public int[] medAdd = new int[3];
+    public int[] currentBaseDefends = new int[3]; // temp defense value
     void Start()
     {
         
