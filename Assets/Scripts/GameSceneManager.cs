@@ -1527,7 +1527,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                                 for (r = 1; r <= total; ++r)
                                 {
                                     PlayerPanelController ppc = PlayerPanels[(me + r) % total].GetComponent<PlayerPanelController>();
-                                    if (ppc.isExist("disappear") || ppc.isExist("hide")) continue;
+                                    if (ppc.isExist("disappear") || ppc.isExist("sleep")) continue;
                                     else break;
                                 }
                                 targetnum = (me + r) % total;
@@ -2145,14 +2145,12 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     // Update is called once per frame
     public void TargetSet(int k)
     {
-        targetnum = k;
         PlayerPanelController targetPanel = PlayerPanels[k].GetComponent<PlayerPanelController>();
-        while (targetPanel.isExist("disappear") || targetPanel.isExist("sleep"))
+        if (targetPanel.isExist("disappear") || targetPanel.isExist("sleep"))
         {
-            targetnum = (targetnum + 1) % total;
-            targetPanel = PlayerPanels[targetnum].GetComponent<PlayerPanelController>();
-            if (targetnum == me) break;
+            return; 
         }
+        targetnum = k;
         Photon.Realtime.Player target = LocalPlayerList[targetnum];
         TMP_Text[] texts =  UIparent.GetComponent<Transform>().Find("Round").GetComponentsInChildren<TMP_Text>();
         foreach(TMP_Text t in texts)
