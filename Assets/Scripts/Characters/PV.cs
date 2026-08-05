@@ -39,7 +39,7 @@ public class PV : PlayerBase
         StringBuilder sb = new StringBuilder();
         sb.AppendLine("見到神...為何不跪？");
         sb.Append(handle.nickname + " 使用了技能！");
-        handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 1500);
+        handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 2000);
         if (manager.targetnum == -1)
         {
             manager.targetnum = (manager.me + 1) % manager.total;
@@ -61,7 +61,7 @@ public class PV : PlayerBase
         handle.View.RPC("SetFromTo", RpcTarget.All, manager.me, manager.targetnum);
         handle.View.RPC("GetCard", RpcTarget.All, "special", "king");
         handle.View.RPC("Played", RpcTarget.All, Damages[0], Damages[1], Damages[2]);
-        //manager.setPlayerProperties((mine[0] + yours[0] + 1) / 2, (mine[1] + yours[1] + 1) / 2, (mine[2] + yours[2] + 1) / 2);
+        manager.setPlayerProperties((mine[0] + yours[0] + 1) / 2, (mine[1] + yours[1] + 1) / 2, (mine[2] + yours[2] + 1) / 2);
         flag = true;
         PhotonNetwork.SendAllOutgoingCommands();
 
