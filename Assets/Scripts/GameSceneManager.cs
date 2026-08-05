@@ -464,18 +464,12 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         {
             if (FromAndTo[1] == PhotonNetwork.LocalPlayer)
             {
-                if (character == "11")
+                if (player.p.checkPassiveDodge())
                 {
-                    System.Random rand = new System.Random(Guid.NewGuid().GetHashCode());
-                    float rnd = (float)rand.NextDouble();
-                    if (rnd <= 0.2f)
-                    {
-                        photonView.RPC("Announcement", RpcTarget.All, "呼...躲過了", 1500);
-                        PhotonNetwork.SendAllOutgoingCommands();
-                        photonView.RPC("Responded", RpcTarget.All, -daW, -daS, -daR);
-                        PhotonNetwork.SendAllOutgoingCommands();
-                        return;
-                    }
+                    PhotonNetwork.SendAllOutgoingCommands();
+                    photonView.RPC("Responded", RpcTarget.All, -daW, -daS, -daR);
+                    PhotonNetwork.SendAllOutgoingCommands();
+                    return;
                 }
                 status = 2;
                 PD = true;
