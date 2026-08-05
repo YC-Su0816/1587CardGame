@@ -992,7 +992,17 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     sb.AppendLine("我進過四次NTUEE");
                     sb.AppendLine("而你...");
                     sb.AppendLine("又進過幾次台大");
-                    sb.Append(FromAndTo[1].NickName + "展現王的風範");
+                    sb.Append(FromAndTo[0].NickName + "展現王的風範");
+
+                    EnqueueLocalAnnouncement(sb.ToString(), 3000);
+                    await Task.Delay(3000);
+                }
+                else if (DisplayFace[0] == "self_defense")
+                {
+                    sb.AppendLine("嗨...呀");
+                    sb.AppendLine("(踢出強而無力的一腳)");
+                    sb.AppendLine("笑什麼，我是打品式的");
+                    sb.Append(FromAndTo[0].NickName + " 弱不禁風的回擊");
 
                     EnqueueLocalAnnouncement(sb.ToString(), 3000);
                     await Task.Delay(3000);
@@ -1934,16 +1944,17 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         }
         bool isReflecting = false;
         List<string> playedSpecialFaces = new List<string>();
+
         if (displaycount > 0)
         {
-            List<string> attemptTypes = new List<string>();
-            for (int i = 0; i < typeNum; i++)
+        List<string> attemptTypes = new List<string>();
+        for (int i = 0; i < typeNum; i++)
+        {
+            foreach (GameObject obj in CardsInDisplay[i])
             {
-                foreach (GameObject obj in CardsInDisplay[i])
-                {
-                    attemptTypes.Add(obj.GetComponent<ToolDisplayController>().tooltype);
-                }
+                attemptTypes.Add(obj.GetComponent<ToolDisplayController>().tooltype);
             }
+        }
             if (player.p.checkActionFailure(attemptTypes))
             {
                 for (int i = 0; i < typeNum; i++)
@@ -1975,13 +1986,15 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 displaycount = 0;
                 return; 
             }
+            
             for (int i = 0; i < typeNum; i++)
             {
                 foreach (GameObject obj in CardsInDisplay[i])
                 {
-                    if (obj.GetComponent<ToolDisplayController>().tooltype == "special")
+                    var controller = obj.GetComponent<ToolDisplayController>();
+                    if (controller.tooltype == "special")
                     {
-                        playedSpecialFaces.Add(obj.GetComponent<ToolDisplayController>().face);
+                        playedSpecialFaces.Add(controller.face);
                         if (playedSpecialFaces[0] == "test_reflect")
                             isReflecting = true;
                     }
@@ -1999,11 +2012,16 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
 
                         if (controller.face == "test_reflect")
                         {
-                            // 反彈卡不需要 GetCard 廣播，它的效果由 StartReflection 獨立處理
+                            // test_reflect 不參與常規防禦結算
+                        }
+                        else if (controller.face == "test_defense")
+                        {
+                            // 廣播 test_defense 讓大家看到，但不加入 Defends 陣列，因為它要轉為反彈傷害
+                            photonView.RPC("GetCard", RpcTarget.All, controller.tooltype, controller.face);
                         }
                         else
                         {
-                            // 普通防禦卡才需要同步給所有人看
+                            // 普通防禦卡處理
                             photonView.RPC("GetCard", RpcTarget.All, controller.tooltype, controller.face);
                             if(controller.tooltype == "defense")
                             {
@@ -2013,7 +2031,6 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                                     Defends[dummy] += readInValue[dummy];
                                 }
                             }
-                            
                         }
 
                         // 回收本地的手牌與展示牌
@@ -2035,28 +2052,23 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         // 第三步：分流處理狀態機
         if (isReflecting)
         {
+            // 原始 test_reflect 邏輯 (完全反彈)
             int originalAttackerIndex = 0;
             for (int i = 0; i < total; i++)
             {
                 if (LocalPlayerList[i] == FromAndTo[0]) { originalAttackerIndex = i; break; }
             }
-            photonView.RPC("StartReflection", RpcTarget.All, me, originalAttackerIndex, daW, daS, daR, multi);
+            photonView.RPC("StartReflection", RpcTarget.All, me, originalAttackerIndex, daW, daS, daR, multi, canPlayDefense, canPlaySpecial);
             PhotonNetwork.SendAllOutgoingCommands();
         }
         else
         {
+            // 常規防禦與其他特殊卡處理邏輯
             if (playedSpecialFaces.Count > 0)
             {
                 foreach (string spFace in playedSpecialFaces)
                 {
-                    if (spFace == "all_in_vain")
-                    {
-                        Debug.Log("w是" + -daW +" / s是"+ -daS +" / r是" + -daR);
-                        Debug.Log("送出之後");
-                        photonView.RPC("Responded", RpcTarget.All, (int)-daW, (int)-daS, (int)-daR);
-                        PhotonNetwork.SendAllOutgoingCommands();
-                    }
-                    else if(spFace == "nah_bro")
+                    if (spFace == "all_in_vain" || spFace == "nah_bro")
                     {
                         photonView.RPC("Responded", RpcTarget.All, (int)-daW, (int)-daS, (int)-daR);
                         PhotonNetwork.SendAllOutgoingCommands();
@@ -2081,7 +2093,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         RefreshCards();
         toolcardtype = "none";
         cardpicking = -1;
-        displaycount = 0; // 確保重置計數
+        displaycount = 0;
     }
     public void UpdatePlayerProperties(int w, int s, int r)
     {
