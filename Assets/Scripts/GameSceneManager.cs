@@ -334,6 +334,9 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         await Task.Delay(400);
         if (over || !pickable) return;
 
+        //  確保每一回合都會減少cd
+        cd = Mathf.Max(0, cd - 1);
+
         // 【新增攔截邏輯】：檢查自己當前有沒有被限制行動的效果
         PlayerPanelController myPanel = PlayerPanels[me].GetComponent<PlayerPanelController>();
         if (myPanel.isExist("disappear"))
@@ -370,7 +373,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             return;
         }
         
-        cd = Mathf.Max(0, cd - 1);
+        
         displaytime = false;
         photonView.RPC("SetFromTo", RpcTarget.All, me, -1);
         PhotonNetwork.SendAllOutgoingCommands();
