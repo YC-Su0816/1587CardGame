@@ -38,6 +38,15 @@ public class PVI : PlayerBase
         sb.AppendLine("zzz...");
         sb.Append(handle.nickname + " 使用了技能！");
         handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 2000);
+
+        // 抽三張卡
+        for (int i = 0; i < 3; i++)
+        {
+            int rnd = UnityEngine.Random.Range(0, 6);
+            manager.PickACard((float)rnd + 0.5f); // TODO: 若未來有隨機抽卡池，可在此替換
+        }
+        manager.RefreshCards();
+        
         handle.View.RPC("PutEffect", RpcTarget.All, manager.me, 1, "sleep");
         PhotonNetwork.SendAllOutgoingCommands();
         manager.status = 0;
