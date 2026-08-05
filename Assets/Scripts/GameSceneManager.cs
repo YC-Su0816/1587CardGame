@@ -1053,7 +1053,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     await Task.Delay(1600);
                     PhotonNetwork.SendAllOutgoingCommands();
                     photonView.RPC("GetCard", RpcTarget.All, "special", "self_defense");
-                    photonView.RPC("StartReflection", RpcTarget.All, targetnum, me, Calculator(daW, 0.27f), Calculator(daS, 0.27f), Calculator(daR, 0.27f), multi, false, false);
+                    photonView.RPC("StartReflection", RpcTarget.All, defIdx, attIdx, Calculator(daW, 0.27f), Calculator(daS, 0.27f), Calculator(daR, 0.27f), multi, false, false);
                     PhotonNetwork.SendAllOutgoingCommands();
                     return;
                     //UpdatePlayerProperties(Calculator(toW, 0.27f), Calculator(toS, 0.27f), Calculator(toR, 0.27f));
