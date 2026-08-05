@@ -59,7 +59,7 @@ public class PI : PlayerBase
     public override bool checkImmune(string effectName)
     {
         // 溫文儒雅：無法被附加任何效果 (排除自己施放的「神隱」)
-        if (effectName != "disappear")
+        if (!(effectName == "disappear" || effectName == "chenchienting" || effectName == "wuminglin" || effectName == "linminching" || effectName == "chenpenghsu" || effectName == "chenchihsheng" || effectName == "loyinting"))
         {
             manager.photonView.RPC("Announcement", RpcTarget.All, handle.nickname + " 溫文儒雅，免疫了狀態！", 1500);
             return true; // 攔截成功
