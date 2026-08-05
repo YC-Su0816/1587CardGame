@@ -40,7 +40,10 @@ public class PXVIII : PlayerBase
             {
                 defendAdd[i] = -2;
             }
-            else
+            else if (currentBaseDefends[i] >= 0)
+            {
+                defendAdd[i] = -currentBaseDefends[i];
+            } else
             {
                 defendAdd[i] = 0;
             }
