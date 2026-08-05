@@ -314,6 +314,20 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         DisplayFace.Clear();
         displaytime = false;
     }
+
+    [PunRPC]
+    void CleaningMulti()
+    {
+        for (int j = 1; j < DisplayInRally.Count; j++)
+        {
+            DisplayInRally[j].GetComponent<ToolDisplayController>().kill();
+            DisplayInRally.RemoveAt(DisplayInRally.Count - 1);
+            DisplayType.Clear();
+            DisplayFace.Clear();
+        }
+        //Theoretically
+    }
+
     [PunRPC]
     async Task Go()
     {
@@ -1175,7 +1189,8 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 else
                 {
                     // 繼續傳遞群攻
-                    photonView.RPC("Cleaning", RpcTarget.All);
+                    photonView.RPC("CleaningMulti", RpcTarget.All);
+
                     int nextVictim = (defIdx + 1) % total;
                     
                     while (!isAlive[nextVictim] || PlayerPanels[nextVictim].GetComponent<PlayerPanelController>().isExist("disappear") || PlayerPanels[nextVictim].GetComponent<PlayerPanelController>().isExist("sleep"))
