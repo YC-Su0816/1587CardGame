@@ -42,8 +42,8 @@ public class PVI : PlayerBase
         // 抽三張卡
         for (int i = 0; i < 3; i++)
         {
-            int rnd = UnityEngine.Random.Range(0, 6);
-            manager.PickACard((float)rnd + 0.5f); // TODO: 若未來有隨機抽卡池，可在此替換
+            double rnd = rand.NextDouble();
+            PickACard(rnd);
         }
         manager.RefreshCards();
         
