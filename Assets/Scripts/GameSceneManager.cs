@@ -62,7 +62,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     public int reflectMemoNext;
     public Photon.Realtime.Player reflectMemoPlayer;
 
-    System.Random rand;
+    public System.Random rand;
     int typeNum = 6;
     int count = 0;
     int skillUseCounter;
@@ -2327,11 +2327,6 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     }
     public void UseSkill()
     {
-        status = 0;
-        if (targetnum == -1)
-        {
-            targetnum = (me + 1) % total;
-        }
         if (displaycount > 0)
         {
             for (int y = 0; y < typeNum; y++)

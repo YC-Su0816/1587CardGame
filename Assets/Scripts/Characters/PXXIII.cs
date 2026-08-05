@@ -40,10 +40,17 @@ public class PXXIII : PlayerBase
         // 使用幹片，提升 10% 失敗率
         fail = (fail <= 0.65f) ? fail + 0.1f : 0.75f;
 
+        if (manager.targetnum == -1)
+        {
+            manager.targetnum = (manager.me + 1) % manager.total;
+        }
+
+        manager.status = 0;
         handle.View.RPC("SetFromTo", RpcTarget.All, manager.me, manager.targetnum);
 
         // 【修正】使用指定的技能卡片圖示
         handle.View.RPC("GetCard", RpcTarget.All, "attack", "XXIIISkill");
+        
         handle.View.RPC("Played", RpcTarget.All, -20, 0, 0); // 對目標造成 20 點智力傷害
 
         // 因為是 attack (可防禦)，必須將自己狀態鎖死，交給系統等待對手回應
