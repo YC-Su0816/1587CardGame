@@ -1413,7 +1413,6 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             {
                 PickACard(rand.NextDouble());
             }
-            PickACard(0.99f, "test_reflect");
         }
         
 
