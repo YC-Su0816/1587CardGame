@@ -1,28 +1,41 @@
 using UnityEngine;
 using Photon.Pun;
 using System.Text;
+using System.Threading.Tasks;
 
 public class PXVII : PlayerBase
 {
     private bool isInitUI = false;
     private bool isSkillActive = false;
 
-    public override void Init()
+    public override async void Init()
     {
         attackRatio = new double[] { 1.0, 1.0, 1.0 };
         defendRatio = new double[] { 1.0, 1.0, 1.0 };
         medRatio = new double[] { 1.0, 1.0, 1.0 };
         attackAdd = new int[3]; defendAdd = new int[3]; medAdd = new int[3];
+        await Task.Delay(100);
+        if (manager.PlayerPanels[manager.me] != null)
+        {
+            manager.PlayerPanels[manager.me].GetComponent<PlayerPanelController>().AddEffect("disappear", -1, true);
+        }
+        _ = BroadcastDisappearAsync();
+    }
+
+    private async Task BroadcastDisappearAsync()
+    {
+        await Task.Delay(1400);
+        manager.photonView.RPC("PutEffect", RpcTarget.Others, manager.me, -1, "disappear");
     }
 
     public override void newRound()
     {
         // 預設起始狀態設為【神隱】
-        if (!isInitUI)
-        {
-            manager.photonView.RPC("PutEffect", RpcTarget.All, manager.me, -1, "disappear");
-            isInitUI = true;
-        }
+        // if (!isInitUI)
+        // {
+        //     manager.photonView.RPC("PutEffect", RpcTarget.All, manager.me, -1, "disappear");
+        //     isInitUI = true;
+        // }
     }
 
     // 主動技能：吊嘎男

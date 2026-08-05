@@ -1170,9 +1170,15 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     // 繼續傳遞群攻
                     photonView.RPC("Cleaning", RpcTarget.All);
                     int nextVictim = (defIdx + 1) % total;
+                    
+                    while (!isAlive[nextVictim] || PlayerPanels[nextVictim].GetComponent<PlayerPanelController>().isExist("disappear") || PlayerPanels[nextVictim].GetComponent<PlayerPanelController>().isExist("sleep"))
+                    {
+                        nextVictim = (nextVictim + 1) % total;
+                        if (nextVictim == attIdx) break;
+                    }
+
                     if (nextVictim == attIdx)
                     {
-                        // 繞完一圈回到自己，結束
                         status = 0;
                         player.endRound();
                         await endRoundEffectHandler(PlayerPanels, me, 2000);
@@ -1585,7 +1591,14 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
 
                     if (m)
                     {
-                        photonView.RPC("SetFromTo", RpcTarget.All, me, (me + 1) % total);
+                        int firstVictim = (me + 1) % total;
+                        while (!isAlive[firstVictim] || PlayerPanels[firstVictim].GetComponent<PlayerPanelController>().isExist("disappear") || PlayerPanels[firstVictim].GetComponent<PlayerPanelController>().isExist("sleep"))
+                        {
+                            firstVictim = (firstVictim + 1) % total;
+                            if (firstVictim == me) break;
+                        }
+
+                        photonView.RPC("SetFromTo", RpcTarget.All, me, firstVictim);
                         PhotonNetwork.SendAllOutgoingCommands();
                         photonView.RPC("Multi", RpcTarget.All, daW, daS, daR);
                         PhotonNetwork.SendAllOutgoingCommands();
@@ -2107,13 +2120,13 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     {
         targetnum = k;
         PlayerPanelController targetPanel = PlayerPanels[k].GetComponent<PlayerPanelController>();
-        while (targetPanel.isExist("disappear"))
+        while (targetPanel.isExist("disappear") || targetPanel.isExist("sleep"))
         {
-            ++targetnum;
+            targetnum = (targetnum + 1) % total;
             targetPanel = PlayerPanels[targetnum].GetComponent<PlayerPanelController>();
+            if (targetnum == me) break;
         }
-        Photon.Realtime.Player target;
-        target = LocalPlayerList[k];
+        Photon.Realtime.Player target = LocalPlayerList[targetnum];
         TMP_Text[] texts =  UIparent.GetComponent<Transform>().Find("Round").GetComponentsInChildren<TMP_Text>();
         foreach(TMP_Text t in texts)
         {
