@@ -32,8 +32,8 @@ public class PlayerPanelController : MonoBehaviourPunCallbacks
         { "sleep", ("沉睡", "不可選中，每回合扣除智慧、聲譽各一點。\n指定回合後解除", false, true) },  // 非常駐，可被藥消除
         { "dizzy", ("失神", "每回合隨機失去一張卡片。\n指定回合後解除", false, true) },
         { "malice", ("怨念", "時刻給予關注，否則...後果自負。\nCD歸0時引爆，扣除所有數值各15點。\n單體攻擊自己並造成傷害可重置回合", false, true) },
-        { "21water", ("柔水", "降攻、增防。", true, false) },
-        { "21knife", ("鋼刀", "增攻、破防。", true, false) },
+        { "21water", ("柔水", "宜蘭人好像一生都是溼的\n攻擊減少30%、防禦增加40%。", true, false) },
+        { "21knife", ("鋼刀", "每一種情感要不頂峰，要不深海\n攻擊增加40%、防禦減少30%。", true, false) },
         { "chenchienting", ("陳建廷", "建章常繞勒沙理，廷殿時聞酸鹼音。", true, false) },
         { "wuminglin", ("吳明麟", "明師化雨澤天地，麟閣流芳縱往今。", true, false) },
         { "linminching", ("林敏靜", "敏心能辨他邦字，靜格易通百國言。", true, false) },
