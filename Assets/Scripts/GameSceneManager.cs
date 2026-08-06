@@ -1105,10 +1105,46 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         {
             if (PhotonNetwork.LocalPlayer == FromAndTo[0])
             {
-                photonView.RPC("Cleaning", RpcTarget.All);
-                status = 0;
-                isResolvingVirtualCard = false;
-                return; // don't 交棒！！！
+                if (!multi)
+                {
+                    photonView.RPC("Cleaning", RpcTarget.All);
+                    status = 0;
+                    isResolvingVirtualCard = false;
+                    return;
+                }
+                else
+                {
+                    string typeMemo = DisplayType[0];
+                    string faceMemo = DisplayFace[0];
+
+                    int nextVictim = (defIdx + 1) % total;
+                    
+                    while (!isAlive[nextVictim] || PlayerPanels[nextVictim].GetComponent<PlayerPanelController>().isExist("disappear") || PlayerPanels[nextVictim].GetComponent<PlayerPanelController>().isExist("sleep"))
+                    {
+                        nextVictim = (nextVictim + 1) % total;
+                        if (nextVictim == attIdx) break;
+                    }
+
+                    if (nextVictim == attIdx)
+                    {
+                        status = 0;
+                        multi = false;
+                        photonView.RPC("Cleaning", RpcTarget.All);
+                        isResolvingVirtualCard = false;
+                        return;
+                    }
+                    else
+                    {
+                        photonView.RPC("CleaningMulti", RpcTarget.All);
+                        photonView.RPC("GetCard", RpcTarget.All, typeMemo, faceMemo);
+                        PhotonNetwork.SendAllOutgoingCommands();
+                        status = 0;
+                        photonView.RPC("SetFromTo", RpcTarget.All, me, nextVictim);
+                        PhotonNetwork.SendAllOutgoingCommands();
+                        photonView.RPC("Multi", RpcTarget.All, daW, daS, daR);
+                        return;
+                    }
+                }
             }
         }
         else if (wasReflect)
