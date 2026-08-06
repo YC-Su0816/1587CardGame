@@ -2048,7 +2048,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
 
                         if (controller.face == "test_reflect")
                         {
-                            // test_reflect 不參與常規防禦結算
+                            photonView.RPC("GetCard", RpcTarget.All, controller.tooltype, controller.face);
                         }
                         else if (controller.face == "test_defense")
                         {
@@ -2093,6 +2093,28 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             for (int i = 0; i < total; i++)
             {
                 if (LocalPlayerList[i] == FromAndTo[0]) { originalAttackerIndex = i; break; }
+            }
+            
+            photonView.RPC("Announcement", RpcTarget.All,  "我是" + PhotonNetwork.LocalPlayer.NickName +"，或者...\n你也可以叫我Kira\n 我是新世界的卡蜜撒馬", 3000);
+            PhotonNetwork.SendAllOutgoingCommands();
+            List<string> typeMemory = new List<string>();
+            List<string> faceMemory = new List<string>();
+            for (int i = 0; i < temp; i++)
+            {
+                typeMemory.Add(DisplayType[i]);
+                faceMemory.Add(DisplayFace[i]);
+            }
+            for (int j = 0; j < DisplayInRally.Count; j++)
+            {
+                DisplayInRally[j].GetComponent<ToolDisplayController>().kill();
+            }
+            DisplayInRally.Clear();
+            DisplayType.Clear();
+            DisplayFace.Clear();
+            for(int r = 0; r < faceMemory.Count; r++)
+            {
+                photonView.RPC("GetCard", RpcTarget.All, typeMemory[r], faceMemory[r]);
+                PhotonNetwork.SendAllOutgoingCommands();
             }
             photonView.RPC("StartReflection", RpcTarget.All, me, originalAttackerIndex, daW, daS, daR, multi, canPlayDefense, canPlaySpecial);
             PhotonNetwork.SendAllOutgoingCommands();
