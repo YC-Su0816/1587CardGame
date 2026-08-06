@@ -1,0 +1,6 @@
+ALL RIGHTS RESERVED.
+
+The files contained in this directory (including all text, images, artwork, and related media) are the exclusive property of YC-Su0816. 
+These files are NOT covered by the MIT License used for the source code in this repository. 
+
+You may not use, copy, modify, distribute, or reproduce these files in any software, game, or media without explicit written authorization.

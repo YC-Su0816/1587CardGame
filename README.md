@@ -1,14 +1,13 @@
-# 1587CardGame
+# 1587 Card Game
 A card game which directly mimics "God Field" without concerning copyright. I guess that copyright means "Copying is the right thing to do."
 
-# 關於此遊戲
+## 關於此遊戲
 打從2022年，1587班的成員們見到彼此，一場無形的角力便在這群同學之間悄悄蔓延。大家各個都是國中時期的英菁，自然想要把彼此都除掉，成為唯一活著走出教室的人，因此這三年，所有人無所不用其極，用盡所有手段坑害彼此，把1587教室變成腥風血雨的戰場......
 
-# 遊戲介紹網頁
-裡面有精美的圖片與介紹說明文字，詳細的解釋每個**角色**主、被動技能、各個**卡牌**的三項數值、**效果**的作用方式與對數值的影響、**老師**們的機制與技能。<br>
-我相信你最感興趣的一定是自己的技能，請在[遊戲介紹網頁](https://yc-su0816.github.io/1587CardGame/#home)中查看。
+## [遊戲介紹網頁](https://yc-su0816.github.io/1587CardGame/)
+裡面有精美的圖片與介紹說明文字，詳細的解釋每個**角色**主、被動技能、各個**卡牌**的三項數值、**效果**的作用方式與對數值的影響、**老師**們的機制與技能。
 
-# 遊玩機制
+## 遊玩機制
 和《God Field》差不多，惟本遊戲在舊有的基礎下，修改了部分機制
 
 * 角色：目前有30位電神們，於進入「教室」前可於三位隨機角色中選擇一位做為該輪遊戲的身分，每位角色都有**略有差異的數值**、**有特色的被動技能**與**獨特的主動技能**，使得校園變得更加刺激。
@@ -46,3 +45,20 @@ A card game which directly mimics "God Field" without concerning copyright. I gu
     * 特殊：可以對自己或他人造成效果，詳細見卡牌介紹。
 
 * 勝利條件：當除了自己以外的玩家全部(社會性)死亡，**你即為勝利者**。
+
+## License & Copyright
+
+This project adopts a split-licensing model to distinguish between open-source logic and proprietary assets:
+
+### 1. Source Code (MIT License)
+All source code files in this repository are licensed under the **[MIT License](LICENSE)**. You are free to use, modify, and distribute the code for both commercial and non-commercial purposes, provided that you include the original copyright notice.
+
+### 2. Game Assets and Narrative Text (All Rights Reserved)
+**All Rights Reserved.** 
+The following specific components are proprietary and strictly protected by copyright law:
+* **All visual assets:** Including but not limited to all image files (`.png`, `.jpg`, `.svg`, etc.) located in the `/assets` directory, UI designs, and card artwork.
+* **All narrative and game data:** Including card names, item descriptions, lore, and textual configurations located in `/assets` (or embedded directly within components).
+
+You **MAY NOT** copy, distribute, modify, reuse, or publicly display these visual and textual assets in any form, for any purpose, without explicit prior written permission from the repository owner. 
+
+If you fork this repository to build your own project, you MUST replace all proprietary images and narrative text with your own original assets.
