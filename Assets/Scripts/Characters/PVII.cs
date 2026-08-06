@@ -35,19 +35,31 @@ public class PVII : PlayerBase
     }
     public override void useSkill()
     {
+        int targetIdx = (manager.me + 1) % manager.total;
+        while (!manager.isAlive[targetIdx] || 
+                manager.PlayerPanels[targetIdx].GetComponent<PlayerPanelController>().isExist("disappear") || 
+                manager.PlayerPanels[targetIdx].GetComponent<PlayerPanelController>().isExist("sleep"))
+        {
+            targetIdx = (targetIdx + 1) % manager.total;
+            if (targetIdx == manager.me) return;
+        }
+        manager.status = 0;
+        manager.photonView.RPC("SetFromTo", RpcTarget.All, manager.me, targetIdx);
         StringBuilder sb = new StringBuilder();
         sb.AppendLine("學測是什麼？我不需要");
         sb.Append(handle.nickname + " 使用了技能！");
-        handle.View.RPC("Announcement", RpcTarget.All, sb.ToString(), 1000);
-        handle.View.RPC("SetFromTo", RpcTarget.All, manager.me, (manager.me + 1) % manager.total);
-        handle.View.RPC("GetCard", RpcTarget.All, "multiattack", "sevenskill");
+        manager.photonView.RPC("Announcement", RpcTarget.All, sb.ToString(), 1000);
+       
+        
+        manager.targetnum = targetIdx;
+        manager.photonView.RPC("GetCard", RpcTarget.All, "multiattack", "sevenskill");
         manager.daW = -5;
         manager.daR = -5; 
         manager.daS = -5;
 
-        handle.View.RPC("Multi", RpcTarget.All, -5, -5, -5);
+        manager.photonView.RPC("Multi", RpcTarget.All, -5, -5, -5);
         PhotonNetwork.SendAllOutgoingCommands();
-        manager.status = 0;
+        
     }
     public override void updateAttack()
     {
