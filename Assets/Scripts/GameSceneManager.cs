@@ -2104,13 +2104,8 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 typeMemory.Add(DisplayType[i]);
                 faceMemory.Add(DisplayFace[i]);
             }
-            for (int j = 0; j < DisplayInRally.Count; j++)
-            {
-                DisplayInRally[j].GetComponent<ToolDisplayController>().kill();
-            }
-            DisplayInRally.Clear();
-            DisplayType.Clear();
-            DisplayFace.Clear();
+            photonView.RPC("Cleaning", RpcTarget.All);
+            PhotonNetwork.SendAllOutgoingCommands();
             for(int r = 0; r < faceMemory.Count; r++)
             {
                 photonView.RPC("GetCard", RpcTarget.All, typeMemory[r], faceMemory[r]);
