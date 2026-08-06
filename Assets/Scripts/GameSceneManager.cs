@@ -780,7 +780,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 }
             }
 
-            if (DisplayType[0] == "attack" || DisplayType[0] == "multiattack" || DisplayType[0] == "medicine")
+            if (DisplayType[0] == "attack" || DisplayType[0] == "multiattack" || DisplayType[0] == "medicine" || DisplayType[0] == "test_reflect")
             {
                 await Task.Delay(3000);
             }
@@ -2062,7 +2062,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
 
                         if (controller.face == "test_reflect")
                         {
-                            photonView.RPC("GetCard", RpcTarget.All, controller.tooltype, controller.face);
+                            //photonView.RPC("GetCard", RpcTarget.All, controller.tooltype, controller.face);
                         }
                         else if (controller.face == "test_defense")
                         {
