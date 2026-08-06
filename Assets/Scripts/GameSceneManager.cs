@@ -216,7 +216,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
 
     }
     [PunRPC]
-    async Task StartReflection(int reflectorIndex, int targetIndex, int w, int s, int r, bool isMultiAttack, bool allowDefense, bool allowSpecial)
+    async Task StartReflection(int reflectorIndex, int targetIndex, int w, int s, int r, bool isMultiAttack, bool allowDefense, bool allowSpecial, string memoType, string memoFace)
     {
         if (!reflect)
         {
@@ -225,6 +225,8 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             {
                 reflectMemoNext = (reflectorIndex + 1) % total;
             }
+            reflectMemoType = memoType;
+            reflectMemoFace = memoFace;
         }
 
         reflect = true; // 設為反彈狀態
@@ -780,7 +782,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 }
             }
 
-            if (DisplayType[0] == "attack" || DisplayType[0] == "multiattack" || DisplayType[0] == "medicine" || DisplayType[0] == "test_reflect")
+            if (DisplayType[0] == "attack" || DisplayType[0] == "multiattack" || DisplayType[0] == "medicine" || DisplayFace[0] == "test_reflect")
             {
                 await Task.Delay(3000);
             }
@@ -1076,7 +1078,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     await Task.Delay(1600);
                     PhotonNetwork.SendAllOutgoingCommands();
                     photonView.RPC("GetCard", RpcTarget.All, "special", "self_defense");
-                    photonView.RPC("StartReflection", RpcTarget.All, defIdx, attIdx, Calculator(daW, 0.37f), Calculator(daS, 0.37f), Calculator(daR, 0.37f), multi, false, false);
+                    photonView.RPC("StartReflection", RpcTarget.All, defIdx, attIdx, Calculator(daW, 0.37f), Calculator(daS, 0.37f), Calculator(daR, 0.37f), multi, false, false, reflectMemoType, reflectMemoFace);
                     PhotonNetwork.SendAllOutgoingCommands();
                     return;
                     //UpdatePlayerProperties(Calculator(toW, 0.27f), Calculator(toS, 0.27f), Calculator(toR, 0.27f));
@@ -1094,10 +1096,12 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                         await Task.Delay(2000);
                         if (PhotonNetwork.LocalPlayer == FromAndTo[1])
                         {
+                            reflectMemoType = DisplayType[0];
+                            reflectMemoFace = DisplayFace[0];
                             photonView.RPC("Cleaning", RpcTarget.All);
                             photonView.RPC("GetCard", RpcTarget.All, "attack", "boxing");
                             
-                            photonView.RPC("StartReflection", RpcTarget.All, defIdx, attIdx, daW, daS, daR, multi, true, false);
+                            photonView.RPC("StartReflection", RpcTarget.All, defIdx, attIdx, daW, daS, daR, multi, true, false, reflectMemoType, reflectMemoFace);
 
                             PhotonNetwork.SendAllOutgoingCommands();
                         }
@@ -2115,14 +2119,15 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             
             photonView.RPC("Announcement", RpcTarget.All, "我是" + PhotonNetwork.LocalPlayer.NickName + "，或者...\n你也可以叫我Kira\n 我是新世界的卡蜜撒馬", 3000);
             PhotonNetwork.SendAllOutgoingCommands();
-
+            await Task.Delay(3000);
             // 現在可以安全地清空並換成 test_reflect 進行反擊了
             photonView.RPC("Cleaning", RpcTarget.All);
+            PhotonNetwork.SendAllOutgoingCommands();
             photonView.RPC("GetCard", RpcTarget.All, "special", "test_reflect");
             PhotonNetwork.SendAllOutgoingCommands();
 
             // 啟動反彈
-            photonView.RPC("StartReflection", RpcTarget.All, me, originalAttackerIndex, daW, daS, daR, multi, true, true);
+            photonView.RPC("StartReflection", RpcTarget.All, me, originalAttackerIndex, daW, daS, daR, multi, true, true, reflectMemoType, reflectMemoFace);
             PhotonNetwork.SendAllOutgoingCommands();
         }
         else
