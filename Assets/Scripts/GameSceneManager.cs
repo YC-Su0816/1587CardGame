@@ -219,48 +219,96 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     {
         if (!reflect)
         {
-            reflectMemoPlayer = LocalPlayerList[targetIndex];
+            reflectMemoPlayer = LocalPlayerList[targetIndex]; // 記住最初的攻擊者 A
             if (isMultiAttack)
             {
                 reflectMemoNext = (reflectorIndex + 1) % total;
             }
         }
 
-        reflect = true; // 設為反彈狀態
-        int k = DisplayType.Count;
-        float x = displayfrom.GetComponent<RectTransform>().sizeDelta.x / 2;
-        float y = displayfrom.GetComponent<RectTransform>().sizeDelta.y;
-        float inter = y / (k + 1);
-        temp = k;
-        displaytime = true;
-        for (int i = 0; i < k; i++)
-        {
-            GameObject detail = Instantiate(carddisplayprfeb, displayfrom);
-            DisplayInRally.Add(detail);
-            ToolDisplayController tdc = detail.GetComponent<ToolDisplayController>();
-            detail.transform.localPosition = new Vector3(x, y - inter * (i + 1), 1);
+        reflect = true; // 進入反彈狀態
 
-            tdc.tooltype = DisplayType[i];
-            tdc.face = DisplayFace[i];
-            tdc.forDisplay = true;
-            tdc.init(w, s, r);
+        // -------------------------------------------------------------
+        // 步驟 1：動態備份原本攻擊者打出的「所有」卡牌
+        // (變數 temp 記錄了攻擊者出牌的數量，索引 0 ~ temp-1 就是原始攻擊牌)
+        // -------------------------------------------------------------
+        List<string> origTypes = new List<string>();
+        List<string> origFaces = new List<string>();
+        
+        for (int i = 0; i < temp; i++)
+        {
+            origTypes.Add(DisplayType[i]);
+            origFaces.Add(DisplayFace[i]);
         }
-        // 攻守方逆轉
-        FromAndTo[0] = LocalPlayerList[reflectorIndex];
-        FromAndTo[1] = LocalPlayerList[targetIndex];
+
+        // -------------------------------------------------------------
+        // 步驟 2：在防守者 B 的回應區 (displayto) 生成 test_reflect 給所有人看
+        // -------------------------------------------------------------
+        float xTo = displayto.GetComponent<RectTransform>().sizeDelta.x / 2;
+        float yTo = displayto.GetComponent<RectTransform>().sizeDelta.y;
+
+        GameObject reflectCardObj = Instantiate(carddisplayprfeb, displayto);
+        DisplayInRally.Add(reflectCardObj);
+        reflectCardObj.transform.localPosition = new Vector3(xTo, yTo / 2f, 1);
+
+        ToolDisplayController tdcReflect = reflectCardObj.GetComponent<ToolDisplayController>();
+        tdcReflect.tooltype = "special";
+        tdcReflect.face = "test_reflect";
+        tdcReflect.forDisplay = true;
+        tdcReflect.init(0, 0, 0);
+
+        // 停頓 2 秒：讓全場看清楚這張反彈卡
+        await Task.Delay(2000);
+
+        // -------------------------------------------------------------
+        // 步驟 3：清場 (銷毀畫面上的舊卡牌，清空陣列)
+        // -------------------------------------------------------------
+        Cleaning();
+
+        // -------------------------------------------------------------
+        // 步驟 4：攻守逆轉 (B 變成攻擊者，A 變成目標)
+        // -------------------------------------------------------------
+        FromAndTo[0] = LocalPlayerList[reflectorIndex]; // B
+        FromAndTo[1] = LocalPlayerList[targetIndex];    // A
         from.text = FromAndTo[0].NickName;
         to.text = FromAndTo[1].NickName;
+
+        // -------------------------------------------------------------
+        // 步驟 5：將「原本 A 打出的卡牌」完美重現到 B 的攻擊區 (displayfrom)
+        // -------------------------------------------------------------
+        float xFrom = displayfrom.GetComponent<RectTransform>().sizeDelta.x / 2;
+        float yFrom = displayfrom.GetComponent<RectTransform>().sizeDelta.y;
+        float interFrom = yFrom / (origTypes.Count + 1);
+
+        for (int i = 0; i < origTypes.Count; i++)
+        {
+            DisplayType.Add(origTypes[i]);
+            DisplayFace.Add(origFaces[i]);
+
+            GameObject attackCardObj = Instantiate(carddisplayprfeb, displayfrom);
+            DisplayInRally.Add(attackCardObj);
+            attackCardObj.transform.localPosition = new Vector3(xFrom, yFrom - interFrom * (i + 1), 1);
+
+            ToolDisplayController tdcAttack = attackCardObj.GetComponent<ToolDisplayController>();
+            tdcAttack.tooltype = origTypes[i];
+            tdcAttack.face = origFaces[i];
+            tdcAttack.forDisplay = true;
+            // 把當時的攻擊數值也原封不動還給他
+            tdcAttack.init(w, s, r); 
+        }
+
+        // -------------------------------------------------------------
+        // 步驟 6：讓 A (原攻擊者) 本地端進入回應階段
+        // -------------------------------------------------------------
         canPlayDefense = allowDefense;
         canPlaySpecial = allowSpecial;
         if (PhotonNetwork.LocalPlayer == LocalPlayerList[targetIndex])
         {
-            status = 2; // 被反彈的原攻擊者本地端進入回應階段
+            status = 2; // A 被自己的牌打到了，請開始防守
             daW = w;
             daS = s;
             daR = r;
         }
-
-        await Task.Delay(1500);
     }
     [PunRPC]
     void imDead(int n)
@@ -2001,6 +2049,23 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 }
             }
 
+            if (isReflecting)
+            {
+                int originalAttackerIndex = 0;
+                for (int i = 0; i < total; i++)
+                {
+                    if (LocalPlayerList[i] == FromAndTo[0]) { originalAttackerIndex = i; break; }
+                }
+                
+                // 廣播公告
+                photonView.RPC("Announcement", RpcTarget.All, "我是...L\n登登登登登登登\n" + PhotonNetwork.LocalPlayer.NickName + " 發動反彈卡", 2000);
+                PhotonNetwork.SendAllOutgoingCommands();
+                
+                // 觸發反彈轉場
+                photonView.RPC("StartReflection", RpcTarget.All, me, originalAttackerIndex, daW, daS, daR, multi, canPlayDefense, canPlaySpecial);
+                PhotonNetwork.SendAllOutgoingCommands();
+            }
+
             // 第二步：回收卡牌，並且【只有非反彈卡】才呼叫 GetCard 廣播
             for (int i = 0; i < typeNum; i++)
             {
@@ -2012,13 +2077,9 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
 
                         if (controller.face == "test_reflect")
                         {
-                            // test_reflect 不參與常規防禦結算
-                        }
-                        else if (controller.face == "test_defense")
-                        {
-                            // 廣播 test_defense 讓大家看到，但不加入 Defends 陣列，因為它要轉為反彈傷害
                             photonView.RPC("GetCard", RpcTarget.All, controller.tooltype, controller.face);
                         }
+
                         else
                         {
                             // 普通防禦卡處理
@@ -2058,6 +2119,8 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             {
                 if (LocalPlayerList[i] == FromAndTo[0]) { originalAttackerIndex = i; break; }
             }
+            photonView.RPC("Announcement", RpcTarget.All, "我是...L\n登登登登登登登\n" + PhotonNetwork.LocalPlayer.NickName + " 發動反彈卡", 2000);
+            PhotonNetwork.SendAllOutgoingCommands();
             photonView.RPC("StartReflection", RpcTarget.All, me, originalAttackerIndex, daW, daS, daR, multi, canPlayDefense, canPlaySpecial);
             PhotonNetwork.SendAllOutgoingCommands();
         }
