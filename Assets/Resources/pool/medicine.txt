@@ -22,3 +22,7 @@ majong_kit
 flower_and_white
 south_maple_flower
 good_water
+flower_and_white
+south_maple_flower
+flower_and_white
+south_maple_flower

@@ -10,3 +10,16 @@ nah_bro,false,true,false
 nameless_doll,true,false,false
 zhenverse_broom,true,false,false
 science_train,true,false,false
+carbon,true,false,false
+carbon,true,false,false
+carbon,true,false,false
+carbon,true,false,false
+carbon,true,false,false
+carbon,true,false,false
+carbon,true,false,false
+carbon,true,false,false
+carbon,true,false,false
+femboy1,true,false,true
+femboy2,true,false,true
+femboy1,true,false,true
+femboy2,true,false,true
