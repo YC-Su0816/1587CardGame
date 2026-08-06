@@ -2265,6 +2265,19 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 // 真的死了，發送死亡廣播
                 over = true;
                 photonView.RPC("imDead", RpcTarget.All, me);
+                PlayerPanelController ppc = PlayerPanels[me].GetComponent<PlayerPanelController>();
+                if(ppc.effectlist.Count > 0)
+                {
+                    List<string> effe = new List<string>();
+                    foreach(var ef in ppc.effectlist)
+                    {
+                        effe.Add(ef.id);
+                    }
+                    foreach(string id in effe)
+                    {
+                        photonView.RPC("RemoveEffect", RpcTarget.All, me, id);
+                    }
+                }
             }
         }
 
