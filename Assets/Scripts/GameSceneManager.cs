@@ -2380,6 +2380,11 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             int num = 0;
             if (Cards.Count > 0)
             {
+                Cards.Sort((a, b) => string.Compare(
+                    a.GetComponent<ToolCardController>().face, 
+                    b.GetComponent<ToolCardController>().face, 
+                    StringComparison.Ordinal
+                ));
                 foreach (GameObject Card in Cards) 
                 {
                     Card.GetComponent<ToolCardController>().num = 100*t + num;
