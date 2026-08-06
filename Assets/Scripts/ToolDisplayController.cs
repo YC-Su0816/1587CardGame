@@ -209,6 +209,19 @@ public class ToolDisplayController : MonoBehaviour
                         if (r < 0) tooleff += "傷譽" + (-r) + " ";
                         else if (r > 0) tooleff += "治譽" + r + " ";
                     }
+                    else if(face == "test_reflect")
+                    {
+                        toolname = inf[0];
+                        discription = inf[1];
+                        if (w < 0) tooleff += "傷智" + (-w) + " ";
+                        else if (w > 0) tooleff += "治智" + w + " ";
+
+                        if (s < 0) tooleff += "傷體" + (-s) + " ";
+                        else if (s > 0) tooleff += "治體" + s + " ";
+
+                        if (r < 0) tooleff += "傷譽" + (-r) + " ";
+                        else if (r > 0) tooleff += "治譽" + r + " ";
+                    }
                     else
                     {
                         toolname = inf[0];
@@ -217,7 +230,7 @@ public class ToolDisplayController : MonoBehaviour
                     }
                 }
                 else
-                {
+                {                   
                     toolname = "特殊卡牌";
                     discription = "擁有獨特的效果";
                     tooleff = "特殊發動";

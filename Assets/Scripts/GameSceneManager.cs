@@ -61,6 +61,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     public string reflectMemoType;
     public int reflectMemoNext;
     public Photon.Realtime.Player reflectMemoPlayer;
+    public string reflectMemoFace;
 
     public System.Random rand;
     int typeNum = 6;
@@ -543,6 +544,11 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     canPlayDefense = false;
                     canPlaySpecial = true;
                 }
+                else if (DisplayFace[0] == "test_reflect")
+                {
+                    canPlayDefense = true; // 允許防禦反擊
+                    canPlaySpecial = false; // 不允許使用特殊牌
+                }
                 else
                 {
                     canPlayDefense = false;
@@ -747,7 +753,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             }
             // 統一顯示受傷文字
             StringBuilder sb = new StringBuilder();
-            if (DisplayType[0] == "attack" || DisplayType[0] == "multiattack" || DisplayType[0] == "medicine")
+            if (DisplayType[0] == "attack" || DisplayType[0] == "multiattack" || DisplayType[0] == "medicine" || DisplayFace[0] == "test_reflect")
             {
                 if (wasReflect) sb.AppendLine(FromAndTo[0].NickName + " 反彈給 " + FromAndTo[1].NickName);
                 else sb.AppendLine(FromAndTo[0].NickName + " 對 " + FromAndTo[1].NickName);
@@ -1063,6 +1069,8 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             {
                 if (defCharacter == "2" && PhotonNetwork.LocalPlayer == FromAndTo[0])
                 {
+                    reflectMemoType = DisplayType[0];
+                    reflectMemoFace = DisplayFace[0];
                     photonView.RPC("Announcement", RpcTarget.All, "防身術！", 1500);
                     photonView.RPC("Cleaning", RpcTarget.All);
                     await Task.Delay(1600);
@@ -1193,6 +1201,11 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                     // 群攻尚未結束，繼續傳給下一個排隊的人
                     photonView.RPC("Cleaning", RpcTarget.All);
                     status = 0;
+                    if (!string.IsNullOrEmpty(reflectMemoType) && !string.IsNullOrEmpty(reflectMemoFace))
+                    {
+                        photonView.RPC("GetCard", RpcTarget.All, reflectMemoType, reflectMemoFace);
+                    }
+                    PhotonNetwork.SendAllOutgoingCommands();
                     photonView.RPC("SetFromTo", RpcTarget.All, me, reflectMemoNext);
                     PhotonNetwork.SendAllOutgoingCommands();
                     photonView.RPC("Multi", RpcTarget.All, daW, daS, daR);
@@ -1342,6 +1355,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     async Task Start()
     {
+        gameStarted = false;
         if (PhotonNetwork.IsConnected == false)
         {
             SceneManager.LoadScene("StartScene");
@@ -1474,7 +1488,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
 
             photonView.RPC("Go", firstPlayer);
         }
-
+        gameStarted = true;
         
     }
     public void LoadCardPools()
@@ -2095,18 +2109,20 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
                 if (LocalPlayerList[i] == FromAndTo[0]) { originalAttackerIndex = i; break; }
             }
             
+            // 【修復核心】：在清空畫面之前，先把原來的攻擊牌（單體或群攻）記下來
+            reflectMemoType = DisplayType[0];
+            reflectMemoFace = DisplayFace[0];
+            
             photonView.RPC("Announcement", RpcTarget.All, "我是" + PhotonNetwork.LocalPlayer.NickName + "，或者...\n你也可以叫我Kira\n 我是新世界的卡蜜撒馬", 3000);
             PhotonNetwork.SendAllOutgoingCommands();
 
-            // 【關鍵修正】：不需要呼叫 Cleaning 重新塞卡！
-            // DisplayType 與 DisplayFace 已經在場上，我們直接保留並把防禦者的反彈牌也加入展示區（如果需要）
-            // 只需要直接切換攻守方並進入 StartReflection 即可
-            
-            // 確保 Photon 網路指令確實送出同步
+            // 現在可以安全地清空並換成 test_reflect 進行反擊了
+            photonView.RPC("Cleaning", RpcTarget.All);
+            photonView.RPC("GetCard", RpcTarget.All, "special", "test_reflect");
             PhotonNetwork.SendAllOutgoingCommands();
 
-            // 啟動反彈：將當前防禦者 (me) 變成攻擊者，原攻擊者變成目標
-            photonView.RPC("StartReflection", RpcTarget.All, me, originalAttackerIndex, daW, daS, daR, multi, canPlayDefense, canPlaySpecial);
+            // 啟動反彈
+            photonView.RPC("StartReflection", RpcTarget.All, me, originalAttackerIndex, daW, daS, daR, multi, true, true);
             PhotonNetwork.SendAllOutgoingCommands();
         }
         else
@@ -3011,5 +3027,19 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             PDSwitch.enabled = false;
         }
         cdText.text = "CD: " + cd;
+    }
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        Debug.Log($"玩家加入房間：{newPlayer.NickName} (ActorNumber: {newPlayer.ActorNumber})");
+        if(gameStarted)
+        {
+            
+        }
+    }
+
+    // 當「其他玩家」離開房間時觸發
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        
     }
 }
