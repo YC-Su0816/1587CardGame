@@ -10,7 +10,11 @@ using System.Text;
 public class LobbySceneManager : MonoBehaviourPunCallbacks
 {
     public TMP_InputField inputroomname;
+    public Button joinButton;
+    public Button creatButton;
+    public TMP_Text hintWord;
     public TMP_Text roomlist;
+    public bool canStart;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -92,5 +96,27 @@ public class LobbySceneManager : MonoBehaviourPunCallbacks
             Debug.Log("Invalid RoomName");
         }
 
+    }
+
+    void Update()
+    {
+        string playername = inputroomname.text;
+        if(playername.Length <= 0)
+        {
+            hintWord.text = "房號不得為空";
+            canStart = false;
+        }
+        else if(playername.Length >= 6)
+        {
+            hintWord.text = "房號請在五字以內";
+            canStart = false;
+        }
+        else
+        {
+            hintWord.text = "你開心就好";
+            canStart = true;
+        }
+        joinButton.enabled = canStart;
+        creatButton.enabled = canStart;
     }
 }
