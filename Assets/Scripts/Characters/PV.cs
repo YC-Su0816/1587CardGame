@@ -36,6 +36,7 @@ public class PV : PlayerBase
     }
     public override void useSkill()
     {
+        manager.status = 0;
         StringBuilder sb = new StringBuilder();
         sb.AppendLine("見到神...為何不跪？");
         sb.Append(handle.nickname + " 使用了技能！");

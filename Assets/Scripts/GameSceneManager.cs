@@ -76,7 +76,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     int multicount;
     public bool isResolvingVirtualCard = false;
 
-    double[] cardRatio = {3.0, 1.0, 2.0, 2.0, 1.0, 2.0}; // att, mul, def, med, str, spe
+    double[] cardRatio = {2.5, 1.0, 2.5, 1.5, 1.0, 2.0}; // att, mul, def, med, str, spe
     
     double[] cardCumulativeProbability;
     // Data structure for "Special"

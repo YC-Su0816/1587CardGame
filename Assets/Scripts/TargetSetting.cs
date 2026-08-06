@@ -17,7 +17,7 @@ public class TargetSetting : MonoBehaviour, IPointerClickHandler
         if (gsm.status == 1)
         {
             PlayerPanelController ppc = gsm.PlayerPanels[k].GetComponent<PlayerPanelController>();
-            if (ppc.isExist("disappear") || ppc.isExist("hide"))
+            if (!manager.GetComponent<GameSceneManager>().isAlive[k] || ppc.isExist("disappear") || ppc.isExist("sleep"))
             {
 
             }

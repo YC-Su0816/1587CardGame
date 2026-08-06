@@ -18,8 +18,7 @@ public class PXVI : PlayerBase
     // 主動技能：滷味面
     public override void useSkill()
     {
-        System.Random rand = new System.Random(Guid.NewGuid().GetHashCode());
-        double mult = (rand.NextDouble() > 0.5) ? 3.0 : 0.2;
+        double mult = (manager.rand.NextDouble() <= 0.35) ? 3.0 : 0.2;
 
         // 計算最終補血量 (智慧基礎 5，體力基礎 10)，聲譽固定扣 5 不受影響
         int finalW = (mult > 1.0) ? 15 : 1;
@@ -46,10 +45,8 @@ public class PXVI : PlayerBase
     // 封裝被動擲骰子邏輯，套用給所有出牌行動
     private void ApplyDaQiDaLuo(double[] ratioArray, string actionType)
     {
-        System.Random rand = new System.Random(Guid.NewGuid().GetHashCode());
 
-        // 50% 大起 (x3)，50% 大落 (x0.2)
-        double mult = (rand.NextDouble() > 0.5) ? 3.0 : 0.2;
+        double mult = (manager.rand.NextDouble() <= 0.35) ? 3.0 : 0.2;
 
         for (int i = 0; i < 3; i++)
         {
