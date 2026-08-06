@@ -71,7 +71,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
     float SW, SH, cs;
     public int daW, daS, daR;
     public int maxW, maxS, maxR;
-    public bool Wdead, Sdead, Rdead, multi, reflect, over, canPlayDefense, canPlaySpecial;
+    public bool Wdead, Sdead, Rdead, multi, reflect, over, canPlayDefense, canPlaySpecial, gameStarted;
     int multicount;
     public bool isResolvingVirtualCard = false;
 
@@ -1970,7 +1970,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         RefreshCards();
     }
     
-    public void RespondCard()
+    public async Task RespondCard()
     {
         status = 0;
         int[] Defends = new int[3];
@@ -2088,29 +2088,24 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         // 第三步：分流處理狀態機
         if (isReflecting)
         {
-            // 原始 test_reflect 邏輯 (完全反彈)
+            // 找出真正的原始攻擊者 Index
             int originalAttackerIndex = 0;
             for (int i = 0; i < total; i++)
             {
                 if (LocalPlayerList[i] == FromAndTo[0]) { originalAttackerIndex = i; break; }
             }
             
-            photonView.RPC("Announcement", RpcTarget.All,  "我是" + PhotonNetwork.LocalPlayer.NickName +"，或者...\n你也可以叫我Kira\n 我是新世界的卡蜜撒馬", 3000);
+            photonView.RPC("Announcement", RpcTarget.All, "我是" + PhotonNetwork.LocalPlayer.NickName + "，或者...\n你也可以叫我Kira\n 我是新世界的卡蜜撒馬", 3000);
             PhotonNetwork.SendAllOutgoingCommands();
-            List<string> typeMemory = new List<string>();
-            List<string> faceMemory = new List<string>();
-            for (int i = 0; i < temp; i++)
-            {
-                typeMemory.Add(DisplayType[i]);
-                faceMemory.Add(DisplayFace[i]);
-            }
-            photonView.RPC("Cleaning", RpcTarget.All);
+
+            // 【關鍵修正】：不需要呼叫 Cleaning 重新塞卡！
+            // DisplayType 與 DisplayFace 已經在場上，我們直接保留並把防禦者的反彈牌也加入展示區（如果需要）
+            // 只需要直接切換攻守方並進入 StartReflection 即可
+            
+            // 確保 Photon 網路指令確實送出同步
             PhotonNetwork.SendAllOutgoingCommands();
-            for(int r = 0; r < faceMemory.Count; r++)
-            {
-                photonView.RPC("GetCard", RpcTarget.All, typeMemory[r], faceMemory[r]);
-                PhotonNetwork.SendAllOutgoingCommands();
-            }
+
+            // 啟動反彈：將當前防禦者 (me) 變成攻擊者，原攻擊者變成目標
             photonView.RPC("StartReflection", RpcTarget.All, me, originalAttackerIndex, daW, daS, daR, multi, canPlayDefense, canPlaySpecial);
             PhotonNetwork.SendAllOutgoingCommands();
         }
