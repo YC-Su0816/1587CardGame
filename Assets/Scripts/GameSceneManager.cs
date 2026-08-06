@@ -1262,10 +1262,10 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
             }
         }
         
-        // 清空本地陣列防呆 (必須確保所有客戶端都能執行到這裡)
-        DisplayFace.Clear();
-        DisplayType.Clear();
-        multi = false;
+        // // 清空本地陣列防呆 (必須確保所有客戶端都能執行到這裡)
+        // DisplayFace.Clear();
+        // DisplayType.Clear();
+        // multi = false;
     }
     private class AnnounceMsg 
     {
@@ -1947,14 +1947,14 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
 
         if (displaycount > 0)
         {
-        List<string> attemptTypes = new List<string>();
-        for (int i = 0; i < typeNum; i++)
-        {
-            foreach (GameObject obj in CardsInDisplay[i])
+            List<string> attemptTypes = new List<string>();
+            for (int i = 0; i < typeNum; i++)
             {
-                attemptTypes.Add(obj.GetComponent<ToolDisplayController>().tooltype);
+                foreach (GameObject obj in CardsInDisplay[i])
+                {
+                    attemptTypes.Add(obj.GetComponent<ToolDisplayController>().tooltype);
+                }
             }
-        }
             if (player.p.checkActionFailure(attemptTypes))
             {
                 for (int i = 0; i < typeNum; i++)
