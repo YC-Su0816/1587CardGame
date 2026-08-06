@@ -337,6 +337,7 @@ public class GameSceneManager : MonoBehaviourPunCallbacks
         if (over || !pickable)
         {
             isGameEnded((me + 1) % total);
+            return;
         }
 
         //  確保每一回合都會減少cd
