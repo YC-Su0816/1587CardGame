@@ -58,7 +58,7 @@ public class PXV : PlayerBase
         for (int i = 0; i < manager.total; ++i)
         {
             // 2. 防錯與防呆：確保玩家存在，且把「自己」從替死鬼名單中排除
-            if (manager.isAlive[i] && manager.LocalPlayerList[i] != null && i != manager.me && !manager.PlayerPanels[i].GetComponent<PlayerPanelController>().isExist("disappear") && !manager.PlayerPanels[i].GetComponent<PlayerPanelController>().isExist("sleep"))
+            if (manager.isAlive[i] && manager.LocalPlayerList[i] != null && !manager.PlayerPanels[i].GetComponent<PlayerPanelController>().isExist("disappear") && !manager.PlayerPanels[i].GetComponent<PlayerPanelController>().isExist("sleep"))
             {
                 nameList.Add(manager.LocalPlayerList[i].NickName);
             }
